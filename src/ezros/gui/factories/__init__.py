@@ -4,6 +4,7 @@ QPen and QFont instances. """
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from ._stub_factory import header
 from ._color_factory import colorNames, parseColor
 from ._font_factory import parseFont
 from ._brush_factory import parseBrush, emptyBrush, solidBrush

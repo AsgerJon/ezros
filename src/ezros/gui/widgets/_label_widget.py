@@ -3,6 +3,7 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from PySide6.QtCore import QMargins, QRect, QPoint
 from PySide6.QtGui import QPainter, QPaintEvent
 from vistutils.fields import TypedField
 
@@ -29,9 +30,16 @@ class LabelWidget(FillWidget):
     FillWidget.paintEvent(self, event)
     painter = QPainter()
     painter.begin(self)
+    viewRect = painter.viewport()
+    borderRect = painter.viewport() - QMargins(1, 1, 1, 1)  # margin
+    paddedRect = borderRect - QMargins(1, 1, 1, 1)  # border
+    innerRect = paddedRect - QMargins(1, 1, 1, 1)  # padding
     baseFont = parseFont('Courier', 24, )
     fontPen = textPen()
     painter.setFont(baseFont)
     painter.setPen(fontPen)
-    painter.drawText(self.rect(), self.innerText)
+    textSize = painter.fontMetrics().size(0, self.innerText)
+    textRect = QRect(QPoint(0, 0), textSize)
+
+    painter.drawText(innerRect, self.innerText)
     painter.end()

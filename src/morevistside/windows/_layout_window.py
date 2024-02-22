@@ -12,7 +12,7 @@ from icecream import ic
 from morevistside.widgets import PlotWidget, LabelWidget, WidgetField, \
   PushButton
 from morevistside.windows import BaseWindow
-from morevistutils.fields import ClassField
+from OLDmorevistutils.fields import ClassField
 
 ic.configureOutput(includeContext=True)
 

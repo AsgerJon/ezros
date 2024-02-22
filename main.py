@@ -10,6 +10,8 @@ from PySide6.QtWidgets import QApplication
 
 from ezros.gui.windows import MainWindow
 
+import vistutils.metas
+
 
 def tester00() -> None:
   """Hello world"""
@@ -27,5 +29,11 @@ def tester01() -> None:
   app.exec()
 
 
+def tester02() -> None:
+  """bla"""
+  for item in dir(vistutils.metas):
+    print(item)
+
+
 if __name__ == '__main__':
-  tester01()
+  tester02()

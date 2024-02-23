@@ -36,4 +36,4 @@ def tester02() -> None:
 
 
 if __name__ == '__main__':
-  tester02()
+  tester01()

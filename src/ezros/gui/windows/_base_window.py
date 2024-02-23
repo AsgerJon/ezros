@@ -11,7 +11,7 @@ from PySide6.QtWidgets import QMainWindow, QWidget, QMessageBox
 from icecream import ic
 
 from ezros.gui.factories import menuBarFactory
-from ezros.morevistutils.fields import Later
+from morevistutils.fields import Later
 
 ic.configureOutput(includeContext=True)
 
@@ -40,9 +40,13 @@ class BaseWindow(QMainWindow):
         e = """Action with key '%s' already exists. """
         raise KeyError(e % key)
       self.__owned_actions__[key] = action
+      setattr(self, key, action)
+    else:
+      e = """Both name and key are required arguments!"""
+      raise ValueError(e)
     return action
 
-  def _getOwnedActions(self) -> dict:
+  def getOwnedActions(self) -> dict:
     """Returns the owned actions."""
     return self.__owned_actions__
 
@@ -63,10 +67,10 @@ class BaseWindow(QMainWindow):
 
   def show(self) -> None:
     """Shows the window."""
-    self.initUI()
     self.setMenuBar(self.mainMenuBar)
-    self.createActionStub()
+    self.initUI()
     self.connectActions()
+    self.createActionStub()
     QMainWindow.show(self)
 
   def aboutPython(self) -> None:

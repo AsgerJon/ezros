@@ -5,16 +5,22 @@ widget that appear on the main application window"""
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from time import sleep
+from typing import Any
 import os
 
-from PySide6.QtGui import QMouseEvent
+import rospy
+from rospy import Subscriber, init_node
+from std_msgs.msg import Float64
 from PySide6.QtWidgets import QMessageBox
 from icecream import ic
 from vistutils.text import monoSpace
 
-from ezros.gui.factories import header
-from ezros.gui.windows import LayoutWindow
+from ezros.gui.factories import header, timerFactory
+from ezros.gui.windows import LayoutWindow, BaseWindow
+from morevistutils.fields import Later
 
+os.environ['ROS_MASTER_URI'] = 'http://localhost:11311'
 ic.configureOutput(includeContext=True)
 
 
@@ -23,33 +29,27 @@ class MainWindow(LayoutWindow):
   provides menus and actions. The Layout Window class provides the layout of
   widget that appear on the main application window"""
 
+  paintTimer = Later(timerFactory(), 50, singleShot=False)
+
   def __init__(self, *args, **kwargs) -> None:
+    self._debugFlag = False
     LayoutWindow.__init__(self, *args, **kwargs)
     self.setWindowTitle('Welcome to EZRos!')
 
-  def showActions(self) -> None:
-    """Shows the actions for the window."""
-    actionTxt = []
-    for action in self.actions():
-      actionTxt.append(action.text())
-    QMessageBox.about(self, 'Actions', '\n'.join(actionTxt))
-
-  def mouseReleaseEvent(self, event: QMouseEvent) -> None:
-    """Handles the mouse release event."""
-    self.showActions()
-
   def createActionStub(self, ) -> None:
     """Creates a stub file for the action."""
-    actions = self._getOwnedActions()
-    body = ['#  Defined Actions:']
-    for (key, val) in actions.items():
-      body.append('%s: QAction' % key)
+    body = []
     allBases = []
     base = self.__class__
     while base.__bases__:
       allBases.append(base)
       base = base.__bases__[0]
+    allBases = [b for b in allBases if issubclass(b, BaseWindow)]
     for base in allBases:
+      head = """<br>#  Actions contribution from %s"""
+      body.append(head % base.__qualname__)
+      for (key, val) in base.getOwnedActions(self).items():
+        body.append('%s: QAction' % key)
       head = """<br>#  Namespace contribution from %s"""
       body.append(head % base.__qualname__)
       for (key, val) in base.__dict__.items():
@@ -67,3 +67,55 @@ class MainWindow(LayoutWindow):
 
   def connectActions(self) -> None:
     """Connects actions to slots."""
+    self.paintTimer.timeout.connect(self.testPaint)
+    self.debug01Action.triggered.connect(self.debug01Func)
+    self.debug02Action.triggered.connect(self.debug02Func)
+    self.debug03Action.triggered.connect(self.debug03Func)
+    self.debug04Action.triggered.connect(self.debug04Func)
+    self.debug05Action.triggered.connect(self.debug05Func)
+    self.debug06Action.triggered.connect(self.debug06Func)
+
+  def testPaint(self) -> None:
+    """Test paint method"""
+    if self._debugFlag:
+      ic(self.plot._getData())
+      self._debugFlag = False
+    self.plot.update()
+
+  def testPlot(self, data: Any) -> None:
+    """Test plot method"""
+    self.plot.append(data.data)
+
+  def debug01Func(self, ) -> None:
+    """Debug01 function"""
+    print('Received debug 01 - Starting test')
+    init_node('fuck', anonymous=False)
+    Subscriber('cunt', Float64, self.testPlot)
+    self.paintTimer.start()
+
+  def debug02Func(self, ) -> None:
+    """Debug02 function"""
+    print('Received debug 02 - setting debug flag')
+    ic(self.paintTimer.isActive())
+    self._debugFlag = True
+
+  def debug03Func(self, ) -> None:
+    """Debug03 function"""
+    print('Received debug 03 - updating plot')
+    self.plot.update()
+
+  def debug04Func(self, ) -> None:
+    """Debug04 function"""
+    print('Received debug 04 - start timer')
+    ic(self.paintTimer)
+    self.paintTimer.start()
+
+  def debug05Func(self, ) -> None:
+    """Debug05 function"""
+    print('Received debug 05 - force repaint')
+    self.plot.update()
+
+  def debug06Func(self, ) -> None:
+    """Debug06 function"""
+    print('Received debug 06 - Force test plot callback')
+    self.testPlot(Float64(0.5))

@@ -7,8 +7,10 @@ from __future__ import annotations
 from typing import Callable
 
 from PySide6.QtWidgets import QMainWindow, QMenuBar
+from icecream import ic
 
-from ezros.gui.factories import filesFactory, editFactory, helpFactory
+from ezros.gui.factories import filesFactory, editFactory, helpFactory, \
+  debugFactory
 
 
 def menuBarFactory() -> Callable:
@@ -22,6 +24,7 @@ def menuBarFactory() -> Callable:
     bar.addMenu(filesFactory()(mainWindow))
     bar.addMenu(editFactory()(mainWindow))
     bar.addMenu(helpFactory()(mainWindow))
+    bar.addMenu(debugFactory(10)(mainWindow))
     return bar
 
   return createMenuBar

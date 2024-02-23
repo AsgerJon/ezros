@@ -15,4 +15,5 @@ from ._action_factory import actionFactory
 from ._files_factory import filesFactory
 from ._edit_factory import editFactory
 from ._help_factory import helpFactory
+from ._debug_factory import debugFactory
 from ._menu_bar_factory import menuBarFactory

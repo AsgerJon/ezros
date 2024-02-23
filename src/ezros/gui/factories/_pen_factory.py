@@ -81,8 +81,25 @@ def emptyPen() -> QPen:
   return _createPen(QColor(0, 0, 0, 0, ), 1, Qt.PenStyle.NoPen)
 
 
-def textPen() -> QPen:
+def textPen(*args) -> QPen:
   """Creates a QPen instance."""
+  color = None
+  intArgs = []
+  for arg in args:
+    if isinstance(arg, QColor):
+      color = arg
+    if isinstance(arg, int):
+      intArgs.append(arg)
+    if isinstance(arg, str):
+      color = parseColor(arg)
+    if color is not None:
+      break
+  else:
+    if len(intArgs) > 2:
+      r, g, b, a = [*intArgs, 255][:4]
+      color = QColor(r, g, b, a)
+    else:
+      color = QColor(0, 0, 0, 255)
   return _createPen(QColor(0, 0, 0, 255, ), 1, Qt.PenStyle.SolidLine)
 
 

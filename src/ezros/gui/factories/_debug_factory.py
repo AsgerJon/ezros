@@ -1,4 +1,4 @@
-"""The helpFactory creates a creator function for the help menu."""
+"""The debugFactory returns a creator for the debug menu."""
 #  MIT Licence
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
@@ -7,25 +7,26 @@ from typing import Callable
 
 from PySide6.QtGui import QKeySequence, QAction
 from PySide6.QtWidgets import QMenu, QMainWindow
+from icecream import ic
+from vistutils.parse import maybeType, maybe
 from vistutils.text import stringList
 from vistutils.waitaminute import typeMsg
 
 from ezros.gui.windows.icons import getIcon
 
 
-def helpFactory() -> Callable:
-  """The helpFactory creates a creator function for the help menu ."""
+def debugFactory(num: int = None) -> Callable:
+  """The debugFactory returns a creator for the debug menu."""
 
   def callMeMaybe(self: QMainWindow, *args, **kwargs) -> QMenu:
     """Creates the edit menu"""
-    menu = QMenu('Help', self)
-    names = stringList("""About Qt, About Python, """)
-    keys = stringList("""aboutQtAction, aboutPythonAction""")
-    cutNames = stringList("""F11, F12""")
-    cuts = [QKeySequence(cut) for cut in cutNames]
-    tips = ["""Information about the Qt framework""",
-            """Information about the Python programming language"""]
-    icons = [getIcon(name) for name in ['about_qt', 'risitas']]
+    menu = QMenu('Debug', self)
+    numDebug = maybe(num, 10)
+    names = ['** Debug %02d **' % i for i in range(1, numDebug)]
+    keys = ['debug%02dAction' % i for i in range(1, numDebug)]
+    cuts = [QKeySequence('F%d' % (i)) for i in range(1, numDebug)]
+    tips = ['Debug %02d' % i for i in range(1, numDebug)]
+    icons = [getIcon('risitas') for i in range(1, numDebug)]
     for (key, name, cut, tip, icon) in zip(keys, names, cuts, tips, icons):
       action = self.addAction(name, key, )
       if not isinstance(action, QAction):

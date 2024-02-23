@@ -113,5 +113,6 @@ def parseColor(*args, **kwargs) -> QColor:
       return colorArg
     e = typeMsg('colorArg', colorArg, QColor)
     raise TypeError(e)
-  e = """Unable to parse given arguments to instance of QColor!"""
-  raise ValueError(e)
+  if kwargs.get('strict', True):
+    e = """Unable to parse given arguments to instance of QColor!"""
+    raise ValueError(e)

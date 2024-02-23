@@ -5,9 +5,9 @@ from __future__ import annotations
 
 from abc import abstractmethod
 
-from ezros.gui.widgets import LabelWidget, BaseWidget, BaseLayout
+from ezros.gui.widgets import LabelWidget, BaseWidget, BaseLayout, PointPlot
 from ezros.gui.windows import BaseWindow
-from ezros.morevistutils.fields import Later
+from morevistutils.fields import Later
 
 
 class LayoutWindow(BaseWindow):
@@ -17,15 +17,19 @@ class LayoutWindow(BaseWindow):
   baseLayout = Later(BaseLayout, )
   welcomeLabel = Later(LabelWidget, 'Welcome', )
   goodbyeLabel = Later(LabelWidget, 'Goodbye', )
+  # subscriber = RosSubs
+  plot = Later(PointPlot)
 
   def __init__(self, *args, **kwargs) -> None:
     BaseWindow.__init__(self, *args, **kwargs)
+    self.testTimer = None
     self.setMinimumSize(480, 320)
 
   def initUI(self) -> None:
     """Sets up the widgets"""
     self.baseLayout.addWidget(self.welcomeLabel, 0, 0)
-    self.baseLayout.addWidget(self.goodbyeLabel, 1, 1)
+    self.baseLayout.addWidget(self.goodbyeLabel, 0, 1)
+    self.baseLayout.addWidget(self.plot, 1, 0, 1, 2)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
 

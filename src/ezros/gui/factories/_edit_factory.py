@@ -3,10 +3,11 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtGui import QKeySequence
+from PySide6.QtGui import QKeySequence, QAction
 from PySide6.QtWidgets import QMenu, QMainWindow
 from icecream import ic
 from vistutils.text import stringList
+from vistutils.waitaminute import typeMsg
 
 from ezros.gui.windows.icons import getIcon
 
@@ -36,7 +37,10 @@ def editFactory() -> callable:
             """Select all items in the document"""]
     icons = [getIcon(name) for name in names]
     for (key, name, cut, tip, icon) in zip(keys, names, cuts, tips, icons):
-      action = self.addAction(name)
+      action = self.addAction(name, key, )
+      if not isinstance(action, QAction):
+        e = typeMsg('action', action, QAction)
+        raise TypeError(e)
       action.setToolTip(tip)
       action.setShortcut(cut)
       action.setIcon(icon)

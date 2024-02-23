@@ -4,8 +4,25 @@
 from __future__ import annotations
 
 from PySide6.QtGui import QFont
+from PySide6.QtGui import QFontDatabase
 from vistutils.text import stringList
 from vistutils.parse import maybe
+
+
+def _getFontFamilies() -> list[str]:
+  """Getter-function for font families."""
+  return [f.lower() for f in QFontDatabase().families()]
+
+
+def resolveFontFamily(family: str, **kwargs) -> str:
+  """Resolves a font family."""
+  families = _getFontFamilies()
+  if family.lower() in families:
+    return family
+  if kwargs.get('strict', True):
+    e = """The name '%s' was not recognized as a font family."""
+    raise NameError(e)
+  return ''
 
 
 def _createFont(*args, **kwargs) -> QFont:
@@ -18,8 +35,10 @@ def _createFont(*args, **kwargs) -> QFont:
   sizeKeys = stringList("""size, fontSize""")
   weightKeys = stringList("""weight, fontWeight""")
   for arg in args:
-    if isinstance(arg, str) and familyArg is None:
-      familyArg = arg
+    if isinstance(arg, str):
+      family = resolveFontFamily(arg, strict=False)
+      if family and familyArg is None:
+        familyArg = family
     elif isinstance(arg, int) and sizeArg is None:
       sizeArg = arg
   familyKwarg, sizeKwarg, weightKwarg = None, None, None

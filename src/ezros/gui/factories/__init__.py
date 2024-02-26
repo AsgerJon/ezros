@@ -8,8 +8,8 @@ from ._stub_factory import header
 from ._color_factory import colorNames, parseColor
 from ._font_factory import parseFont
 from ._brush_factory import parseBrush, emptyBrush, solidBrush
-from ._pen_factory import parsePen, emptyPen, textPen, dashPen, dotPen
-from ._pen_factory import dashDotPen
+from ._pen_factory import (parsePen, emptyPen, textPen, dashPen, dotPen,
+                           solidPen, stylePen, dashDotPen)
 from ._timer_factory import timerFactory
 from ._action_factory import actionFactory
 from ._files_factory import filesFactory

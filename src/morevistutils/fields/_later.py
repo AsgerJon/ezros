@@ -18,7 +18,9 @@ class Later:
   argument a callable and are allowed to provide further arguments later
   used to invoke the callable. """
 
-  def __init__(self, callMeMaybe: Callable, *args, **kwargs) -> None:
+  def __init__(self, callMeMaybe: Callable = None, *args, **kwargs) -> None:
+    self.__positional_args__ = [*args, ]
+    self.__keyword_args__ = {**kwargs, }
     if isinstance(callMeMaybe, type):
       def creator(*args2, **kwargs2) -> Any:
         """Inferred creator function"""
@@ -28,14 +30,10 @@ class Later:
     elif isinstance(callMeMaybe, Callable):
       self.__creator_function__ = callMeMaybe
     elif callMeMaybe is not None:
-      e = typeMsg('callMeMaybe', callMeMaybe, Callable)
-      raise TypeError(e)
+      self.__positional_args__.insert(0, callMeMaybe)
     self.__field_name__ = None
     self.__field_owner__ = None
     self.__creator_function__ = callMeMaybe
-
-    self.__positional_args__ = args
-    self.__keyword_args__ = kwargs
 
   def __set_name__(self, owner: type, name: str) -> None:
     """Setter function for the field name and owner."""
@@ -78,7 +76,10 @@ class Later:
     if not isinstance(callMeMaybe, Callable):
       e = typeMsg('callMeMaybe', callMeMaybe, Callable)
       raise TypeError(e)
-    self.__creator_function__ = callMeMaybe
+    if hasattr(callMeMaybe, '__func__'):
+      self.__creator_function__ = getattr(callMeMaybe, '__func__')
+    else:
+      self.__creator_function__ = callMeMaybe
     return callMeMaybe
 
   def CREATE(self, callMeMaybe: Callable) -> Callable:

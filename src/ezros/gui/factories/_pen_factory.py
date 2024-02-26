@@ -103,16 +103,27 @@ def textPen(*args) -> QPen:
   return _createPen(QColor(0, 0, 0, 255, ), 1, Qt.PenStyle.SolidLine)
 
 
-def dashPen() -> QPen:
+def stylePen(penStyle: Qt.PenStyle, *args) -> QPen:
   """Creates a QPen instance."""
-  return _createPen(QColor(0, 0, 0, 255, ), 1, Qt.PenStyle.DashLine)
+  color = maybe(parseColor(*args, strict=False), QColor(0, 0, 0, 255, ))
+  return _createPen(color, 1, penStyle)
 
 
-def dotPen() -> QPen:
+def solidPen(*args) -> QPen:
   """Creates a QPen instance."""
-  return _createPen(QColor(0, 0, 0, 255, ), 1, Qt.PenStyle.DotLine)
+  return stylePen(Qt.PenStyle.SolidLine, *args)
 
 
-def dashDotPen() -> QPen:
+def dashPen(*args) -> QPen:
   """Creates a QPen instance."""
-  return _createPen(QColor(0, 0, 0, 255, ), 1, Qt.PenStyle.DashDotLine)
+  return stylePen(Qt.PenStyle.DashLine, *args)
+
+
+def dotPen(*args) -> QPen:
+  """Creates a QPen instance."""
+  return stylePen(Qt.PenStyle.DotLine, *args)
+
+
+def dashDotPen(*args) -> QPen:
+  """Creates a QPen instance."""
+  return stylePen(Qt.PenStyle.DashDotLine, *args)

@@ -4,10 +4,9 @@
 from __future__ import annotations
 
 import time
-from typing import Any
 
 import numpy as np
-from PySide6.QtCore import QPoint, Qt, QPointF, QSize, QRect
+from PySide6.QtCore import QPoint, QPointF, QSize, QRect
 from PySide6.QtGui import QPaintEvent, QPainter
 from icecream import ic
 from vistutils.parse import maybe

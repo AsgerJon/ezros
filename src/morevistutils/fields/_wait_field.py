@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import Callable, Any
 
+from icecream import ic
 from vistutils.waitaminute import typeMsg
 
 from morevistutils.fields import AbstractBaseField, FlexField, BaseField
@@ -23,7 +24,11 @@ class WaitField(FlexField):
   def __init__(self, cls: type, *args, **kwargs) -> None:
     """Initializes the field with a function that will be called to create
     the value when it is first accessed. """
-    cls, func, leftArgs = None, None, []
+    ic(args)
+    if not isinstance(cls, type):
+      args = [cls, *args]
+      cls = None
+    func, leftArgs = None, []
     for arg in args:
       if isinstance(arg, type) and cls is None:
         cls = arg

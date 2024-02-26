@@ -1,5 +1,5 @@
 """Auto-generated stub file for the main window.
-Fri Feb 23 16:33:07 2024"""
+Mon Feb 26 07:41:24 2024"""
 # MIT Licence
 # Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations

@@ -3,7 +3,7 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from ezros.gui.paint import FillRectPaint
+from yolomsg.paint import FillRectPaint
 from ezros.gui.widgets import PaintWidget
 
 

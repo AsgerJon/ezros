@@ -3,10 +3,10 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtGui import QBrush, QColor
+from PySide6.QtGui import QBrush
 
 from ezros.gui.factories import parseBrush, emptyPen
-from ezros.gui.paint import AbstractPaint
+from yolomsg.paint import AbstractPaint
 from ezros.gui.shortnames import Lime, SolidFill
 from morevistutils.fields import WaitField
 

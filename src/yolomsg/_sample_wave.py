@@ -32,11 +32,4 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-  try:
-    main()
-  except ROSInitException as e:
-    try:
-      init_node('Test', anonymous=False)
-      main()
-    except Exception as e2:
-      raise e2 from e
+  main()

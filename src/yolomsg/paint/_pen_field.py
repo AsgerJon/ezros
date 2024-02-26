@@ -6,9 +6,7 @@ from __future__ import annotations
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor
 
-from ezros.gui.paint import ColorField
 from ezros.gui.shortnames import Black
-from morevistutils.fields import AbstractBaseField, IntField
 
 
 class PenField:

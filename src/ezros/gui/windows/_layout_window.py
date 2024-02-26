@@ -5,7 +5,9 @@ from __future__ import annotations
 
 from abc import abstractmethod
 
-from ezros.gui.widgets import LabelWidget, BaseWidget, BaseLayout, PointPlot
+from ezros.gui.widgets import (LabelWidget, BaseWidget, BaseLayout,
+                               PointPlot, \
+                               DataWidget)
 from ezros.gui.windows import BaseWindow
 from morevistutils.fields import Later
 
@@ -23,6 +25,7 @@ class LayoutWindow(BaseWindow):
   def __init__(self, *args, **kwargs) -> None:
     BaseWindow.__init__(self, *args, **kwargs)
     self.testTimer = None
+    self.data = None
     self.setMinimumSize(480, 320)
 
   def initUI(self) -> None:
@@ -30,6 +33,8 @@ class LayoutWindow(BaseWindow):
     self.baseLayout.addWidget(self.welcomeLabel, 0, 0)
     self.baseLayout.addWidget(self.goodbyeLabel, 0, 1)
     self.baseLayout.addWidget(self.plot, 1, 0, 1, 2)
+    self.data = DataWidget()
+    self.baseLayout.addWidget(self.data, 2, 0, 1, 2)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
 

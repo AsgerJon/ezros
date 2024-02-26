@@ -10,6 +10,7 @@ from typing import Any
 import os
 
 import rospy
+from PySide6.QtCore import Signal
 from rospy import Subscriber, init_node
 from std_msgs.msg import Float64
 from PySide6.QtWidgets import QMessageBox
@@ -18,6 +19,7 @@ from vistutils.text import monoSpace
 
 from ezros.gui.factories import header, timerFactory
 from ezros.gui.windows import LayoutWindow, BaseWindow
+from ezros.rosutils import getNodeStatus
 from morevistutils.fields import Later
 
 os.environ['ROS_MASTER_URI'] = 'http://localhost:11311'
@@ -28,6 +30,8 @@ class MainWindow(LayoutWindow):
   """MainWindow provides the main application window. The BaseWindow class
   provides menus and actions. The Layout Window class provides the layout of
   widget that appear on the main application window"""
+
+  subscribe = Signal(float)
 
   paintTimer = Later(timerFactory(), 50, singleShot=False)
 
@@ -67,19 +71,17 @@ class MainWindow(LayoutWindow):
 
   def connectActions(self) -> None:
     """Connects actions to slots."""
-    self.paintTimer.timeout.connect(self.testPaint)
     self.debug01Action.triggered.connect(self.debug01Func)
     self.debug02Action.triggered.connect(self.debug02Func)
     self.debug03Action.triggered.connect(self.debug03Func)
     self.debug04Action.triggered.connect(self.debug04Func)
     self.debug05Action.triggered.connect(self.debug05Func)
     self.debug06Action.triggered.connect(self.debug06Func)
+    self.subscribe.connect(self.data.callback)
+    self.paintTimer.timeout.connect(self.testPaint)
 
   def testPaint(self) -> None:
     """Test paint method"""
-    if self._debugFlag:
-      ic(self.plot._getData())
-      self._debugFlag = False
     self.plot.update()
 
   def testPlot(self, data: Any) -> None:
@@ -89,8 +91,10 @@ class MainWindow(LayoutWindow):
   def debug01Func(self, ) -> None:
     """Debug01 function"""
     print('Received debug 01 - Starting test')
-    init_node('fuck', anonymous=False)
-    Subscriber('cunt', Float64, self.testPlot)
+    nodeName = 'Test'
+    if not getNodeStatus(nodeName):
+      init_node(nodeName, anonymous=False)
+    Subscriber('cunt', Float64, self.subscribe.emit)
     self.paintTimer.start()
 
   def debug02Func(self, ) -> None:

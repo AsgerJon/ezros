@@ -8,7 +8,7 @@ from PySide6.QtGui import QPaintEvent, QPainter, QFont, QPen
 
 from ezros.gui.factories import parseFont
 from ezros.gui.shortnames import Black
-from ezros.gui.paint import AbstractPaint
+from yolomsg.paint import AbstractPaint
 from morevistutils.fields import WaitField
 
 

@@ -43,13 +43,3 @@ class ArrayField:
   def _getDefaultValue(self) -> tuple[NumType]:
     """Return the default value for the field."""
     return self._getFallbackValue()
-
-  def __getattribute__(self, key: str) -> Any:
-    """Please note that this method was reimplemented by an experienced
-    professional under controlled conditions. DO NOT TRY THIS AT HOME!"""
-    if key == '__default_value__':
-      cls = object.__getattribute__(self, '__class__')
-      name = object.__getattribute__(cls, '__name__')
-      e = """__default_value__ is not an attribute of '%s'!""" % name
-      raise AttributeError(monoSpace(e))
-    return object.__getattribute__(self, key)

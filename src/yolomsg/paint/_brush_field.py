@@ -10,7 +10,6 @@ from PySide6.QtGui import QColor, QBrush
 from vistutils.waitaminute import typeMsg
 
 from ezros.gui.factories import parseColor
-from ezros.gui.paint import ColorField
 from ezros.gui.shortnames import Lime
 from morevistutils.fields import AbstractBaseField
 

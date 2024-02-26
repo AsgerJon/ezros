@@ -7,6 +7,7 @@ from __future__ import annotations
 from ._base_layout import BaseLayout
 from ._base_widget import BaseWidget
 from ._paint_widget import PaintWidget
+from ._data_widget import DataWidget
 from ._fill_widget import FillWidget
 from ._point_plot import PointPlot
 from ._label_widget import LabelWidget

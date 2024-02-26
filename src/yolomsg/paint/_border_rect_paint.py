@@ -7,8 +7,8 @@ from __future__ import annotations
 from PySide6.QtGui import QPen
 
 from ezros.gui.factories import parsePen, emptyBrush
-from ezros.gui.paint import AbstractPaint
-from ezros.gui.shortnames import Black, SolidLine, SteelBlue
+from yolomsg.paint import AbstractPaint
+from ezros.gui.shortnames import SolidLine, SteelBlue
 from morevistutils.fields import WaitField
 
 

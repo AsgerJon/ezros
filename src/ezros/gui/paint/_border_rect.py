@@ -3,21 +3,21 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtGui import QPen
+from PySide6.QtGui import QPen, QPaintEvent, QPainter
 
-from ezros.gui.factories import emptyBrush
+from ezros.gui.factories import emptyBrush, parsePen
 from ezros.gui.paint import AbstractPaint
+from ezros.gui.shortnames import Black
+from morevistutils import Wait
 
 
 class BorderRect(AbstractPaint):
   """BorderRect draws an outline on the update rectangle, without fill."""
 
-  def __init__(self, pen: QPen) -> None:
-    self.pen = pen
+  pen = Wait(parsePen, Black, 2)
 
-  def paintOp(self, event, painter) -> None:
+  def paintOp(self, event: QPaintEvent, painter: QPainter) -> None:
     """Applies the paint operation"""
     painter.setPen(self.pen)
     painter.setBrush(emptyBrush())
     painter.drawRect(event.rect())
-   

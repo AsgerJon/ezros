@@ -3,39 +3,47 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtCore import Slot
+from typing import Any
+
+from PySide6.QtCore import Slot, QMargins, QRect
 from PySide6.QtGui import QPainter, QPaintEvent, QColor
+from icecream import ic
 
 from ezros.gui.factories import solidBrush, dashPen
 from ezros.gui.paint import BorderRect, FillRect, DataPaint
-from ezros.gui.shortnames import Lime
+from ezros.gui.shortnames import Lime, parseParent, Silver
 from ezros.gui.widgets import PaintWidget
+from morevistutils import Wait
+
+ic.configureOutput(includeContext=True)
 
 
 class DataWidget(PaintWidget):
   """DataWidget provides data plotting on a widget"""
 
-  def __init__(self, parent=None) -> None:
-    super().__init__(parent)
-    self.setMinimumSize(128, 128)
-    self.fillPaint = FillRect(solidBrush(Lime))
-    self.dataPaint = DataPaint()
-    self.borderPaint = BorderRect(dashPen(QColor(127, 127, 127, 255)))
+  fillPaint = FillRect()
+  borderPaint = BorderRect()
+  dataPaint = DataPaint()
 
-  def _getHookedPaints(self) -> list:
-    """Returns the hooked paints"""
-    return [self.fillPaint, self.dataPaint, self.borderPaint]
+  def __init__(self, *args, **kwargs) -> None:
+    PaintWidget.__init__(self, *args, **kwargs)
 
   @Slot(float)
-  def callback(self, data: float) -> None:
+  def callback(self, data: Any) -> None:
     """Callback for data update"""
-    self.dataPaint.dataEcho.append(float(data))
+    self.dataPaint.dataEcho.append(data.data)
 
-  def paintEvent(self, event: QPaintEvent) -> None:
-    """Paint event"""
-    painter = QPainter()
-    painter.begin(self)
+  def paintHook(self, event: QPaintEvent, painter: QPainter) -> None:
+    """Hook for painting the widget."""
+    viewRect = painter.viewport()
+    bottomMargin = 32
+    innerRect = viewRect - QMargins(64, 32, 32, 32)
+    hTickWidth = viewRect.width()
+    hTickHeight = 24
+    hTickTop = viewRect.bottom() + bottomMargin / 2 - hTickHeight / 2
+    hTickLeft = viewRect.left()
+    hTickRect = QRect(hTickLeft, hTickTop, hTickWidth, hTickHeight)
+    dataEvent = QPaintEvent(innerRect)
     self.fillPaint.paintOp(event, painter)
-    self.dataPaint.paintOp(event, painter)
     self.borderPaint.paintOp(event, painter)
-    painter.end()
+    self.dataPaint.paintOp(dataEvent, painter)

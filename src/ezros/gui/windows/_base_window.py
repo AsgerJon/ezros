@@ -7,11 +7,11 @@ import sys
 from abc import abstractmethod
 
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QMainWindow, QWidget, QMessageBox
+from PySide6.QtWidgets import QMainWindow, QWidget, QMessageBox, QStatusBar
 from icecream import ic
 
 from ezros.gui.factories import menuBarFactory
-from morevistutils.fields import Later
+from morevistutils import Wait
 
 ic.configureOutput(includeContext=True)
 
@@ -20,7 +20,7 @@ class BaseWindow(QMainWindow):
   """BaseWindow provides menus and actions for the main application
   window."""
 
-  mainMenuBar = Later(menuBarFactory())
+  mainMenuBar = Wait(menuBarFactory(), )
 
   def __init__(self, *args, **kwargs) -> None:
     self.__owned_actions__ = {}
@@ -68,6 +68,7 @@ class BaseWindow(QMainWindow):
   def show(self) -> None:
     """Shows the window."""
     self.setMenuBar(self.mainMenuBar)
+    self.setStatusBar(QStatusBar(self))
     self.initUI()
     self.connectActions()
     self.createActionStub()

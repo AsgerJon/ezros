@@ -6,9 +6,12 @@ from __future__ import annotations
 import os
 import sys
 
+import numpy as np
 from PySide6.QtWidgets import QApplication
+from numpy import full, nan, complex64
 
 from ezros.gui.windows import MainWindow
+from morevistutils import DataEcho
 
 
 def tester00() -> None:
@@ -28,8 +31,18 @@ def tester01() -> None:
 
 
 def tester02() -> None:
-  """slices ftw"""
-  yolo: slice = slice()
+  """Numpyrithmetic"""
+  nanny = full((128,), nan, dtype=complex64)
+  print(nanny.shape)
+  J = np.ones_like(nanny, dtype=np.uint8)
+
+  print(np.sum(J - (nanny == nanny).astype(int)))
+
+
+def tester03() -> None:
+  """Testing dadta echo"""
+  lmao = DataEcho(128)
+  print(lmao)
 
 
 if __name__ == '__main__':

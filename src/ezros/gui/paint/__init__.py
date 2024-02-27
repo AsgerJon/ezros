@@ -8,3 +8,4 @@ from ._abstract_paint import AbstractPaint
 from ._border_rect import BorderRect
 from ._fill_rect import FillRect
 from ._data_paint import DataPaint
+from ._text_rect import TextRect

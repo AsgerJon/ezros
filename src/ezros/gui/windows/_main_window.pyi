@@ -1,5 +1,5 @@
 """Auto-generated stub file for the main window.
-Mon Feb 26 17:27:17 2024"""
+Tue Feb 27 16:54:12 2024"""
 # MIT Licence
 # Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
@@ -45,9 +45,10 @@ class MainWindow(QMainWindow):
   
 # Namespace contribution from MainWindow
   subscribe: Signal
-  paintTimer: Later
+  paintTimer: Wait
   createActionStub: function
   connectActions: function
+  updateState: function
   testPaint: function
   testPlot: function
   debug01Func: function
@@ -84,11 +85,13 @@ class MainWindow(QMainWindow):
   debug09Action: QAction
   
 # Namespace contribution from LayoutWindow
-  baseWidget: Later
-  baseLayout: Later
-  welcomeLabel: Later
-  goodbyeLabel: Later
-  plot: Later
+  baseWidget: Wait
+  baseLayout: Wait
+  welcomeLabel: Wait
+  goodbyeLabel: Wait
+  state: Wait
+  plot: Wait
+  data: Wait
   initUI: function
   connectActions: function
   staticMetaObject: QMetaObject
@@ -119,7 +122,7 @@ class MainWindow(QMainWindow):
   debug09Action: QAction
   
 # Namespace contribution from BaseWindow
-  mainMenuBar: Later
+  mainMenuBar: Wait
   addAction: function
   getOwnedActions: function
   initUI: function

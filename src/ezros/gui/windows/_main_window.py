@@ -20,7 +20,7 @@ from vistutils.text import monoSpace
 from ezros.gui.factories import header, timerFactory
 from ezros.gui.windows import LayoutWindow, BaseWindow
 from ezros.rosutils import getNodeStatus
-from morevistutils.fields import Later
+from morevistutils import Wait
 
 os.environ['ROS_MASTER_URI'] = 'http://localhost:11311'
 ic.configureOutput(includeContext=True)
@@ -31,9 +31,9 @@ class MainWindow(LayoutWindow):
   provides menus and actions. The Layout Window class provides the layout of
   widget that appear on the main application window"""
 
-  subscribe = Signal(float)
+  subscribe = Signal(Any)
 
-  paintTimer = Later(timerFactory(), 50, singleShot=False)
+  paintTimer = Wait(timerFactory(), 50, singleShot=False)
 
   def __init__(self, *args, **kwargs) -> None:
     self._debugFlag = False
@@ -79,10 +79,24 @@ class MainWindow(LayoutWindow):
     self.debug06Action.triggered.connect(self.debug06Func)
     self.subscribe.connect(self.data.callback)
     self.paintTimer.timeout.connect(self.testPaint)
+    self._pumpComboBox.addItem('Pump Idle')
+    self._pumpComboBox.addItem('Pump ON')
+    self._pumpComboBox.currentIndexChanged.connect(self.updateState)
+    self._sprayComboBox.addItem('Spray Idle')
+    self._sprayComboBox.addItem('Spray ON')
+    self._sprayComboBox.currentIndexChanged.connect(self.updateState)
+
+  def updateState(self, *args) -> None:
+    """Update state of the main window"""
+    sprayText = self._sprayComboBox.currentText()
+    pumpText = self._pumpComboBox.currentText()
+    self.state.innerText = '%s, %s' % (pumpText, sprayText)
+    self.state.update()
 
   def testPaint(self) -> None:
     """Test paint method"""
     self.plot.update()
+    self.data.update()
 
   def testPlot(self, data: Any) -> None:
     """Test plot method"""
@@ -91,10 +105,10 @@ class MainWindow(LayoutWindow):
   def debug01Func(self, ) -> None:
     """Debug01 function"""
     print('Received debug 01 - Starting test')
-    nodeName = 'Test'
-    if not getNodeStatus(nodeName):
-      init_node(nodeName, anonymous=False)
-    Subscriber('cunt', Float64, self.subscribe.emit)
+    nodeName = 'Subscriber'
+    init_node(nodeName, anonymous=False)
+    self.subscribe.connect(self.data.callback)
+    Subscriber('topic', Float64, self.subscribe.emit)
     self.paintTimer.start()
 
   def debug02Func(self, ) -> None:

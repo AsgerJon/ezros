@@ -25,6 +25,9 @@ DotLine = Qt.PenStyle.DotLine
 DashDotLine = Qt.PenStyle.DashDotLine
 DashDotDotLine = Qt.PenStyle.DashDotDotLine
 EmptyLine = Qt.PenStyle.NoPen
+RoundCap = Qt.PenCapStyle.RoundCap
+FlatCap = Qt.PenCapStyle.FlatCap
+SquareCap = Qt.PenCapStyle.SquareCap
 #  Brush styles
 SolidFill = Qt.BrushStyle.SolidPattern
 #  Size policy
@@ -35,4 +38,5 @@ Tight = QSizePolicy.Policy.Maximum
 __all__ = ['Precise', 'Coarse', 'VeryCoarse', 'Left', 'Right', 'Top',
            'Bottom', 'Center', 'HCenter', 'VCenter', 'SolidLine', 'DashLine',
            'DotLine', 'DashDotLine', 'DashDotDotLine', 'EmptyLine',
-           'SolidFill', 'Spread', 'Fixed', 'Tight']
+           'SolidFill', 'Spread', 'Fixed', 'Tight', 'RoundCap', 'FlatCap',
+           'SquareCap']

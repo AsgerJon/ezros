@@ -4,18 +4,31 @@
 from __future__ import annotations
 
 from math import sin
+import os
+import sys
+from icecream import ic
 
+here = os.getcwd()
+root = os.path.join(here, '..', )
+root = os.path.normpath(root)
+sys.path.append(root)
+
+ic.configureOutput(includeContext=True)
+ic(root)
 from rospy import ROSInitException, init_node
 from std_msgs.msg import Float64
 import rospy
-import os
+
+from ezros.rosutils import validateInitialized
 
 os.environ['ROS_MASTER_URI'] = 'http://localhost:11311'
 
 
 def main() -> None:
   """LOL"""
-  publisher = rospy.Publisher('cunt', Float64,
+  nodeName = 'Publisher'
+  init_node(nodeName, anonymous=False)
+  publisher = rospy.Publisher('topic', Float64,
                               queue_size=10)
   rate = rospy.Rate(50)  # In hertz, not waiting time
   c = 0

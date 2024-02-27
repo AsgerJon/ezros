@@ -18,11 +18,14 @@ def _createPen(*args, **kwargs) -> QPen:
   widthDefault = 1
   colorDefault = QColor(0, 0, 0, 255)
   styleDefault = Qt.PenStyle.SolidLine
+  capStyleDefault = Qt.PenCapStyle.FlatCap
   widthKeys = stringList("""width, w, penWidth""")
   colorKeys = stringList("""color, col, penColor, rgb, RGB, rgba, RGBA""")
   styleKeys = stringList("""style, penStyle, lineStyle""")
+  capStyleKeys = stringList("""capStyle, penCapStyle""")
   widthArg, widthFArg, colorArg, styleArg = None, None, None, None
   widthKwarg, widthFKwarg, colorKwarg, styleKwarg = None, None, None, None
+  capStyleArg, capStyleKwarg = None, None
   for arg in args:
     if isinstance(arg, float) and widthFArg is None:
       widthFArg = arg
@@ -32,6 +35,8 @@ def _createPen(*args, **kwargs) -> QPen:
       colorArg = arg
     elif isinstance(arg, Qt.PenStyle) and styleArg is None:
       styleArg = arg
+    elif isinstance(arg, Qt.PenCapStyle) and capStyleArg is None:
+      capStyleArg = arg
   for key in widthKeys:
     if key in kwargs:
       if widthKwarg is None:
@@ -54,10 +59,17 @@ def _createPen(*args, **kwargs) -> QPen:
         val = kwargs[key]
         if isinstance(val, Qt.PenStyle):
           styleKwarg = val
+  for key in capStyleKeys:
+    if key in kwargs:
+      if capStyleArg is None:
+        val = kwargs[key]
+        if isinstance(val, Qt.PenCapStyle):
+          capStyleKwarg = val
   width = maybe(widthKwarg, widthArg, widthDefault)
   widthF = maybe(widthKwarg, widthArg, None)
   color = maybe(colorKwarg, colorArg, colorDefault)
   style = maybe(styleKwarg, styleArg, styleDefault)
+  capStyle = maybe(capStyleKwarg, capStyleArg, capStyleDefault)
   pen = QPen()
   if widthF is not None:
     if isinstance(widthF, float):
@@ -68,6 +80,7 @@ def _createPen(*args, **kwargs) -> QPen:
     pen.setWidth(width)
   pen.setColor(color)
   pen.setStyle(style)
+  pen.setCapStyle(capStyle)
   return pen
 
 

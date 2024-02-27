@@ -8,6 +8,8 @@ from abc import abstractmethod
 
 from PySide6.QtGui import QPainter, QPaintEvent
 
+from ezros.gui.widgets import PaintWidget
+
 
 class AbstractPaint:
   """AbstractPaint provides the abstract baseclass for the encapsulated
@@ -16,3 +18,6 @@ class AbstractPaint:
   @abstractmethod
   def paintOp(self, event: QPaintEvent, painter: QPainter) -> None:
     """Applies the paint operation"""
+
+  def __set_name__(self, owner: PaintWidget, name: str) -> None:
+    owner.appendHookedPaint(self)

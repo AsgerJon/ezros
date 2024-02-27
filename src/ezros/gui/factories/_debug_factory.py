@@ -7,9 +7,7 @@ from typing import Callable
 
 from PySide6.QtGui import QKeySequence, QAction
 from PySide6.QtWidgets import QMenu, QMainWindow
-from icecream import ic
-from vistutils.parse import maybeType, maybe
-from vistutils.text import stringList
+from vistutils.parse import maybe
 from vistutils.waitaminute import typeMsg
 
 from ezros.gui.windows.icons import getIcon

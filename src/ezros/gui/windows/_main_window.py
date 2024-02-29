@@ -5,21 +5,20 @@ widget that appear on the main application window"""
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from time import sleep
 from typing import Any
 import os
 
-import rospy
 from PySide6.QtCore import Signal
+from PySide6.QtWidgets import QApplication
 from rospy import Subscriber, init_node
-from std_msgs.msg import Float64
-from PySide6.QtWidgets import QMessageBox
+
 from icecream import ic
+from std_msgs.msg import Float64
 from vistutils.text import monoSpace
 
 from ezros.gui.factories import header, timerFactory
 from ezros.gui.windows import LayoutWindow, BaseWindow
-from ezros.rosutils import getNodeStatus
+
 from morevistutils import Wait
 
 os.environ['ROS_MASTER_URI'] = 'http://localhost:11311'
@@ -78,7 +77,7 @@ class MainWindow(LayoutWindow):
     self.debug05Action.triggered.connect(self.debug05Func)
     self.debug06Action.triggered.connect(self.debug06Func)
     self.subscribe.connect(self.data.callback)
-    self.paintTimer.timeout.connect(self.testPaint)
+    self.paintTimer.timeout.connect(self.data.update)
     self._pumpComboBox.addItem('Pump Idle')
     self._pumpComboBox.addItem('Pump ON')
     self._pumpComboBox.currentIndexChanged.connect(self.updateState)
@@ -90,17 +89,8 @@ class MainWindow(LayoutWindow):
     """Update state of the main window"""
     sprayText = self._sprayComboBox.currentText()
     pumpText = self._pumpComboBox.currentText()
-    self.state.innerText = '%s, %s' % (pumpText, sprayText)
-    self.state.update()
-
-  def testPaint(self) -> None:
-    """Test paint method"""
-    self.plot.update()
-    self.data.update()
-
-  def testPlot(self, data: Any) -> None:
-    """Test plot method"""
-    self.plot.append(data.data)
+    # self.state.innerText = '%s, %s' % (pumpText, sprayText)
+    # self.state.update()
 
   def debug01Func(self, ) -> None:
     """Debug01 function"""
@@ -113,25 +103,19 @@ class MainWindow(LayoutWindow):
 
   def debug02Func(self, ) -> None:
     """Debug02 function"""
-    print('Received debug 02 - setting debug flag')
-    ic(self.paintTimer.isActive())
-    self._debugFlag = True
+    print('Received debug 02 - double click interval')
 
   def debug03Func(self, ) -> None:
     """Debug03 function"""
-    print('Received debug 03 - updating plot')
-    self.plot.update()
+    print('Received debug 03 - single click')
 
   def debug04Func(self, ) -> None:
     """Debug04 function"""
-    print('Received debug 04 - start timer')
-    ic(self.paintTimer)
-    self.paintTimer.start()
+    print('Received debug 04 - double click')
 
   def debug05Func(self, ) -> None:
     """Debug05 function"""
-    print('Received debug 05 - force repaint')
-    self.plot.update()
+    print('Received debug 05 - triple click')
 
   def debug06Func(self, ) -> None:
     """Debug06 function"""

@@ -20,3 +20,8 @@ class BaseWidget(QWidget):
   def __init__(self, *args, **kwargs) -> None:
     parent = parseParent(*args)
     QWidget.__init__(self, parent)
+    self.connectActions()
+
+  def connectActions(self) -> None:
+    """Subclasses should implement this method if they need to handle
+    actions."""

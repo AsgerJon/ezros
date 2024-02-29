@@ -6,10 +6,8 @@ from __future__ import annotations
 from abc import abstractmethod
 
 from PySide6.QtWidgets import QPushButton, QComboBox
-
-from ezros.gui.widgets import (LabelWidget, BaseWidget, BaseLayout,
-                               PointPlot, \
-                               DataWidget)
+from ezros.gui.widgets import LabelWidget, BaseWidget, BaseLayout, \
+  DataWidget, PromptWidget, SafetyToggleButton, JKFlipFlop, RetroPushButton
 from ezros.gui.windows import BaseWindow
 from morevistutils import Wait
 
@@ -20,11 +18,10 @@ class LayoutWindow(BaseWindow):
   baseWidget = Wait(BaseWidget)
   baseLayout = Wait(BaseLayout, )
   welcomeLabel = Wait(LabelWidget, 'Welcome', )
-  goodbyeLabel = Wait(LabelWidget, 'Goodbye', )
-  state = Wait(LabelWidget, 'State')
-  # subscriber = RosSubs
-  plot = Wait(PointPlot)
+  # state = Wait(PromptWidget, 'YOLO', )
+  goodbyeLabel = Wait(LabelWidget, 'Goodbye')
   data = Wait(DataWidget, )
+  toggle = Wait(SafetyToggleButton, )
 
   def __init__(self, *args, **kwargs) -> None:
     BaseWindow.__init__(self, *args, **kwargs)
@@ -38,7 +35,8 @@ class LayoutWindow(BaseWindow):
   def initUI(self) -> None:
     """Sets up the widgets"""
     self.baseLayout.addWidget(self._pumpComboBox, 0, 0, 1, 1)
-    self.baseLayout.addWidget(self.state, 0, 1, 1, 1)
+    # self.baseLayout.addWidget(self.state, 0, 1, 1, 1)
+    self.baseLayout.addWidget(self.toggle, 0, 1, 1, 1, )
     self.baseLayout.addWidget(self._sprayComboBox, 0, 2, 1, 1)
     self.baseLayout.addWidget(self.data, 1, 0, 1, 3)
     self.baseWidget.setLayout(self.baseLayout)

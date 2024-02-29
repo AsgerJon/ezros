@@ -8,16 +8,16 @@ from abc import abstractmethod
 from PySide6.QtWidgets import QLineEdit, QLabel, QWidget, QGridLayout, \
   QPushButton
 
-from ezros.gui.windows import LayoutWindow
+from ezros.gui.windows import BaseWindow
 from ezros.rosutils import validateInitialized
 
 
-class PubLayoutWindow(LayoutWindow):
+class PubLayoutWindow(BaseWindow):
   """The Pub class provides a gui control of a publisher in the ROS
   system."""
 
   def __init__(self, *args, **kwargs) -> None:
-    LayoutWindow.__init__(self, *args, **kwargs)
+    BaseWindow.__init__(self, *args, **kwargs)
     self.nodeLabel = QLabel('Node:')
     self.nodeLine = QLineEdit()
     self.initButton = QPushButton('Init Note')
@@ -29,8 +29,7 @@ class PubLayoutWindow(LayoutWindow):
     """Sets up the widgets"""
     self.baseLayout.addWidget(self.nodeLabel, 0, 0)
     self.baseLayout.addWidget(self.nodeLine, 0, 1)
-
-    LayoutWindow.initUI(self)
+    BaseWindow.initUI(self)
 
   def _updateStatus(self, msg: str) -> None:
     """Updates the status of the note"""

@@ -1,5 +1,5 @@
 """Auto-generated stub file for the main window.
-Tue Feb 27 16:54:12 2024"""
+Thu Feb 29 11:44:38 2024"""
 # MIT Licence
 # Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
@@ -49,8 +49,6 @@ class MainWindow(QMainWindow):
   createActionStub: function
   connectActions: function
   updateState: function
-  testPaint: function
-  testPlot: function
   debug01Func: function
   debug02Func: function
   debug03Func: function
@@ -89,9 +87,8 @@ class MainWindow(QMainWindow):
   baseLayout: Wait
   welcomeLabel: Wait
   goodbyeLabel: Wait
-  state: Wait
-  plot: Wait
   data: Wait
+  toggle: Wait
   initUI: function
   connectActions: function
   staticMetaObject: QMetaObject

@@ -7,17 +7,13 @@ from math import ceil, floor
 from typing import Any
 
 from PySide6.QtCore import Qt, QRect, QPoint, QLine
-from PySide6.QtGui import QPen, QColor
-from icecream import ic
-from vistutils.waitaminute import typeMsg
 from PySide6.QtGui import QPainter, QPaintEvent
 
-from ezros.gui.factories import (emptyBrush, parsePen, parseFont,
-                                 parseBrush, \
-                                 emptyPen)
+from ezros.gui.factories import emptyBrush, parsePen, parseFont, parseBrush
+from ezros.gui.factories import emptyPen
 from ezros.gui.paint import AbstractPaint
-from ezros.gui.shortnames import Silver, Black, RoundCap, SolidLine, \
-  AliceBlue, SolidFill, OliveDrab
+from ezros.gui.shortnames import Silver, Black, RoundCap, SolidLine
+from ezros.gui.shortnames import AliceBlue, SolidFill, OliveDrab
 from morevistutils import DataEcho, Wait
 
 

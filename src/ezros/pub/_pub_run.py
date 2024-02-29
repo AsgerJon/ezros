@@ -8,7 +8,6 @@ import sys
 
 from PySide6.QtWidgets import QApplication
 from icecream import ic
-from vistutils.dirs import getProjectRoot
 
 here = os.getcwd()
 root = os.path.join(here, '..', '..', )
@@ -21,4 +20,4 @@ if __name__ == '__main__':
   app = QApplication(sys.argv)
   window = PubMain()
   window.show()
-  sys.exit(app.exec_())
+  sys.exit(app.exec())

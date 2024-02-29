@@ -3,7 +3,8 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QEvent
+from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import QSizePolicy
 
 #  Timer types
@@ -34,9 +35,23 @@ SolidFill = Qt.BrushStyle.SolidPattern
 Spread = QSizePolicy.Policy.MinimumExpanding
 Fixed = QSizePolicy.Policy.Fixed
 Tight = QSizePolicy.Policy.Maximum
+#  Mouse buttons
+MouseBtn = Qt.MouseButton
+NoBtn = Qt.MouseButton.NoButton
+LeftBtn = Qt.MouseButton.LeftButton
+RightBtn = Qt.MouseButton.RightButton
+MiddleBtn = Qt.MouseButton.MiddleButton
+NextBtn = Qt.MouseButton.ForwardButton
+BackBtn = Qt.MouseButton.BackButton
+#  Mouse events
+Mouse = QMouseEvent
+BtnDown = QEvent.Type.MouseButtonPress
+BtnUp = QEvent.Type.MouseButtonRelease
+MouseMove = QEvent.Type.MouseMove
 
 __all__ = ['Precise', 'Coarse', 'VeryCoarse', 'Left', 'Right', 'Top',
            'Bottom', 'Center', 'HCenter', 'VCenter', 'SolidLine', 'DashLine',
            'DotLine', 'DashDotLine', 'DashDotDotLine', 'EmptyLine',
-           'SolidFill', 'Spread', 'Fixed', 'Tight', 'RoundCap', 'FlatCap',
-           'SquareCap']
+           'RoundCap', 'FlatCap', 'SquareCap', 'SolidFill', 'Spread',
+           'Fixed', 'Tight', 'NoBtn', 'MouseBtn', 'LeftBtn', 'RightBtn',
+           'MiddleBtn', 'NextBtn', 'BackBtn']

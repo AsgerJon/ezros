@@ -35,6 +35,10 @@ class Field:
     e = typeMsg('__field_name__', self.__field_name__, str)
     raise TypeError(e)
 
+  def _getPrivateName(self) -> str:
+    """Getter-function for getting the private name."""
+    return '_%s' % self._getFieldName()
+
   def _getFieldOwner(self) -> type:
     """Getter-function for getting the field owner."""
     if self.__field_owner__ is None:

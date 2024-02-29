@@ -63,7 +63,8 @@ class Wait:
       self.__include_instance__ = True
 
   def __set_name__(self, owner: type, name: str) -> None:
-    """"""
+    """Automatically invoked my the type metaclass after __new__,
+    but before __init__."""
     self.__field_name__ = name
     self.__field_owner__ = owner
 

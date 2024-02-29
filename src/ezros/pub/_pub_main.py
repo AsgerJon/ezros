@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from ezros.pub import PubLayoutWindow
+from ezros.rosutils import validateInitialized
 
 
 class PubMain(PubLayoutWindow):
@@ -11,7 +12,6 @@ class PubMain(PubLayoutWindow):
 
   def createActionStub(self) -> None:
     """Omitting..."""
-    pass
 
   def __init__(self, *args, **kwargs) -> None:
     """Initializes the main application window"""
@@ -20,3 +20,8 @@ class PubMain(PubLayoutWindow):
   def connectActions(self) -> None:
     """Initializes the user interface"""
     self.initButton.clicked.connect(self._initNote)
+
+  def _initNote(self, ) -> None:
+    """Initializes the note"""
+    noteName = 'topic'
+    validateInitialized()

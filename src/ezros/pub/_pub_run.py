@@ -13,11 +13,11 @@ here = os.getcwd()
 root = os.path.join(here, '..', '..', )
 root = os.path.normpath(root)
 sys.path.append(root)
-ic(root)
-from ezros.pub import PubMain
 
 if __name__ == '__main__':
   app = QApplication(sys.argv)
+  from ezros.pub import PubMain
+
   window = PubMain()
   window.show()
   sys.exit(app.exec())

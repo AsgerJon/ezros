@@ -8,39 +8,30 @@ from abc import abstractmethod
 from PySide6.QtWidgets import QLineEdit, QLabel, QWidget, QGridLayout, \
   QPushButton
 
+from ezros.gui.widgets import BaseWidget, BaseLayout, LabelWidget, \
+  BaseLineEdit
 from ezros.gui.windows import BaseWindow
 from ezros.rosutils import validateInitialized
+from morevistutils import Wait
 
 
 class PubLayoutWindow(BaseWindow):
   """The Pub class provides a gui control of a publisher in the ROS
   system."""
 
-  def __init__(self, *args, **kwargs) -> None:
-    BaseWindow.__init__(self, *args, **kwargs)
-    self.nodeLabel = QLabel('Node:')
-    self.nodeLine = QLineEdit()
-    self.initButton = QPushButton('Init Note')
-    self.noteStatus = QLabel('Note Status:')
-    self.baseLayout = QGridLayout()
-    self.baseWidget = QWidget()
+  baseWidget = Wait(BaseWidget)
+  baseLayout = Wait(BaseLayout, )
+  welcomeLabel = Wait(LabelWidget, 'Welcome', )
+  noteName = Wait(BaseLineEdit, 'Input note name here...', )
+  noteInitButton = Wait(QPushButton, 'Initialize note', )
+  topicName = Wait(BaseLineEdit, 'Input topic name here...', )
 
   def initUI(self) -> None:
     """Sets up the widgets"""
-    self.baseLayout.addWidget(self.nodeLabel, 0, 0)
-    self.baseLayout.addWidget(self.nodeLine, 0, 1)
+    welcomeLabel = Wait(LabelWidget, 'Welcome', )
+    self.baseWidget.setLayout(self.baseLayout)
+    self.setCentralWidget(self.baseWidget)
     BaseWindow.initUI(self)
-
-  def _updateStatus(self, msg: str) -> None:
-    """Updates the status of the note"""
-    self.noteStatus.setText(msg)
-
-  def _initNote(self, ) -> None:
-    """Initializes the note"""
-    noteName = self.nodeLine.text()
-    msg = """Attempting to initialize note at name: %s""" % noteName
-    self._updateStatus(msg)
-    validateInitialized()
 
   @abstractmethod
   def connectActions(self) -> None:

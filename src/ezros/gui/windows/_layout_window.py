@@ -6,8 +6,9 @@ from __future__ import annotations
 from abc import abstractmethod
 
 from PySide6.QtWidgets import QPushButton, QComboBox
+
 from ezros.gui.widgets import LabelWidget, BaseWidget, BaseLayout, \
-  DataWidget, PromptWidget, SafetyToggleButton, JKFlipFlop, RetroPushButton
+  DataWidget, SafetyToggleButton
 from ezros.gui.windows import BaseWindow
 from morevistutils import Wait
 

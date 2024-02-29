@@ -18,6 +18,9 @@ class FillRect(AbstractPaint):
 
   brush = Wait(parseBrush, Silver, )
 
+  def __init__(self, *args, **kwargs) -> None:
+    brush = parseBrush(*args, Silver, **kwargs)
+
   def paintOp(self, event: QPaintEvent, painter: QPainter) -> None:
     """Fills the rect with the given brush"""
     painter.setBrush(self.brush)

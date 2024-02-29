@@ -21,3 +21,6 @@ class BorderRect(AbstractPaint):
     painter.setPen(self.pen)
     painter.setBrush(emptyBrush())
     painter.drawRect(event.rect())
+
+  def __init__(self, *args, **kwargs) -> None:
+    pen = parsePen(*args, Black, 2, **kwargs)

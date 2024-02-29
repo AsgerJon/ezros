@@ -8,14 +8,20 @@ import sys
 
 from PySide6.QtCore import QEvent, Qt
 from PySide6.QtWidgets import QApplication
-from icecream import ic
+from pyperclip import copy
 
 from ezros.gui.windows import MainWindow
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+  import yolo as msg
+else:
+  import msgs.msg as msg
 
 
 def tester00() -> None:
   """Hello world"""
-  stuff = [os, sys, 'hello world', Qt]
+  stuff = [os, sys, 'hello world', Qt, msg]
   for item in stuff:
     print(item)
 
@@ -42,6 +48,15 @@ def tester02() -> None:
 
 def tester03() -> None:
   """lmao"""
+
+  import msgs.msg as lmao
+  yoloCode = []
+  for (key, val) in lmao.__dict__.items():
+    if isinstance(val, type) and key[0].isupper():
+      entry = """%s = type('%s', (genpy.Message,), {})"""
+      yoloCode.append(entry % (key, key,))
+  yoloCode = '\n'.join(yoloCode)
+  copy(yoloCode)
 
 
 if __name__ == '__main__':

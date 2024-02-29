@@ -6,8 +6,9 @@ from __future__ import annotations
 from PySide6.QtGui import QPaintEvent, QPainter, QFontMetricsF, QPaintDevice
 from vistutils.waitaminute import typeMsg
 
-from ezros.gui.factories import textPen, parseFont
+from ezros.gui.factories import textPen, parseFont, parseColor
 from ezros.gui.paint import AbstractPaint
+from ezros.gui.shortnames import Black
 from morevistutils import Wait, Field
 
 
@@ -60,3 +61,8 @@ class TextRect(AbstractPaint):
   def _getBoundSize(self, **kwargs) -> tuple[int, int]:
     """Getter for the bound size"""
     return self.fontMetrics.boundingRect(self.latest.innerText).size()
+
+  def __init__(self, *args, **kwargs) -> None:
+    font = parseFont(*args, 'Arial', 10, **kwargs)
+    TextRect.textFont
+    color = parseColor(*args, Black, **kwargs)

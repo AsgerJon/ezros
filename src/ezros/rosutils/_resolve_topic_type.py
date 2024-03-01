@@ -4,21 +4,22 @@ expected message type. """
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from typing import Optional
+
 from roslib.message import get_message_class
 from rospy import get_published_topics
 
-from ezros.rosutils import validateTopicName
 
-
-def getTopicType(topicName: str) -> type:
+def resolveTopicType(topicName: str) -> Optional[type]:
   """Get the expected message type of given topic."""
-  topicName = validateTopicName(topicName)
+  if topicName is None:
+    return None
+  topicNames = [name.lower() for name in topicName.split('/') if name]
   topicType = None
   topics = get_published_topics()
   for topic, type_ in topics:
-    if topic == topicName:
-      topicType = type_
-      break
-  else:
-    raise NameError(topicName)
-  return get_message_class(topicType)
+    names = [name.lower() for name in topic.split('/') if name]
+    if len(names) != len(topicNames):
+      continue
+    elif all([a == b for (a, b) in zip(names, topicNames)]):
+      return get_message_class(type_)

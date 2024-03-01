@@ -50,17 +50,14 @@ class BaseWindow(QMainWindow):
     """Returns the owned actions."""
     return self.__owned_actions__
 
-  @abstractmethod
   def initUI(self) -> None:
     """Initializes the user interface. Subclasses are required to provide
     implementation of this method. """
 
-  @abstractmethod
   def connectActions(self) -> None:
     """Connects the actions to the slots. Subclasses are required to provide
     implementation of this method. """
 
-  @abstractmethod
   def createActionStub(self) -> None:
     """Creates a stub file. Subclasses are required to provide
     implementation of this method. """

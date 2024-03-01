@@ -5,12 +5,12 @@ from __future__ import annotations
 
 from rospy import Publisher
 
-from ezros.rosutils import getTopicType, validateInitialized
+from ezros.rosutils import resolveTopicType, validateInitialized
 
 
 def publisherFactory(topicName: str, nodeName: str = None) -> Publisher:
   """Create a publisher for a given topic and message type."""
   nodeName = 'Test' if nodeName is None else nodeName
   validateInitialized(nodeName)
-  messageType = getTopicType(topicName)
+  messageType = resolveTopicType(topicName)
   return Publisher(topicName, messageType, queue_size=10)

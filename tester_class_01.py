@@ -3,52 +3,38 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from morevistutils.metas import Singleton
+from typing import Any
 
-
-@Singleton
-class Tester:
-  """Tester class"""
-
-  def __init__(self, *args, **kwargs) -> None:
-    self.__msg__ = [*[arg for arg in args if isinstance(arg, str)], 'LOL'][0]
-
-  def __str__(self) -> str:
-    return self.__msg__
-
-
-class Tester2(Singleton):
-  """Tester class"""
-
-  def __init__(self, *args, **kwargs) -> None:
-    self.__msg__ = [*[arg for arg in args if isinstance(arg, str)], 'LOL'][0]
-
-  def __str__(self) -> str:
-    return self.__msg__
-
-
-class Bla(type):
-  """Bla provides a metaclass that can be used as a base class for
-  classes"""
-
-  def __str__(cls, ) -> str:
-    return '%s: %02d' % (cls.__qualname__, cls.__secret_counter__)
-
-  def __new__(cls, *args, **kwargs) -> type:
-    cls = type.__new__(cls, *args, **kwargs)
-    cls.__secret_counter__ = 0
-    return cls
-
-  def __pos__(cls) -> int:
-    cls.__secret_counter__ += 1
-    return cls.__secret_counter__
-
-
-class Taboo(metaclass=Bla):
-  """Counter class"""
-
-  __secret_counter__ = 0
-
-  @classmethod
-  def __ladd__(cls, *args, **kwargs) -> None:
-    cls.__secret_counter__ += 1
+#
+# class Meta(type):
+#   """Metaclass for Tester"""
+#
+#   @classmethod
+#   def __prepare__(mcls, name: str, bases: tuple, **kwargs) -> dict:
+#     """Prepare the class"""
+#     print(mcls.__qualname__, mcls.__prepare__.__name__)
+#     return {'__name__': name, '__bases__': bases, '__kwargs__': kwargs}
+#
+#   def __new__(mcls,
+#               name: str,
+#               bases: tuple,
+#               namespace: dict,
+#               **kwargs) -> Meta:
+#     """Create the class"""
+#     print(mcls.__qualname__, mcls.__new__.__name__)
+#     return super().__new__(mcls, name, bases, namespace)
+#
+#   def __init__(cls,
+#                name: str,
+#                bases: tuple,
+#                namespace: dict,
+#                **kwargs) -> None:
+#     """Initialize the class"""
+#     mcls = cls.__class__
+#     print(mcls.__qualname__, cls.__qualname__, '__init__')
+#     super().__init__(name, bases, namespace)
+#
+#   def __call__(cls, *args, **kwargs) -> Any:
+#     """Call the class"""
+#     print(cls.__qualname__, cls.__call__.__name__)
+#     return super().__call__(*args, **kwargs)

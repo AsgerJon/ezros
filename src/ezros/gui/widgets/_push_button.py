@@ -12,6 +12,7 @@ class PushButton(PaintWidget):
   """PushButton implementation"""
 
   innerText = TextField()
+  
   textFill = FillRect()
   borderRect = FillRect()
   textLabel = TextRect()

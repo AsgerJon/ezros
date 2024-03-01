@@ -7,8 +7,6 @@ import subprocess
 
 from rosgraph import is_master_online
 
-from ezros.rosutils import initializeRosNode, getNodeStatus
-
 
 def validateInitialized(nodeName: str = None, **kwargs) -> bool:
   """Initialize the ROS environment."""

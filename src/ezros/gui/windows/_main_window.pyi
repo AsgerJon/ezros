@@ -1,5 +1,5 @@
 """Auto-generated stub file for the main window.
-Thu Feb 29 16:09:03 2024"""
+Fri Mar 1 15:39:57 2024"""
 # MIT Licence
 # Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
@@ -44,11 +44,13 @@ class MainWindow(QMainWindow):
   debug09Action: QAction
   
 # Namespace contribution from MainWindow
-  subscribe: Signal
   paintTimer: Wait
   createActionStub: function
+  startPump: function
   connectActions: function
   updateState: function
+  dataCallback: function
+  pumpControl: function
   debug01Func: function
   debug02Func: function
   debug03Func: function

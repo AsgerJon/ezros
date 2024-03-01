@@ -2,14 +2,10 @@
 slow to activate. """
 #  MIT Licence
 #  Copyright (c) 2024 Asger Jon Vistisen
+from __future__ import annotations
 
-from math import pi
-
-#  MIT Licence
-#  Copyright (c) 2024 Asger Jon Vistisen
-from PySide6.QtGui import QPainter, QPen, QColor, QBrush
-from PySide6.QtCore import QTimer, Qt, QRectF, QPointF
-from typing import Callable
+from PySide6.QtGui import QPainter, QPen, QBrush
+from PySide6.QtCore import QTimer, Qt, QPointF
 
 from ezros.gui.shortnames import parseParent
 from ezros.gui.widgets import BaseWidget

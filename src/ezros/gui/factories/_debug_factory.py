@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QMenu, QMainWindow
 from vistutils.parse import maybe
 from vistutils.waitaminute import typeMsg
 
-from ezros.gui.windows.icons import getIcon
+from ezros.gui.factories.icons import getIcon
 
 
 def debugFactory(num: int = None) -> Callable:

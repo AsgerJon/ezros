@@ -6,6 +6,12 @@ from __future__ import annotations
 import sys
 import os
 
+from PySide6.QtCore import QObject
+from PySide6.QtWidgets import QWidget, QApplication
+from rospy import init_node
+
+from ezros.sub import SubMain
+
 msgsPath = '~/home/asger/catkin_ws/devel/lib/python3.11/site-packages/'
 msgsPath = os.path.expanduser(msgsPath)
 sys.path.insert(0, msgsPath)
@@ -14,7 +20,12 @@ if __name__ == '__main__':
   try:
     from main import tester01
 
-    tester01()
+    init_node('Test', anonymous=False, )
+    app = QApplication(sys.argv)
+    main = SubMain()
+    main.show()
+    sys.exit(app.exec())
+
   except ModuleNotFoundError as moduleNotFoundError:
     e = """The main failed because of a missing module with the following 
     error message:\n%s""" % moduleNotFoundError

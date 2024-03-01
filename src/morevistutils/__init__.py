@@ -3,6 +3,7 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from ._parse_name import parseName
 from ._wait import Wait
 from ._field import Field
 from ._typed_field import TypedField

@@ -9,7 +9,7 @@ from icecream import ic
 from vistutils.text import stringList
 from vistutils.waitaminute import typeMsg
 
-from ezros.gui.windows.icons import getIcon
+from ezros.gui.factories.icons import getIcon
 
 ic.configureOutput(includeContext=True)
 

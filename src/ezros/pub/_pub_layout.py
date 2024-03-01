@@ -5,14 +5,9 @@ from __future__ import annotations
 
 from abc import abstractmethod
 
-from PySide6.QtWidgets import QLineEdit, QLabel, QWidget, QGridLayout, \
-  QPushButton
-
-from ezros.gui.widgets import BaseWidget, BaseLayout, LabelWidget, \
-  BaseLineEdit
 from ezros.gui.windows import BaseWindow
-from ezros.rosutils import validateInitialized
 from morevistutils import Wait
+from ezros.gui.widgets import BaseWidget, BaseLayout, LabelWidget
 
 
 class PubLayoutWindow(BaseWindow):
@@ -22,16 +17,14 @@ class PubLayoutWindow(BaseWindow):
   baseWidget = Wait(BaseWidget)
   baseLayout = Wait(BaseLayout, )
   welcomeLabel = Wait(LabelWidget, 'Welcome', )
-  noteName = Wait(BaseLineEdit, 'Input note name here...', )
-  noteInitButton = Wait(QPushButton, 'Initialize note', )
-  topicName = Wait(BaseLineEdit, 'Input topic name here...', )
+  label = Wait(LabelWidget, 'Goodbye')
 
   def initUI(self) -> None:
     """Sets up the widgets"""
-    welcomeLabel = Wait(LabelWidget, 'Welcome', )
+    self.baseLayout.addWidget(self.welcomeLabel, 0, 0, 1, 1)
+    self.baseLayout.addWidget(self.label, 1, 0, 1, 1)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
-    BaseWindow.initUI(self)
 
   @abstractmethod
   def connectActions(self) -> None:

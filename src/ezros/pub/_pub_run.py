@@ -8,6 +8,7 @@ import sys
 
 from PySide6.QtWidgets import QApplication
 from icecream import ic
+from rospy import init_node
 
 here = os.getcwd()
 root = os.path.join(here, '..', '..', )
@@ -15,6 +16,9 @@ root = os.path.normpath(root)
 sys.path.append(root)
 
 if __name__ == '__main__':
+  nodeName = 'test'
+  init_node(nodeName, anonymous=True)
+
   app = QApplication(sys.argv)
   from ezros.pub import PubMain
 

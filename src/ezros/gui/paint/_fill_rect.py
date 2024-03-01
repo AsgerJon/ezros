@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from PySide6.QtGui import QPainter, QPaintEvent
 
-from ezros.gui.factories import emptyPen, parseBrush
+from ezros.gui.factories import emptyPen, parseBrush, parseColor
 from ezros.gui.paint import AbstractPaint
 from ezros.gui.shortnames import Lime, Silver
 from morevistutils import Wait
@@ -19,7 +19,8 @@ class FillRect(AbstractPaint):
   brush = Wait(parseBrush, Silver, )
 
   def __init__(self, *args, **kwargs) -> None:
-    brush = parseBrush(*args, Silver, **kwargs)
+    pass
+    # color = parseColor(*args, **kwargs)
 
   def paintOp(self, event: QPaintEvent, painter: QPainter) -> None:
     """Fills the rect with the given brush"""

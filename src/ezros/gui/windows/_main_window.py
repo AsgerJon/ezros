@@ -5,23 +5,26 @@ widget that appear on the main application window"""
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING
 import os
 
-from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QApplication
-from rospy import Subscriber, init_node
-
+import rospy
+from PySide6.QtCore import QTimer
+from rospy import Subscriber, Publisher
 from icecream import ic
 from std_msgs.msg import Float64
 from vistutils.text import monoSpace
 
 from ezros.gui.factories import header, timerFactory
+from ezros.gui.shortnames import Precise
 from ezros.gui.windows import LayoutWindow, BaseWindow
-
 from morevistutils import Wait
 
-os.environ['ROS_MASTER_URI'] = 'http://localhost:11311'
+if TYPE_CHECKING:
+  from yolo import Float32Stamped, AuxCommand
+else:
+  from msgs.msg import Float32Stamped, AuxCommand
+
 ic.configureOutput(includeContext=True)
 
 
@@ -30,12 +33,24 @@ class MainWindow(LayoutWindow):
   provides menus and actions. The Layout Window class provides the layout of
   widget that appear on the main application window"""
 
-  subscribe = Signal(Any)
+  __pump_control_flag__ = None
+  __pump_control_timer__ = None
+  __pump_control_pub__ = None
 
   paintTimer = Wait(timerFactory(), 50, singleShot=False)
 
   def __init__(self, *args, **kwargs) -> None:
     self._debugFlag = False
+    self.__pump_control__ = False
+    self.pubName = None
+    self.topic = None
+    self.pub = None
+    self.pumpTimer = QTimer()
+    self.pumpTimer.setInterval(1000)
+    self.pumpTimer.timeout.connect(self.pumpControl)
+    self.pumpTimer.setSingleShot(False)
+    self.pumpTimer.setTimerType(Precise)
+
     LayoutWindow.__init__(self, *args, **kwargs)
     self.setWindowTitle('Welcome to EZRos!')
 
@@ -68,6 +83,11 @@ class MainWindow(LayoutWindow):
     with open(stubPath, 'w') as f:
       f.write(stub)
 
+  def startPump(self) -> None:
+    """LMAO"""
+    self.pumpTimer.stop()
+    self.pumpTimer.start()
+
   def connectActions(self) -> None:
     """Connects actions to slots."""
     self.debug01Action.triggered.connect(self.debug01Func)
@@ -76,14 +96,16 @@ class MainWindow(LayoutWindow):
     self.debug04Action.triggered.connect(self.debug04Func)
     self.debug05Action.triggered.connect(self.debug05Func)
     self.debug06Action.triggered.connect(self.debug06Func)
-    self.subscribe.connect(self.data.callback)
     self.paintTimer.timeout.connect(self.data.update)
-    self._pumpComboBox.addItem('Pump Idle')
+    self.paintTimer.start()
+    self.topic = Subscriber('/tool/pump_current',
+                            Float32Stamped,
+                            self.dataCallback)
+    self.pubName = '/tool/pump_command'
+    self.pub = Publisher(self.pubName, AuxCommand, queue_size=10)
+
     self._pumpComboBox.addItem('Pump ON')
-    self._pumpComboBox.currentIndexChanged.connect(self.updateState)
-    self._sprayComboBox.addItem('Spray Idle')
-    self._sprayComboBox.addItem('Spray ON')
-    self._sprayComboBox.currentIndexChanged.connect(self.updateState)
+    self._pumpComboBox.addItem('Pump OFF')
 
   def updateState(self, *args) -> None:
     """Update state of the main window"""
@@ -92,18 +114,32 @@ class MainWindow(LayoutWindow):
     # self.state.innerText = '%s, %s' % (pumpText, sprayText)
     # self.state.update()
 
+  def dataCallback(self, data) -> None:
+    """Data callback"""
+    self.data.callback(data)
+
+  def pumpControl(self, ) -> None:
+    """Pump control callback"""
+    val = AuxCommand()
+    val.for_duration = rospy.Duration.from_sec(1.2)
+    val.activate = True if self.toggle.state else False
+    self.pub.publish(val)
+
   def debug01Func(self, ) -> None:
     """Debug01 function"""
-    print('Received debug 01 - Starting test')
-    nodeName = 'Subscriber'
-    init_node(nodeName, anonymous=False)
-    self.subscribe.connect(self.data.callback)
-    Subscriber('topic', Float64, self.subscribe.emit)
-    self.paintTimer.start()
+    print('Received debug 01 - single click interval')
+    if self.pumpTimer.isActive():
+      self.pumpTimer.stop()
+    else:
+      self.pumpTimer.start()
 
   def debug02Func(self, ) -> None:
     """Debug02 function"""
     print('Received debug 02 - double click interval')
+    val = AuxCommand()
+    val.for_duration = rospy.Duration.from_sec(0.5)
+    val.activate = True
+    self.pub.publish(val)
 
   def debug03Func(self, ) -> None:
     """Debug03 function"""

@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QMenu, QMainWindow
 from vistutils.text import stringList
 from vistutils.waitaminute import typeMsg
 
-from ezros.gui.windows.icons import getIcon
+from ezros.gui.factories.icons import getIcon
 
 
 def filesFactory() -> callable:

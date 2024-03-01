@@ -95,9 +95,9 @@ class DataEcho:
     T, X = self.snapshot()
 
     T -= min(T)
-    T /= max(T)
+    T /= max(T) + 1e-12
     X -= min(X)
-    X /= max(X)
+    X /= max(X) + 1e-12
 
     T, X = T * w, X * h
 
@@ -125,7 +125,7 @@ class DataEcho:
     T, X = self.snapshot()
     tSpan = max(T) - min(T)
     uT = T - min(T)
-    uT /= max(uT)
+    uT /= max(uT) + 1e-12
     pT = offset + uT * span
     timeStep = tSpan / n
     pixelStep = span / n
@@ -142,7 +142,7 @@ class DataEcho:
     T, X = self.snapshot()
     xSpan = max(X) - min(X)
     uX = X - min(X)
-    uX /= max(uX)
+    uX /= (max(uX) + 1e-6)
     pX = offset + uX * span
     valueStep = xSpan / n
     pixelStep = span / n

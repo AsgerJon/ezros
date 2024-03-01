@@ -6,6 +6,9 @@ from __future__ import annotations
 
 from ._button_field import ButtonField
 from ._base_layout import BaseLayout
+from ._vertical_layout import VerticalLayout
+from ._horizontal_layout import HorizontalLayout
+from ._grid_layout import GridLayout
 from ._base_widget import BaseWidget
 from ._mouse_aware import MouseAware
 from ._base_line_edit import BaseLineEdit

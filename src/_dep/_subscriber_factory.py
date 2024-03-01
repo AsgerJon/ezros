@@ -8,7 +8,7 @@ from typing import Any
 from rospy import Subscriber
 from vistutils.parse import maybe
 
-from ezros.rosutils import getTopicType, validateInitialized
+from ezros.rosutils import resolveTopicType, validateInitialized
 
 
 def _parse(*args, **kwargs) -> dict:
@@ -42,5 +42,5 @@ def subscriberFactory(*args, **kwargs) -> Any:
   callback = parsed['callback']
   nodeName = parsed['nodeName']
   validateInitialized(nodeName)
-  msgType = getTopicType(topicName)
+  msgType = resolveTopicType(topicName)
   return Subscriber(topicName, msgType, callback)

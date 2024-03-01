@@ -6,12 +6,14 @@ from __future__ import annotations
 import os
 import sys
 
-from PySide6.QtCore import QEvent, Qt
+from PySide6.QtCore import QEvent, Qt, QObject
 from PySide6.QtWidgets import QApplication
 from pyperclip import copy
 
 from ezros.gui.windows import MainWindow
 from typing import TYPE_CHECKING
+
+from tester_class_03 import Test
 
 if TYPE_CHECKING:
   import yolo as msg
@@ -57,6 +59,10 @@ def tester03() -> None:
       yoloCode.append(entry % (key, key,))
   yoloCode = '\n'.join(yoloCode)
   copy(yoloCode)
+
+
+def tester04() -> None:
+  """lmao"""
 
 
 if __name__ == '__main__':

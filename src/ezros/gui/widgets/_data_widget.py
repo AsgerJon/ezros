@@ -6,14 +6,11 @@ from __future__ import annotations
 from typing import Any
 
 from PySide6.QtCore import Slot, QMargins, QRect
-from PySide6.QtGui import QPainter, QPaintEvent, QColor
+from PySide6.QtGui import QPainter, QPaintEvent
 from icecream import ic
 
-from ezros.gui.factories import solidBrush, dashPen
 from ezros.gui.paint import BorderRect, FillRect, DataPaint
-from ezros.gui.shortnames import Lime, parseParent, Silver
 from ezros.gui.widgets import PaintWidget
-from morevistutils import Wait
 
 ic.configureOutput(includeContext=True)
 

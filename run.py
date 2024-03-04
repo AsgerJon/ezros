@@ -14,7 +14,8 @@ from ezros.sub import SubMain
 
 msgsPath = '~/home/asger/catkin_ws/devel/lib/python3.11/site-packages/'
 msgsPath = os.path.expanduser(msgsPath)
-sys.path.insert(0, msgsPath)
+if os.path.exists(msgsPath):
+  sys.path.insert(0, msgsPath)
 
 if __name__ == '__main__':
   try:

@@ -7,10 +7,15 @@ import sys
 from abc import abstractmethod
 
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QMainWindow, QWidget, QMessageBox, QStatusBar
+from PySide6.QtWidgets import QMainWindow, \
+  QWidget, \
+  QMessageBox, \
+  QStatusBar, \
+  QMenu, QMenuBar
 from icecream import ic
 
 from ezros.gui.factories import menuBarFactory
+from ezros.gui.shortnames import parseParent
 from morevistutils import Wait
 
 ic.configureOutput(includeContext=True)
@@ -22,14 +27,45 @@ class BaseWindow(QMainWindow):
 
   mainMenuBar = Wait(menuBarFactory(), )
 
+  mainMenuBar: QMenuBar
+
+  filesMenu: QMenu
+  editMenu: QMenu
+  helpMenu: QMenu
+  debugMenu: QMenu
+
+  newAction: QAction
+  openAction: QAction
+  saveAction: QAction
+  saveAsAction: QAction
+  exitAction: QAction
+
+  selectAllAction: QAction
+  cutAction: QAction
+  copyAction: QAction
+  pasteAction: QAction
+  undoAction: QAction
+  redoAction: QAction
+
+  aboutAction: QAction
+  aboutQtAction: QAction
+  aboutPythonAction: QAction
+
+  debug01Action: QAction
+  debug02Action: QAction
+  debug03Action: QAction
+  debug04Action: QAction
+  debug05Action: QAction
+  debug06Action: QAction
+  debug07Action: QAction
+  debug08Action: QAction
+  debug09Action: QAction
+  debug10Action: QAction
+
   def __init__(self, *args, **kwargs) -> None:
     self.__owned_actions__ = {}
-    for arg in args:
-      if isinstance(arg, QWidget):
-        QMainWindow.__init__(self, arg)
-        break
-    else:
-      QMainWindow.__init__(self, )
+    parent = parseParent(*args, )
+    QMainWindow.__init__(self, parent, )
 
   def addAction(self, *args) -> QAction:
     """Adds an action to the window."""

@@ -3,12 +3,9 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
-from vistutils.text import monoSpace
-from vistutils.waitaminute import typeMsg
-
-from morevistutils import Field, TypedField
+from morevistutils import TypedField
 
 
 class TextField(TypedField):
@@ -18,9 +15,13 @@ class TextField(TypedField):
   __default_value__ = None
   __fallback_value__ = ''
 
-  def getFieldType(self, ) -> type:
-    """Returns the field type."""
-    return str
+  def __init__(self, *args, **kwargs) -> None:
+    for arg in args:
+      if isinstance(arg, str):
+        TypedField.__init__(self, str, arg)
+        break
+    else:
+      TypedField.__init__(self, str, )
 
   def getDefaultValue(self) -> Any:
     """Returns the default value."""

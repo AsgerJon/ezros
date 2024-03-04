@@ -14,20 +14,24 @@ from morevistutils import Wait
 class SubLayout(LayoutWindow):
   """SubLayout organizes the windows on the application"""
 
-  baseWidget = Wait(BaseWidget, instance=False, )
-  baseLayout = Wait(VerticalLayout, instance=False, )
-  controlPanel = Wait(HorizontalLayout, instance=False, )
-  controlWidget = Wait(BaseWidget, instance=False, )
+  baseWidget = Wait(BaseWidget, )
+
+  baseLayout = Wait(VerticalLayout, )
   banner = Wait(LabelWidget, 'Welcome to EZRos!')
+
+  controlWidget = Wait(BaseWidget, )
+  controlPanel = Wait(HorizontalLayout, )
+
   robotId = Wait(LabelWidget, 'Robot ID: 69420')
+  pumpToggle = Wait(JKFlipFlop, )
   statusIndicator = Wait(LabelWidget, 'Status: not yet implemented')
-  pumpToggle = Wait(JKFlipFlop, instance=False, )
   pumpScenario = Wait(LabelWidget, 'Pump scenario: not yet implemented')
-  dataLayout = Wait(GridLayout, instance=False, )
-  gridWidget = Wait(BaseWidget, instance=False, )
-  dataHeader = Wait(LabelWidget, instance=False, )
-  dataControl = Wait(LabelWidget, instance=False, )
-  data = Wait(DataWidget, instance=False, )
+
+  dataLayout = Wait(GridLayout, )
+  gridWidget = Wait(BaseWidget, )
+  dataHeader = Wait(LabelWidget, )
+  dataControl = Wait(LabelWidget, )
+  data = Wait(DataWidget, )
 
   def __init__(self, *args, **kwargs) -> None:
     LayoutWindow.__init__(self, *args, **kwargs)

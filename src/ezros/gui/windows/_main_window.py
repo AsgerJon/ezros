@@ -20,10 +20,7 @@ from ezros.gui.shortnames import Precise
 from ezros.gui.windows import LayoutWindow, BaseWindow
 from morevistutils import Wait
 
-if TYPE_CHECKING:
-  from yolo import Float32Stamped, AuxCommand
-else:
-  from msgs.msg import Float32Stamped, AuxCommand
+from msgs.msg import AuxCommand, Float32Stamped
 
 ic.configureOutput(includeContext=True)
 
@@ -37,7 +34,7 @@ class MainWindow(LayoutWindow):
   __pump_control_timer__ = None
   __pump_control_pub__ = None
 
-  paintTimer = Wait(timerFactory(), 50, singleShot=False)
+  # paintTimer = Wait(timerFactory(), 50, singleShot=False)
 
   def __init__(self, *args, **kwargs) -> None:
     self._debugFlag = False
@@ -45,6 +42,10 @@ class MainWindow(LayoutWindow):
     self.pubName = None
     self.topic = None
     self.pub = None
+    self.paintTimer = QTimer()
+    self.paintTimer.setInterval(50)
+    self.paintTimer.setSingleShot(False)
+    self.paintTimer.setTimerType(Precise)
     self.pumpTimer = QTimer()
     self.pumpTimer.setInterval(1000)
     self.pumpTimer.timeout.connect(self.pumpControl)

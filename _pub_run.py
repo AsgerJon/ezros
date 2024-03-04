@@ -10,6 +10,8 @@ from PySide6.QtWidgets import QApplication
 from icecream import ic
 from rospy import init_node
 
+ic.configureOutput(includeContext=True)
+
 here = os.getcwd()
 root = os.path.join(here, '..', '..', )
 root = os.path.normpath(root)

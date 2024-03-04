@@ -5,14 +5,23 @@ painting operations"""
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Callable, Self
+
+from PySide6.QtCore import QSize, QSizeF
 from PySide6.QtGui import QPainter, QPaintEvent
+from vistutils.text import stringList
+
+from morevistutils import Field
 
 if TYPE_CHECKING:
   from ezros.gui.widgets import PaintWidget
 
+  PW = PaintWidget
 
-class AbstractPaint:
+Sig = tuple[type]
+
+
+class AbstractPaint(Field):
   """AbstractPaint provides the abstract baseclass for the encapsulated
   painting operations"""
 
@@ -22,3 +31,6 @@ class AbstractPaint:
 
   def __set_name__(self, owner: PaintWidget, name: str) -> None:
     owner.appendHookedPaint(self)
+
+  def __get__(self, instance: PW, owner: type[PW]) -> Self:
+    return self

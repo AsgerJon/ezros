@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from PySide6.QtCore import Qt, QEvent
 from PySide6.QtGui import QMouseEvent
-from PySide6.QtWidgets import QSizePolicy
+from PySide6.QtWidgets import QSizePolicy, QMenu
 
 #  Timer types
 Precise = Qt.TimerType.PreciseTimer
@@ -48,6 +48,7 @@ Mouse = QMouseEvent
 BtnDown = QEvent.Type.MouseButtonPress
 BtnUp = QEvent.Type.MouseButtonRelease
 MouseMove = QEvent.Type.MouseMove
+#  Menu Roles
 
 __all__ = ['Precise', 'Coarse', 'VeryCoarse', 'Left', 'Right', 'Top',
            'Bottom', 'Center', 'HCenter', 'VCenter', 'SolidLine', 'DashLine',

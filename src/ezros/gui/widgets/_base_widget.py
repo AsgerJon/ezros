@@ -4,7 +4,6 @@ controls only size limits."""
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtGui import QEnterEvent, QGuiApplication
 from PySide6.QtWidgets import QWidget, QSizePolicy
 
 from ezros.gui.shortnames import parseParent

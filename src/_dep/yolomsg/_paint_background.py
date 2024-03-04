@@ -6,7 +6,7 @@ from __future__ import annotations
 from PySide6.QtCore import QRect
 from PySide6.QtGui import QPainter, QPaintEvent
 
-from yolomsg._abstract_paint_rect import AbstractPaintRect
+from _dep.yolomsg._abstract_paint_rect import AbstractPaintRect
 
 
 class PaintBackground(AbstractPaintRect):

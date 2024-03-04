@@ -14,6 +14,8 @@ from morevistutils import Wait
 from math import sin
 from random import gauss
 
+ic.configureOutput(includeContext=True)
+
 
 class PubMain(PubLayoutWindow):
   """The main application window"""
@@ -50,10 +52,10 @@ class PubMain(PubLayoutWindow):
 
   def publishSample(self, ) -> None:
     """Publishes a sample sine wave"""
-    self.sineTest.publish(self.sineSample())
+    sample = self.sineSample()
+    self.sineTest.publish(sample)
 
   def updateLabel(self, msg: Float64 = None) -> None:
     """Updates the label with the latest sample"""
-    print(self)
     self.label.innerText = f'{msg.data:.3f}'
     self.label.update()

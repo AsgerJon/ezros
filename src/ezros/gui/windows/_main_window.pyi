@@ -1,5 +1,5 @@
 """Auto-generated stub file for the main window.
-Fri Mar 1 15:39:57 2024"""
+Sat Mar 2 02:33:03 2024"""
 # MIT Licence
 # Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
@@ -92,7 +92,6 @@ class MainWindow(QMainWindow):
   data: Wait
   toggle: Wait
   initUI: function
-  connectActions: function
   staticMetaObject: QMetaObject
   
 # Actions contribution from BaseWindow

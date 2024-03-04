@@ -8,7 +8,7 @@ Arguments:
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from typing import Callable
+from typing import Callable, Any
 
 from PySide6.QtCore import QTimer, Qt, QObject
 from vistutils.parse import maybe, maybeType, searchKey
@@ -17,28 +17,23 @@ from vistutils.waitaminute import typeMsg
 from ezros.gui.shortnames import Precise
 
 
-def timerFactory(*args, **kwargs) -> Callable:
+def timerFactory(instance: Any, *args, **kwargs) -> Callable:
   """Creates a QTimer instance."""
-
-  def callMeMaybe(instance: QObject, *args2, **kwargs2) -> QTimer:
-    """Creates a QTimer instance."""
-    if not isinstance(instance, QObject):
-      e = typeMsg('instance', QObject, instance)
-      raise TypeError(e)
-    intervalArg = maybeType(int, *args2)
-    intervalKwarg = searchKey(int, 'interval', 'time', **kwargs2)
-    intervalDefault = 100
-    interval = maybe(intervalArg, intervalKwarg, intervalDefault)
-    timerType = None
-    for arg in args2:
-      if isinstance(arg, Qt.TimerType):
-        timerType = arg
-    if timerType is None:
-      timerType = kwargs2.get('timerType', Precise)
-    timer = QTimer(instance)
-    timer.setInterval(interval)
-    timer.setTimerType(timerType)
-    timer.setSingleShot(True if kwargs2.get('singleShot', False) else False)
-    return timer
-
-  return callMeMaybe
+  if not isinstance(instance, QObject):
+    e = typeMsg('instance', QObject, instance)
+    raise TypeError(e)
+  intervalArg = maybeType(int, *args)
+  intervalKwarg = searchKey(int, 'interval', 'time', **kwargs)
+  intervalDefault = 100
+  interval = maybe(intervalArg, intervalKwarg, intervalDefault)
+  timerType = None
+  for arg in args:
+    if isinstance(arg, Qt.TimerType):
+      timerType = arg
+  if timerType is None:
+    timerType = kwargs.get('timerType', Precise)
+  timer = QTimer(instance)
+  timer.setInterval(interval)
+  timer.setTimerType(timerType)
+  timer.setSingleShot(True if kwargs.get('singleShot', False) else False)
+  return timer

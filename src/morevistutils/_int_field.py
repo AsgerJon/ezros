@@ -18,7 +18,8 @@ class IntField(TypedField):
   __default_value__ = None
   __fallback_value__ = 0
 
-  def getFieldType(self, ) -> type:
+  @staticmethod
+  def getFieldType() -> type:
     """Returns the field type."""
     return int
 

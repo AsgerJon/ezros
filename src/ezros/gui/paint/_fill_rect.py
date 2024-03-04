@@ -4,6 +4,8 @@ underlying device"""
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from typing import Any, Self
+
 from PySide6.QtGui import QPainter, QPaintEvent
 
 from ezros.gui.factories import emptyPen, parseBrush, parseColor
@@ -27,3 +29,10 @@ class FillRect(AbstractPaint):
     painter.setBrush(self.brush)
     painter.setPen(emptyPen())
     painter.drawRect(event.rect())
+
+  def update(self, *args, **kwargs) -> Self:
+    """Updates the paint settings. """
+    if args:
+      color = parseColor(*args, **kwargs)
+      self.brush = parseBrush(color)
+    return self

@@ -78,7 +78,7 @@ class PubFactory(TopicFactory):
       @lmao.CALL
       def _factory(self, ) -> Callable:
 
-        def callback(msg: Any=None) -> Any:
+        def callback(yolo: Any=None) -> Any:
           return String.fromStr('Hello, World!')
 
         return callback

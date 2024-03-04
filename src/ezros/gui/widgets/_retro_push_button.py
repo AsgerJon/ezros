@@ -3,14 +3,13 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from ezros.gui.widgets import MouseAware, LabelWidget, BaseWidget
+from ezros.gui.widgets import BaseWidget
 
-from PySide6.QtWidgets import QWidget, QApplication
 from PySide6.QtGui import QPainter, QMouseEvent, QEnterEvent, \
-  QPaintEvent, QBrush
-from PySide6.QtCore import Signal, Qt, QRect
+  QPaintEvent
+from PySide6.QtCore import Signal, Qt
 
-from morevistutils import TextField
+from _dep.morevistutils import TextField
 
 
 class RetroPushButton(BaseWidget):

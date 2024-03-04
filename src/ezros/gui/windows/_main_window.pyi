@@ -10,15 +10,14 @@ from PySide6.QtCore import QMetaObject
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMainWindow
 
-from morevistutils.fields import Later
-
-
 method_descriptor = type(QMainWindow.addDockWidget)
 classmethod_descriptor = type(classmethod)
+
+
 class MainWindow(QMainWindow):
   """The main application window class."""
-  
-# Actions contribution from MainWindow
+
+  # Actions contribution from MainWindow
   new: QAction
   open: QAction
   save: QAction
@@ -42,8 +41,8 @@ class MainWindow(QMainWindow):
   debug07Action: QAction
   debug08Action: QAction
   debug09Action: QAction
-  
-# Namespace contribution from MainWindow
+
+  # Namespace contribution from MainWindow
   paintTimer: Wait
   createActionStub: function
   startPump: function
@@ -58,8 +57,8 @@ class MainWindow(QMainWindow):
   debug05Func: function
   debug06Func: function
   staticMetaObject: QMetaObject
-  
-# Actions contribution from LayoutWindow
+
+  # Actions contribution from LayoutWindow
   new: QAction
   open: QAction
   save: QAction
@@ -83,8 +82,8 @@ class MainWindow(QMainWindow):
   debug07Action: QAction
   debug08Action: QAction
   debug09Action: QAction
-  
-# Namespace contribution from LayoutWindow
+
+  # Namespace contribution from LayoutWindow
   baseWidget: Wait
   baseLayout: Wait
   welcomeLabel: Wait
@@ -93,8 +92,8 @@ class MainWindow(QMainWindow):
   toggle: Wait
   initUI: function
   staticMetaObject: QMetaObject
-  
-# Actions contribution from BaseWindow
+
+  # Actions contribution from BaseWindow
   new: QAction
   open: QAction
   save: QAction
@@ -118,8 +117,8 @@ class MainWindow(QMainWindow):
   debug07Action: QAction
   debug08Action: QAction
   debug09Action: QAction
-  
-# Namespace contribution from BaseWindow
+
+  # Namespace contribution from BaseWindow
   mainMenuBar: Wait
   addAction: function
   getOwnedActions: function

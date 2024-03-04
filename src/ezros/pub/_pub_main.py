@@ -9,7 +9,7 @@ from std_msgs.msg import Float64
 
 from ezros.gui.factories import timerFactory
 from ezros.pub import PubLayoutWindow
-from morevistutils import Wait
+from _dep.morevistutils import Wait
 
 from math import sin
 from random import gauss

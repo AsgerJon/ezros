@@ -2,15 +2,18 @@
 # MIT Licence
 # Copyright (c) 2024 Asger Jon Vistisen
 #
+clear
+,mamba
+mamba activate rosvist
 SCRIPT_DIR=$(dirname "$0")
+source /home/AsgerJon/.zshrc
 
 export PYTHONPATH=$PYTHONPATH:$SCRIPT_DIR/src
 export PYTHONPATH=$PYTHONPATH:$SCRIPT_DIR/src/ezros
-export PYTHONPATH=$PYTHONPATH:/home/AsgerJon/lmao
 echo "$PYTHONPATH"
 
 if [ -d /home/AsgerJon/catkin_ws/devel/setup.bash ]; then
-  cd ~/catkin_ws/devel/ || exit
+  cd /home/AsgerJon/catkin_ws/devel/ || exit
   source ./setup.bash
   cd /home/AsgerJon/PycharmProjects/ezros/ || exit
   export PYTHONPATH=$PYTHONPATH:\
@@ -21,7 +24,6 @@ if [ -d /home/AsgerJon/catkin_ws/devel/setup.bash ]; then
 else
   export ROS_MASTER_URI=http://localhost:11311
   export ROS_PYTHON_ENV=/opt/miniconda3/envs/rosvist/bin/python3
-  export ROS_PYTHON_ENV=/home/AsgerJon/.conda/envs/rosenv/bin/python3
   echo "Catkin workspace not present, using yolo instead!"
 fi
 

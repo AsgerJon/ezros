@@ -9,7 +9,7 @@ from PySide6.QtGui import QMouseEvent
 
 from ezros.gui.shortnames import NoBtn
 from ezros.gui.widgets import BaseWidget, ButtonField
-from morevistutils import Flag, IntField
+from _dep.morevistutils import Flag, IntField
 from ezros.gui.shortnames import MouseBtn, LeftBtn, RightBtn, \
   MiddleBtn, NextBtn, BackBtn
 

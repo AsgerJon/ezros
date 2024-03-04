@@ -3,12 +3,10 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from abc import abstractmethod
-
 from ezros.gui.widgets import JKFlipFlop, DataWidget, LabelWidget, \
   VerticalLayout, HorizontalLayout, GridLayout, BaseWidget
 from ezros.gui.windows import LayoutWindow
-from morevistutils import Wait
+from _dep.morevistutils import Wait
 
 
 class SubLayout(LayoutWindow):

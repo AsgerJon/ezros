@@ -6,8 +6,8 @@ from __future__ import annotations
 import unittest
 from PySide6.QtCore import Qt
 
-from morevistside.core import Precise
-from src.morevistside.core._timer_factory import _parseArgs
+from _dep.morevistside.core import Precise
+from _dep.morevistside.core import _parseArgs
 
 
 class TestParseTimer(unittest.TestCase):

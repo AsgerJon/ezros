@@ -3,12 +3,12 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtGui import QPen, QPaintEvent, QPainter
+from PySide6.QtGui import QPaintEvent, QPainter
 
 from ezros.gui.factories import emptyBrush, parsePen
 from ezros.gui.paint import AbstractPaint
 from ezros.gui.shortnames import Black
-from morevistutils import Wait
+from _dep.morevistutils import Wait
 
 
 class BorderRect(AbstractPaint):

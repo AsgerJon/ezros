@@ -12,7 +12,7 @@ def tester05() -> None:
   here = os.getcwd()
   sys.path.append(os.path.join(here, 'src'))
   print(sys.path)
-  from morevistutils import AbstractDescriptor
+  from _dep.morevistutils import AbstractDescriptor
 
   class A:
     b = AbstractDescriptor()

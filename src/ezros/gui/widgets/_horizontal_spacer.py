@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QSizePolicy
 from ezros.gui.factories import parseBrush, parseColor, emptyPen
 from ezros.gui.shortnames import Fixed, Spread
 from ezros.gui.widgets import PaintWidget
-from morevistutils import Wait
+from _dep.morevistutils import Wait
 
 
 class HorizontalSpacer(PaintWidget):

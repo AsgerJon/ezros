@@ -14,7 +14,7 @@ from ezros.gui.factories import emptyPen
 from ezros.gui.paint import AbstractPaint
 from ezros.gui.shortnames import Silver, Black, RoundCap, SolidLine
 from ezros.gui.shortnames import AliceBlue, SolidFill, OliveDrab
-from morevistutils import DataEcho, Wait
+from _dep.morevistutils import DataEcho, Wait
 
 
 class DataPaint(AbstractPaint):

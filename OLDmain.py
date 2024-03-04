@@ -12,8 +12,8 @@ from pyperclip import copy
 
 from ezros.gui.shortnames import ColorSpace
 from ezros.gui.windows import MainWindow
-from morevistutils import Nunc
-from morevistutils.metas import Singleton
+from _dep.morevistutils import Nunc
+from _dep.morevistutils import Singleton
 from tester_class_01 import Tester, Tester2
 from tester_class_02 import Owner
 

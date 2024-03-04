@@ -3,14 +3,12 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtGui import QPaintEvent, QPainter
-
-from ezros.gui.factories import parseFont, parsePen, textPen
+from ezros.gui.factories import parseFont, textPen
 from ezros.gui.paint import FillRect, BorderRect
-from ezros.gui.shortnames import Black, Gray, Silver
+from ezros.gui.shortnames import Black, Silver
 from ezros.gui.widgets import PaintWidget, BaseWidget, BaseLayout, \
   BaseLineEdit
-from morevistutils import TextField, Wait
+from _dep.morevistutils import TextField, Wait
 
 
 class TextInput(PaintWidget):

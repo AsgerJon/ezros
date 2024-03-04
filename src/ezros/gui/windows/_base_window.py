@@ -4,11 +4,9 @@
 from __future__ import annotations
 
 import sys
-from abc import abstractmethod
 
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QMainWindow, \
-  QWidget, \
   QMessageBox, \
   QStatusBar, \
   QMenu, QMenuBar
@@ -16,7 +14,7 @@ from icecream import ic
 
 from ezros.gui.factories import menuBarFactory
 from ezros.gui.shortnames import parseParent
-from morevistutils import Wait
+from _dep.morevistutils import Wait
 
 ic.configureOutput(includeContext=True)
 

@@ -6,7 +6,7 @@ from __future__ import annotations
 from abc import abstractmethod
 
 from ezros.gui.windows import BaseWindow
-from morevistutils import Wait
+from _dep.morevistutils import Wait
 from ezros.gui.widgets import BaseWidget, BaseLayout, LabelWidget
 
 

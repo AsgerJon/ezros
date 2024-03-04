@@ -7,7 +7,7 @@ from PySide6.QtCore import Qt, QTimer
 from vistutils.text import stringList
 
 from ezros.gui.shortnames import Precise
-from morevistutils import Field
+from _dep.morevistutils import Field
 
 
 class TimerField(Field):

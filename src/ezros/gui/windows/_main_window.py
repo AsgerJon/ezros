@@ -5,7 +5,6 @@ widget that appear on the main application window"""
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 import os
 
 import rospy
@@ -15,10 +14,9 @@ from icecream import ic
 from std_msgs.msg import Float64
 from vistutils.text import monoSpace
 
-from ezros.gui.factories import header, timerFactory
+from ezros.gui.factories import header
 from ezros.gui.shortnames import Precise
 from ezros.gui.windows import LayoutWindow, BaseWindow
-from morevistutils import Wait
 
 from msgs.msg import AuxCommand, Float32Stamped
 

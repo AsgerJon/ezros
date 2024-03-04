@@ -8,9 +8,13 @@ import sys
 
 from PySide6.QtCore import Qt, QProcess
 from PySide6.QtWidgets import QApplication
-import msgs as msg
 
-from morevistside.windows import BaseWindow
+import msgs.msg as msg
+
+from _dep.morevistside.windows import BaseWindow
+
+for item in sys.path:
+  print(item)
 
 
 def tester00() -> None:

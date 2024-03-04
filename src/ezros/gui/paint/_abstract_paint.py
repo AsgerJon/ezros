@@ -5,13 +5,11 @@ painting operations"""
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Any, Callable, Self
+from typing import TYPE_CHECKING, Self
 
-from PySide6.QtCore import QSize, QSizeF
 from PySide6.QtGui import QPainter, QPaintEvent
-from vistutils.text import stringList
 
-from morevistutils import Field
+from _dep.morevistutils import Field
 
 if TYPE_CHECKING:
   from ezros.gui.widgets import PaintWidget

@@ -3,10 +3,8 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtCore import Qt
-
 from ezros.gui.shortnames import MouseBtn
-from morevistutils import TypedField
+from _dep.morevistutils import TypedField
 
 
 class ButtonField(TypedField):

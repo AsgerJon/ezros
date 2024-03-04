@@ -9,7 +9,7 @@ from vistutils.waitaminute import typeMsg
 from ezros.gui.factories import textPen, parseFont, parseColor
 from ezros.gui.paint import AbstractPaint
 from ezros.gui.shortnames import Black
-from morevistutils import Wait, Field
+from _dep.morevistutils import Wait, Field
 
 
 class TextRect(AbstractPaint):

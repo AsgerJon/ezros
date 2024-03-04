@@ -3,14 +3,12 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from abc import abstractmethod
-
 from PySide6.QtWidgets import QPushButton, QComboBox
 
 from ezros.gui.widgets import LabelWidget, BaseWidget, BaseLayout, \
   DataWidget, JKFlipFlop
 from ezros.gui.windows import BaseWindow
-from morevistutils import Wait
+from _dep.morevistutils import Wait
 
 
 class LayoutWindow(BaseWindow):

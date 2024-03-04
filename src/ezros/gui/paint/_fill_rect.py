@@ -4,14 +4,14 @@ underlying device"""
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from typing import Any, Self
+from typing import Self
 
 from PySide6.QtGui import QPainter, QPaintEvent
 
 from ezros.gui.factories import emptyPen, parseBrush, parseColor
 from ezros.gui.paint import AbstractPaint
-from ezros.gui.shortnames import Lime, Silver
-from morevistutils import Wait
+from ezros.gui.shortnames import Silver
+from _dep.morevistutils import Wait
 
 
 class FillRect(AbstractPaint):

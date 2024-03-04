@@ -9,7 +9,7 @@ from vistutils.parse import maybe
 from ezros.gui.factories import parseBrush, textPen, parsePen, parseFont
 from ezros.gui.shortnames import Silver, Black
 from ezros.gui.widgets import PaintWidget
-from morevistutils import TextField, Wait
+from _dep.morevistutils import TextField, Wait
 
 
 class LabelWidget(PaintWidget):

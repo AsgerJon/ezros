@@ -11,7 +11,7 @@ from PySide6.QtWidgets import QApplication
 from numpy import full, nan, complex64
 
 from ezros.gui.windows import MainWindow
-from morevistutils import DataEcho
+from _dep.morevistutils import DataEcho
 
 
 def tester00() -> None:

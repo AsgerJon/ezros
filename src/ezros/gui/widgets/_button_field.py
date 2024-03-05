@@ -3,8 +3,8 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from ezros.gui.shortnames import MouseBtn
-from _dep.morevistutils import TypedField
+from vistside.core import MouseBtn
+from vistutils.fields import TypedField
 
 
 class ButtonField(TypedField):

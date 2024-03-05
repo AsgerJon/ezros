@@ -9,7 +9,7 @@ from vistutils.waitaminute import typeMsg
 from ezros.gui.factories import textPen, parseFont, parseColor
 from ezros.gui.paint import AbstractPaint
 from ezros.gui.shortnames import Black
-from _dep.morevistutils import Wait, Field
+from ezros.rosutils import Wait
 
 
 class TextRect(AbstractPaint):
@@ -20,9 +20,7 @@ class TextRect(AbstractPaint):
 
   textLine = Wait(textPen, )
   textFont = Wait(parseFont, 'Arial', 10)
-  fontMetrics = Field()
-  boundSize = Field()
-  latest = Field()
+  fontMetrics = Wait()
 
   def paintOp(self,
               event: QPaintEvent,
@@ -38,7 +36,7 @@ class TextRect(AbstractPaint):
     painter.setFont(self.textFont)
     painter.drawText(event.rect(), text)
 
-  @fontMetrics.GET
+  @fontMetrics.CREATE
   def _getFontMetrics(self, **kwargs) -> QFontMetricsF:
     """Getter for the font metrics"""
     if self.__self_font_metrics__ is None:
@@ -48,21 +46,7 @@ class TextRect(AbstractPaint):
       return self._getFontMetrics(recursion=True)
     return self.__self_font_metrics__
 
-  @latest.GET
-  def _getLatest(self, **kwargs) -> QPaintDevice:
-    """Getter for the latest font metrics"""
-    if self.__recent_painter__ is not None:
-      if isinstance(self.__recent_painter__, QPainter):
-        return self.__recent_painter__.device()
-      e = typeMsg('recent_painter', self.__recent_painter__, QPainter)
-      raise TypeError(e)
-
-  @boundSize.GET
-  def _getBoundSize(self, **kwargs) -> tuple[int, int]:
-    """Getter for the bound size"""
-    return self.fontMetrics.boundingRect(self.latest.innerText).size()
-
   def __init__(self, *args, **kwargs) -> None:
-    font = parseFont(*args, 'Arial', 10, **kwargs)
-    TextRect.textFont
-    color = parseColor(*args, Black, **kwargs)
+    color, font = None, None
+    color = parseColor(*args, **kwargs, strict=False)
+    font = parseFont(*args, **kwargs, strict=False)

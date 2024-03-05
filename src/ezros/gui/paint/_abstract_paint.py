@@ -8,8 +8,7 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING, Self
 
 from PySide6.QtGui import QPainter, QPaintEvent
-
-from _dep.morevistutils import Field
+from vistutils.fields import Field
 
 if TYPE_CHECKING:
   from ezros.gui.widgets import PaintWidget

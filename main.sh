@@ -6,7 +6,7 @@ clear
 echo "main.sh"
 echo "$HOME"
 SCRIPT_DIR=$(dirname "$0")
-
+export ROS_MASTER_URI=http://192.168.1.42:11311
 export PYTHONPATH=$PYTHONPATH:$SCRIPT_DIR/src
 export PYTHONPATH=$PYTHONPATH:$SCRIPT_DIR/src/ezros
 export PYTHONPATH=$PYTHONPATH:$HOME/catkin_ws/devel/lib/python3.11

@@ -11,7 +11,9 @@ from PySide6.QtGui import QPainter, QPaintEvent
 from ezros.gui.factories import emptyPen, parseBrush, parseColor
 from ezros.gui.paint import AbstractPaint
 from ezros.gui.shortnames import Silver
-from _dep.morevistutils import Wait
+
+
+# from _dep.morevistutils import Wait
 
 
 class FillRect(AbstractPaint):

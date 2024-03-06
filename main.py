@@ -12,6 +12,8 @@ from PySide6.QtWidgets import QApplication
 
 import msgs.msg as msg
 
+from ezros.app import MainWindow
+
 
 def tester00() -> None:
   """Hello world"""

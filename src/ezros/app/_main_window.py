@@ -14,7 +14,6 @@ class MainWindow(LayoutWindow):
   """The MainWindow class is the main application window."""
 
   baseWidget = Wait(BaseWidget)
-  baseLayout = Wait(BaseLayout)
 
   def __init__(self, *args, **kwargs) -> None:
     """Create a new MainWindow."""

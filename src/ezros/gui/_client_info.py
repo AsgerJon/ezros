@@ -7,7 +7,7 @@ import os
 from typing import Any
 
 from PySide6.QtGui import QColor, QPaintEvent, QPainter
-from vistside.core import BrushField, parsePen, Black
+from vistside.core import BrushField, parsePen, Black, Tight
 from vistside.widgets import BaseWidget, BaseLayoutField, LabelField
 from vistutils.fields import unParseArgs, Wait
 
@@ -27,6 +27,7 @@ class ClientInfo(BaseWidget):
   def __init__(self, *args, **kwargs) -> None:
     """Create a new ClientInfo."""
     BaseWidget.__init__(self, *args, **kwargs)
+    self.setSizePolicy(Tight, Tight)
     self.rosUriField = self.__ros_master_uri__
     clientName = kwargs.get('client', None)
     self.clientInfo = clientName
@@ -45,7 +46,7 @@ class ClientInfo(BaseWidget):
     """Paints the widget."""
     painter = QPainter()
     painter.begin(self)
-    painter.setRenderHint(painter.Antialiasing)
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     viewRect = painter.viewport()
     # # # # # # # # # # # # # # # # #
     #  fill background

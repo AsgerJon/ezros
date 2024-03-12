@@ -6,18 +6,18 @@ from __future__ import annotations
 import os
 import sys
 
-from PySide6.QtCore import Qt, QProcess
-
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
-
-import msgs.msg as msg
 
 from ezros.app import MainWindow
 
 
+# import msgs.msg as msg
+
+
 def tester00() -> None:
   """Hello world"""
-  stuff = [os, sys, 'hello world', Qt, msg]
+  stuff = [os, sys, 'hello world', Qt, ]
   for item in stuff:
     print(item)
 

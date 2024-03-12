@@ -10,7 +10,7 @@ from vistside.windows import BaseWindow
 class LayoutWindow(BaseWindow):
   """The LayoutWindow class is a window that contains a layout of widgets."""
 
-  baseWidget = 777
+  clientInfo =777
 
   def __init__(self, *args, **kwargs) -> None:
     """Create a new LayoutWindow."""

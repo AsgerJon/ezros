@@ -4,3 +4,4 @@
 from __future__ import annotations
 
 from ._client_info import ClientInfo, ClientInfoField
+from ._ping_indicator import PingIndicator, PingIndicatorField

@@ -27,7 +27,7 @@ class ClientInfo(BaseWidget):
   def __init__(self, *args, **kwargs) -> None:
     """Create a new ClientInfo."""
     BaseWidget.__init__(self, *args, **kwargs)
-    self.setSizePolicy(Tight, Tight)
+    self.setMinimumSize(self.minimumSizeHint())
     self.rosUriField = self.__ros_master_uri__
     clientName = kwargs.get('client', None)
     self.clientInfo = clientName

@@ -11,13 +11,6 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 
 from ezros.app import MainWindow
-import logging
-
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-logging.info('This is an info message with timestamp and level')
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 def tester00() -> None:
@@ -33,13 +26,10 @@ fb = lambda n: '' if n % 5 else 'Fizz' + '' if n % 3 else 'Buzz' or str(n)
 def tester01() -> None:
   """Main application tester"""
 
-  try:
-    app = QApplication(sys.argv)
-    main = MainWindow()
-    main.show()
-    app.exec()
-  except Exception as e:
-    print(logging)
+  app = QApplication(sys.argv)
+  main = MainWindow()
+  main.show()
+  app.exec()
 
 if __name__ == '__main__':
   tester01()

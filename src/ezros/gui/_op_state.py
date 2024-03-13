@@ -73,7 +73,6 @@ class OpState(BaseWidget):
   def __init__(self, *args, **kwargs) -> None:
     """Create a new OpState."""
     BaseWidget.__init__(self, *args, **kwargs)
-    self.setMinimumSize(self.minimumSizeHint())
     self.initUI()
     self.connectActions()
 

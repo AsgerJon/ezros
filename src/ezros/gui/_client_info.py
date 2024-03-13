@@ -17,6 +17,7 @@ class ClientInfo(BaseWidget):
 
   __fallback_uri__ = 'http://localhost:11311'
   __ros_master_uri__ = os.environ.get('ROS_MASTER_URI', __fallback_uri__)
+
   fillBrush = BrushField(QColor(255, 255, 255, 63))
 
   baseLayout = BaseLayoutField(layout='vertical')

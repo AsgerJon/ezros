@@ -4,4 +4,5 @@
 from __future__ import annotations
 
 from ._layout_window import LayoutWindow
+input('lmao')
 from ._main_window import MainWindow

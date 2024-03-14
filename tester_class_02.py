@@ -2,34 +2,23 @@
 #  MIT Licence
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
-#
-# from typing import Callable
-#
-# from icecream import ic
-#
-# from tester_class_01 import Meta
-#
-# ic.configureOutput(includeContext=True)
-#
-#
-# class Descriptor:
-#   """Descriptor"""
-#   print('Creating descriptor class')
-#
-#   def __init__(self, ) -> None:
-#     print('Instantiating descriptor class')
-#
-#   def __set_name__(self, owner, name) -> None:
-#     print(self.__class__.__qualname__, self.__set_name__.__name__)
-#
-#   def __get__(self, instance, owner) -> None:
-#     print(self.__class__.__qualname__, self.__get__.__name__)
-#
-#   def this(self, callMeMaybe: Callable) -> Callable:
-#     """Decorates the callable"""
-#     print("""Decorating: '%s'""" % callMeMaybe.__qualname__)
-#     print(callMeMaybe)
-#     notations = getattr(callMeMaybe, '__qualname__', 'No annotations')
-#     print("""Having annotations: '%s'""" % notations)
-#     callMeMaybe(1, 2, '3')
-#     return callMeMaybe
+
+from vistside.windows import BaseWindow
+
+from tester_class_01 import TestField
+
+
+class TestWindow(BaseWindow):
+  """The TestWindow class is a window that contains a layout of widgets."""
+
+  testWidget = TestField()
+
+  def __init__(self, *args, **kwargs) -> None:
+    """Create a new TestWindow."""
+    BaseWindow.__init__(self, *args, **kwargs)
+    self.setMinimumSize(800, 600)
+
+  def show(self) -> None:
+    """Show the window."""
+    self.baseLayout.addWidget(self.testWidget)
+    BaseWindow.show(self)

@@ -6,12 +6,10 @@ from __future__ import annotations
 import os
 import sys
 
-import logging
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 
-from ezros.app import MainWindow
-from PySide6.QtGui import QFontDatabase
+from tester_class_02 import TestWindow
 
 
 def tester00() -> None:
@@ -28,13 +26,7 @@ def tester01() -> None:
   """Main application tester"""
 
   app = QApplication(sys.argv)
-
-  available_families = QFontDatabase().families()
-
-  for family in available_families:
-    print(family)
-
-  main = MainWindow()
+  main = TestWindow()
   main.show()
   app.exec()
 

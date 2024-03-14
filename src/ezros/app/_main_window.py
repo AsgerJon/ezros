@@ -37,11 +37,17 @@ class MainWindow(LayoutWindow, ):
     self.dataTimer.timeout.connect(self.makeNoise)
     self.noise.connect(self.callback)
     self.paintTimer.timeout.connect(self.paintBack)
+    self.connectionStatus.operationalState.nowAir.connect(
+      self.tabWidget.plotWidget.lineData.setAir)
+    self.connectionStatus.operationalState.nowWater.connect(
+      self.tabWidget.plotWidget.lineData.setWater)
+    self.connectionStatus.operationalState.nowPaint.connect(
+      self.tabWidget.plotWidget.lineData.setPaint)
 
   def makeNoise(self, ) -> float:
     """Make some noise."""
     t = time.time()
-    out = (sin(t) * 4 + sin(8 * t) * 2 + sin(64 * t) * 1) / 7
+    out = sin(t * 16)
     out += (random.random() - 0.5) * 0.1
     self.noise.emit(out)
     return out
@@ -55,6 +61,11 @@ class MainWindow(LayoutWindow, ):
   def paintBack(self, ) -> None:
     """Updates the plot visualization."""
     self.tabWidget.plotWidget.updateChart()
+
+  @Slot()
+  def pingBack(self, ) -> None:
+    """Updates the ping visualization."""
+    self.connectionStatus.pingIndicator.ping()
 
   def debug01Func(self, ) -> None:
     """Debug function."""
@@ -73,8 +84,9 @@ class MainWindow(LayoutWindow, ):
   def debug03Func(self, ) -> None:
     """Debug function."""
     BaseWindow.debug03Func(self)
-    print('force repaint of tab widget')
-    self.tabWidget.repaint()
+    print('ping test')
+    self.connectionStatus.pingIndicator.setPing(100)
+    self.connectionStatus.pingIndicator.update()
     self.mainStatusBar.showMessage('Debug03 action triggered!')
 
   def debug04Func(self, ) -> None:

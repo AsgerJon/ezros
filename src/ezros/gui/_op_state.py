@@ -18,6 +18,9 @@ class OpSelect(QComboBox):
 
   __content_lock__ = False
   newState = Signal(int)
+  airContent = Signal()
+  waterContent = Signal()
+  paintContent = Signal()
 
   def __init__(self, *args, **kwargs) -> None:
     """Initializes the OpSelect."""
@@ -37,6 +40,17 @@ class OpSelect(QComboBox):
   def connectActions(self) -> None:
     """Connects the widget's signals to its slots."""
     self.currentIndexChanged.connect(self.newState)
+    self.currentIndexChanged.connect(self.handleChange)
+
+  @Slot(int)
+  def handleChange(self, index: int) -> None:
+    """Handles the change in index."""
+    if 'air' in self.itemText(index).lower():
+      self.airContent.emit()
+    elif 'water' in self.itemText(index).lower():
+      self.waterContent.emit()
+    elif 'paint' in self.itemText(index).lower():
+      self.paintContent.emit()
 
   @classmethod
   def getDefault(cls, *args, **kwargs) -> OpSelect:
@@ -67,7 +81,7 @@ class OpState(BaseWidget):
   nowPaint = Signal()
 
   baseLayout = BaseLayoutField(layout='vertical')
-  header = LabelField('Operational State')
+  header = LabelField('Fluid Content')
   opSelect = OpField()
 
   def __init__(self, *args, **kwargs) -> None:

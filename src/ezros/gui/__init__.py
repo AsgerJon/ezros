@@ -11,3 +11,5 @@ from ._op_state import OpState, OpStateField, OpSelect, OpField
 from ._connection_status import ConnectionStatus, ConnectionStatusField
 from ._dyn_plot import DynPlot, DynPlotField
 from ._tab_field import TabField, TabWidget
+from ._data_field import DataField, DataSeries
+from ._data_axis import Axis, AxisField

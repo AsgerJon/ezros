@@ -7,12 +7,12 @@ import time
 from typing import Any, Never
 
 from PySide6.QtCharts import QChartView, QChart
-from PySide6.QtCore import QPointF, Slot
+from PySide6.QtCore import QPointF, Slot, QEvent
 from vistside.widgets import BaseWidget, BaseLayoutField
 from vistutils.fields import FloatField
 from vistutils.waitaminute import typeMsg
 
-from ezros.rosutils import ArrayField, ListField
+from ezros.rosutils import ListField
 
 
 class ChartWidget(BaseWidget):
@@ -24,7 +24,6 @@ class ChartWidget(BaseWidget):
   __data_axis_y__ = None
 
   baseLayout = BaseLayoutField(layout='horizontal')
-  data = ArrayField(128)
   pointLimit = FloatField(1024)
 
   minEdge = FloatField(-1.5)
@@ -33,14 +32,15 @@ class ChartWidget(BaseWidget):
   maxEdge = FloatField(1.5)
 
   epochTime = FloatField(1.0)
-  values = ListField(QPointF)
+  # data = ListField(QPointF)
+  data = DataField()
 
   @Slot(float)
   def appendValue(self, value: float) -> None:
     """Append a value to the data array."""
-    while len(self.values) >= self.pointLimit:
-      self.values.pop(0)
-    self.values.append(QPointF(time.time(), value))
+    while len(self.data) >= self.pointLimit:
+      self.data.pop(0)
+    self.data.append(QPointF(time.time(), value))
 
   def getTimeRange(self, ) -> tuple[float, float]:
     """Returns the range of the data."""
@@ -63,3 +63,16 @@ class ChartWidget(BaseWidget):
     view = QChartView()
     view.setChart(self.getChart())
     return view
+
+  def setupView(self) -> None:
+    """Sets up the view."""
+    chart = self.getChart()
+    chart.addSeries(self.getSeries())
+    chart.createDefaultAxes()
+    chart.axes()[0].setRange(*self.getTimeRange())
+    chart.axes()[1].setRange(*self.getValueRange())
+
+  def showEvent(self, event: QEvent) -> None:
+    """Handles the show event."""
+    self.setupView()
+    BaseWidget.showEvent(self, event)

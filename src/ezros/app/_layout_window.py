@@ -3,14 +3,11 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from time import sleep
-
 from vistside.widgets import BaseLayoutField, BaseWidget
 from vistside.windows import BaseWindow
 from vistutils.fields import Wait
 
-from ezros.gui import ClientInfoField, ConnectionStatusField, ClientInfo, \
-  TabField
+from ezros.gui import ClientInfoField, ConnectionStatusField, TabField
 
 
 class LayoutWindow(BaseWindow):

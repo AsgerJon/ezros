@@ -6,7 +6,9 @@ from __future__ import annotations
 import time
 from typing import Any, Self
 
-from PySide6.QtCharts import QChart, QScatterSeries, QChartView
+from PySide6.QtCharts import (QChart, QScatterSeries, QChartView,
+                              QLineSeries, \
+                              QXYSeries)
 from PySide6.QtCore import Slot, QSize
 from PySide6.QtWidgets import QWidget
 from vistside.core import parseParent, Black
@@ -18,6 +20,13 @@ from ezros.rosutils import ArrayField
 
 class Chart(QChart):
   """Wrapper class providing closure and descriptor."""
+
+  def __init__(self, *args, **kwargs) -> None:
+    """Initializes the Chart."""
+    QChart.__init__(self)
+    self.legend().setBorderColor(Black)
+    self.setBackgroundRoundness(8)
+    self.setTheme(QChart.ChartTheme.ChartThemeBrownSand)
 
   @classmethod
   def getDefault(cls, *args, **kwargs) -> Self:
@@ -40,29 +49,48 @@ class ChartField(Wait):
     Wait.__init__(self, Chart, *args, **kwargs)
 
 
-class Scatter(QScatterSeries):
+class ScatterData(QScatterSeries):
   """Wrapper class providing closure and descriptor."""
 
   @classmethod
   def getDefault(cls, *args, **kwargs) -> Self:
     """Returns the default value for the field."""
-    defVal = Scatter()
+    defVal = cls()
     defVal.apply((args, kwargs))
     return defVal
 
-  def apply(self, value: Any) -> Scatter:
+  def apply(self, value: Any) -> ScatterData:
     """Applies the value to the field."""
     args, kwargs = unParseArgs(value)
     return self
 
 
-class ScatterField(Wait):
+class LineData(QLineSeries):
+  """Wrapper class providing closure and descriptor."""
+
+  @classmethod
+  def getDefault(cls, *args, **kwargs) -> Self:
+    """Returns the default value for the field."""
+    defVal = cls()
+    defVal.apply((args, kwargs))
+    return defVal
+
+  def apply(self, value: Any) -> LineData:
+    """Applies the value to the field."""
+    args, kwargs = unParseArgs(value)
+    return self
+
+
+class DataField(Wait):
   """The ScatterField class provides a descriptor for instances of
   Scatter."""
 
   def __init__(self, *args, **kwargs) -> None:
     """Initializes the ScatterField."""
-    Wait.__init__(self, Scatter, *args, **kwargs)
+    for arg in args:
+      if isinstance(arg, QXYSeries):
+        args = (arg,)
+    Wait.__init__(self, ScatterData, *args, **kwargs)
 
 
 class View(QChartView):
@@ -104,7 +132,7 @@ class DynPlot(QWidget):
   data = ArrayField(128)
 
   chart = ChartField()
-  lineData = ScatterField()
+  lineData = DataField()
   view = ViewField()
 
   def __init__(self, *args, **kwargs) -> None:
@@ -113,22 +141,15 @@ class DynPlot(QWidget):
     QWidget.__init__(self, parent)
     self.setMinimumSize(QSize(480, 240))
     self._zeroTime = time.time()
-    self.chart = Chart()
-    self.series = Scatter()
-    self.view = View()
 
   def initUI(self, ) -> None:
     """Initializes the user interface."""
-    self.chart.addSeries(self.series)
+    self.chart.addSeries(self.lineData)
     self.chart.createDefaultAxes()
+    self.chart.axes()[1].setRange(-1.2, 1.2)
     self.view.setChart(self.chart)
     self.baseLayout.addWidget(self.view)
     self.setLayout(self.baseLayout)
-    self.chart.axes()[1].setRange(-1.2, 1.2)
-    self.chart.legend().setBorderColor(Black)
-    self.chart.setBackgroundRoundness(8)
-    self.chart.setTheme(QChart.ChartTheme.ChartThemeBlueNcs)
-    self.chart.setAnimationOptions(QChart.AnimationOption.SeriesAnimations)
 
   @Slot(float)
   def callback(self, value: float) -> None:
@@ -138,11 +159,11 @@ class DynPlot(QWidget):
   @Slot()
   def updateChart(self, ) -> None:
     """Updates the chart with the current data."""
-    self.series.clear()
+    self.lineData.clear()
     X = self.data.snap().real.tolist()
     Y = self.data.snap().imag.tolist()
     for (x, y) in zip(X, Y):
-      self.series.append(x, y)
+      self.lineData.append(x, y)
 
   def showEvent(self, event) -> None:
     """Shows the widget."""

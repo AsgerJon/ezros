@@ -19,8 +19,8 @@ from ezros.app import LayoutWindow
 class MainWindow(LayoutWindow, ):
   """The MainWindow class is the main application window."""
 
-  dataTimer = TimerField(50, Precise, singleShot=False)
-  paintTimer = TimerField(50, Precise, singleShot=False)
+  dataTimer = TimerField(10, Precise, singleShot=False)
+  paintTimer = TimerField(20, Precise, singleShot=False)
 
   noise = Signal(float)
 

@@ -30,6 +30,7 @@ class ConnectionStatus(BaseWidget):
   def __init__(self, *args, **kwargs) -> None:
     """Create a new OpState."""
     BaseWidget.__init__(self, *args, **kwargs)
+    self.headerLabel.innerText = 'Connection Status'
     self.initUI()
 
   def initUI(self) -> None:

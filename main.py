@@ -11,6 +11,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 
 from ezros.app import MainWindow
+from PySide6.QtGui import QFontDatabase
 
 
 def tester00() -> None:
@@ -27,9 +28,20 @@ def tester01() -> None:
   """Main application tester"""
 
   app = QApplication(sys.argv)
+
+  available_families = QFontDatabase().families()
+
+  for family in available_families:
+    print(family)
+
   main = MainWindow()
   main.show()
   app.exec()
+
+
+def tester02() -> None:
+  """lmao"""
+
 
 if __name__ == '__main__':
   tester01()

@@ -6,20 +6,21 @@ from __future__ import annotations
 import time
 from typing import Any, Self
 
-from PySide6.QtCharts import (QChart, QScatterSeries, QChartView,
-                              QLineSeries, \
-                              QXYSeries, QAbstractSeries)
-from PySide6.QtCore import Slot, QSize, QPointF, QRect, Qt, QSizeF, QRectF
-from PySide6.QtGui import QPaintEvent, QPainter, QColor, QPen, QBrush
-from PySide6.QtWidgets import QWidget
-from icecream import ic
-from vistside.core import parseParent, Black, Green, Red
+from PySide6.QtCharts import QChart, QScatterSeries, QChartView
+from PySide6.QtCharts import QXYSeries
+from PySide6.QtCore import Slot, QSize, QPointF, QRectF, QEvent, QSizeF
+from PySide6.QtGui import QBrush, QColor
+from PySide6.QtWidgets import QWidget, QGraphicsRectItem
+from vistside.core import parseParent, Black, Green, Red, parseBrush, \
+  SolidFill
+from vistside.core import emptyPen
 from vistside.widgets import BaseWidget, BaseLayoutField
 from vistutils.fields import unParseArgs, Wait, FloatField
 from vistutils.waitaminute import typeMsg
 
 from ezros.rosutils import ArrayField
 
+QGRect = QGraphicsRectItem
 PointColor = QXYSeries.PointConfiguration.Color
 
 
@@ -131,12 +132,90 @@ class View(QChartView):
 
   __explicit_chart__ = None
 
+  minVal = FloatField(-1.5)
+  maxVal = FloatField(1.5)
+
   def __init__(self, *args, **kwargs) -> None:
     """Initializes the View."""
     parent = parseParent(*args)
     QChartView.__init__(self, parent)
     self.setRubberBand(QChartView.RubberBand.NoRubberBand)
-    self.lmao = True
+    self.minPixel = None
+    self.maxPixel = None
+    self.addRects()
+
+  def addRects(self, ) -> None:
+    """Adds the rectangles."""
+    plotArea = self.chart().plotArea()
+    minP = QPointF(0, self.minVal)
+    maxP = QPointF(0, self.maxVal)
+    minPixel = self.chart().mapToPosition(minP).y()
+    maxPixel = self.chart().mapToPosition(maxP).y()
+    lowestPixel = plotArea.bottom()
+    highestPixel = plotArea.top()
+    width = plotArea.width()
+    minSize = QSize(width, lowestPixel - minPixel)
+    minTopLeft = QPointF(plotArea.left(), minPixel)
+    minRect = QRectF(minTopLeft, minSize)
+    minRectGraphics = QGraphicsRectItem(minRect)
+    minBrush = QBrush()
+    minBrush.setColor(QColor(255, 0, 0, 31))
+    minRectGraphics.setBrush(minBrush)
+    maxSize = QSize(width, maxPixel - highestPixel)
+    maxTopLeft = QPointF(plotArea.left(), highestPixel)
+    maxRect = QRectF(maxTopLeft, maxSize)
+    maxRectGraphics = QGraphicsRectItem(maxRect)
+    maxBrush = QBrush()
+    maxBrush.setColor(QColor(255, 0, 0, 31))
+    maxRectGraphics.setBrush(maxBrush)
+    self.updateScene([minRect, maxRect])
+    self.scene().addItem(minRectGraphics)
+    self.scene().addItem(maxRectGraphics)
+
+  def showEvent(self, event: QEvent) -> None:
+    """Handles the show event."""
+    plotArea = self.chart().plotArea()
+    width = plotArea.width()
+    left, top = plotArea.topLeft().toTuple()
+    topWarn = QRectF(QPointF(left, top), QSizeF(width, 50))
+    topWarn = QGraphicsRectItem(topWarn)
+    topWarn.setBrush(QBrush(QColor(255, 0, 0, 31)))
+    topWarn.setPen(emptyPen())
+    self.scene().addItem(topWarn)
+    QChartView.showEvent(self, event)
+
+  def mapY2Pixel(self, y: float) -> float:
+    """Maps the y-coordinate to a pixel."""
+    return self.chart().mapToPosition(QPointF(0, y)).y()
+
+  def mapX2Pixel(self, x: float) -> float:
+    """Maps the x-coordinate to a pixel."""
+    return self.chart().mapToPosition(QPointF(x, 0)).x()
+
+  def getRect(self, *args, **kwargs) -> tuple[QGRect]:
+    """Returns the rectangle."""
+    plotArea = self.chart().plotArea()
+    width = plotArea.width()
+    left, top, bottom = plotArea.left(), plotArea.top(), plotArea.bottom()
+    brush = parseBrush(QColor(255, 0, 0, 31), SolidFill)
+    pen = emptyPen()
+    lowWarnTop = self.mapY2Pixel(self.minVal)
+    lowWarnTopLeft = QPointF(left, lowWarnTop)
+    lowWarnHeight = bottom - lowWarnTop
+    lowWarnSize = QSizeF(width, lowWarnHeight)
+    lowWarn = QRectF(lowWarnTopLeft, lowWarnSize)
+    minGraphicRect = QGraphicsRectItem(lowWarn)
+    highWarnBottom = self.mapY2Pixel(self.maxVal)
+    highWarnTopLeft = QPointF(left, top)
+    highWarnHeight = highWarnBottom - top
+    highWarnSize = QSizeF(width, highWarnHeight)
+    highWarn = QRectF(highWarnTopLeft, highWarnSize)
+    maxGraphicRect = QGraphicsRectItem(highWarn)
+    minGraphicRect.setBrush(brush)
+    minGraphicRect.setPen(pen)
+    maxGraphicRect.setBrush(brush)
+    maxGraphicRect.setPen(pen)
+    return minGraphicRect, maxGraphicRect
 
   @classmethod
   def getDefault(cls, *args, **kwargs) -> Self:
@@ -175,7 +254,7 @@ class DynPlot(QWidget):
     """Create a new DynPlot."""
     parent = parseParent(*args)
     QWidget.__init__(self, parent)
-    self.setMinimumSize(QSize(480, 240))
+    self.setMinimumSize(QSize(480, 320))
     self._zeroTime = time.time()
 
   def initUI(self, ) -> None:
@@ -215,8 +294,9 @@ class DynPlot(QWidget):
 
   def showEvent(self, event) -> None:
     """Shows the widget."""
-    BaseWidget.showEvent(self, event)
     self.updateChart()
+    self.view.showEvent(event)
+    BaseWidget.showEvent(self, event)
 
   @classmethod
   def getDefault(cls, *args, **kwargs) -> Self:

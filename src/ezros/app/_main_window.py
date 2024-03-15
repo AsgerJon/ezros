@@ -19,8 +19,8 @@ from ezros.app import LayoutWindow
 class MainWindow(LayoutWindow, ):
   """The MainWindow class is the main application window."""
 
-  dataTimer = TimerField(10, Precise, singleShot=False)
-  paintTimer = TimerField(20, Precise, singleShot=False)
+  dataTimer = TimerField(25, Precise, singleShot=False)
+  paintTimer = TimerField(40, Precise, singleShot=False)
 
   noise = Signal(float)
 
@@ -92,8 +92,8 @@ class MainWindow(LayoutWindow, ):
   def debug04Func(self, ) -> None:
     """Debug function."""
     BaseWindow.debug04Func(self)
-    print('Debug04 | force repaint of plot widget')
-    self.tabWidget.plotWidget.update()
+    print('Debug04 | force reset of rects')
+    self.tabWidget.plotWidget.view.addRects()
     self.mainStatusBar.showMessage('Debug04 action triggered!')
 
   def debug05Func(self, ) -> None:

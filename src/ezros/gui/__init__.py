@@ -12,4 +12,8 @@ from ._connection_status import ConnectionStatus, ConnectionStatusField
 from ._dyn_plot import DynPlot, DynPlotField
 from ._tab_field import TabField, TabWidget
 from ._data_field import DataField, DataSeries
-from ._data_axis import Axis, AxisField
+from ._axis_field import Axis, AxisField
+from ._chart_field import ChartField, DataChart
+from ._data_view import DataView, ViewField
+from ._data_widget import PlotWidget, HookedView, PlotField
+from ._data_chart import DataChart

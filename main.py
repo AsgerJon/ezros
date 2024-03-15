@@ -9,6 +9,7 @@ import sys
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 
+from ezros.app import MainWindow
 from tester_class_02 import TestWindow
 
 
@@ -26,7 +27,7 @@ def tester01() -> None:
   """Main application tester"""
 
   app = QApplication(sys.argv)
-  main = TestWindow()
+  main = MainWindow()
   main.show()
   app.exec()
 

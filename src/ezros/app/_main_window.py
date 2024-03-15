@@ -37,11 +37,11 @@ class MainWindow(LayoutWindow, ):
     self.dataTimer.timeout.connect(self.makeNoise)
     self.noise.connect(self.callback)
     self.paintTimer.timeout.connect(self.paintBack)
-    self.connectionStatus.operationalState.nowAir.connect(
+    self.connectionStatus.opState.nowAir.connect(
       self.tabWidget.plotWidget.lineData.setAir)
-    self.connectionStatus.operationalState.nowWater.connect(
+    self.connectionStatus.opState.nowWater.connect(
       self.tabWidget.plotWidget.lineData.setWater)
-    self.connectionStatus.operationalState.nowPaint.connect(
+    self.connectionStatus.opState.nowPaint.connect(
       self.tabWidget.plotWidget.lineData.setPaint)
 
   def makeNoise(self, ) -> float:

@@ -6,13 +6,14 @@ from __future__ import annotations
 
 from typing import Self, Any
 
-from vistside.widgets import LabelField, LabelWidget
+from vistside.widgets import LabelWidget
 from PySide6.QtGui import QColor, QPainter, QPaintEvent
 from vistside.core import BrushField
 from vistside.widgets import BaseWidget, BaseLayoutField
 from vistutils.fields import Wait, FieldBox
 
-from ezros.gui import PingIndicatorField, OpStateField, PingIndicator
+from ezros.gui import PingIndicator, \
+  OpState
 
 
 class ConnectionStatus(BaseWidget):
@@ -25,19 +26,17 @@ class ConnectionStatus(BaseWidget):
 
   headerLabel = FieldBox[LabelWidget]('Connection Status')
   pingIndicator = FieldBox[PingIndicator]()
-  operationalState = OpStateField()
+  opState = FieldBox[OpState]()
 
   def __init__(self, *args, **kwargs) -> None:
     """Create a new OpState."""
     BaseWidget.__init__(self, *args, **kwargs)
-    self.headerLabel.innerText = 'Connection Status'
-    self.initUI()
 
   def initUI(self) -> None:
     """Initialize the user interface."""
     self.baseLayout.addWidget(self.headerLabel)
     self.baseLayout.addWidget(self.pingIndicator)
-    self.baseLayout.addWidget(self.operationalState)
+    self.baseLayout.addWidget(self.opState)
     self.setLayout(self.baseLayout)
 
   def paintEvent(self, event: QPaintEvent) -> None:

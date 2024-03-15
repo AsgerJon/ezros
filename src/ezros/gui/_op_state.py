@@ -10,7 +10,7 @@ from PySide6.QtCore import Signal, Slot
 from PySide6.QtWidgets import QComboBox
 from vistside.widgets import BaseWidget, LabelWidget, BaseLayoutField, \
   LabelField
-from vistutils.fields import Wait
+from vistutils.fields import Wait, FieldBox
 
 
 class OpSelect(QComboBox):
@@ -38,23 +38,6 @@ class OpSelect(QComboBox):
     """Connects the widget's signals to its slots."""
     self.currentIndexChanged.connect(self.newState)
 
-  @classmethod
-  def getDefault(cls, *args, **kwargs) -> OpSelect:
-    """Returns the default value for the field."""
-    return cls().apply((args, kwargs))
-
-  def apply(self, value: Any) -> OpSelect:
-    """Applies the value to the field."""
-    return self
-
-
-class OpField(Wait):
-  """The OpField class provides a descriptor for instances of OpSelect."""
-
-  def __init__(self, *args, **kwargs) -> None:
-    """Initializes the OpField."""
-    Wait.__init__(self, OpSelect, *args, **kwargs)
-
 
 class OpState(BaseWidget):
   """OpState provides a selection of operational states relevant for the
@@ -68,7 +51,7 @@ class OpState(BaseWidget):
 
   baseLayout = BaseLayoutField(layout='vertical')
   header = LabelField('Operational State')
-  opSelect = OpField()
+  opSelect = FieldBox[OpSelect]()
 
   def __init__(self, *args, **kwargs) -> None:
     """Create a new OpState."""
@@ -97,21 +80,3 @@ class OpState(BaseWidget):
       self.nowWater.emit()
     elif index == 2:
       self.nowPaint.emit()
-
-  @classmethod
-  def getDefault(cls, *args, **kwargs) -> OpState:
-    """Returns the default value for the field."""
-    return cls().apply((args, kwargs))
-
-  def apply(self, value: Any) -> OpState:
-    """Applies the arguments contained in value to the widget."""
-    return self
-
-
-class OpStateField(Wait):
-  """The OpStateField class provides a descriptor for instances of
-  OpState."""
-
-  def __init__(self, *args, **kwargs) -> None:
-    """Initializes the OpStateField."""
-    Wait.__init__(self, OpState, *args, **kwargs)

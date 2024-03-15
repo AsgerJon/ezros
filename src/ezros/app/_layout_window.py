@@ -3,14 +3,12 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from time import sleep
-
 from vistside.widgets import BaseLayoutField, BaseWidget
 from vistside.windows import BaseWindow
 from vistutils.fields import Wait, FieldBox
+from vistutils.fields._break_point import BreakPoint
 
-from ezros.gui import ClientInfoField, ConnectionStatusField, ClientInfo, \
-  TabField, TabWidget
+from ezros.gui import ClientInfoField, ConnectionStatusField, TabWidget
 
 
 class LayoutWindow(BaseWindow):
@@ -20,7 +18,6 @@ class LayoutWindow(BaseWindow):
   topLayout = BaseLayoutField(layout='horizontal')
   clientInfo = ClientInfoField()
   connectionStatus = ConnectionStatusField()
-
   tabWidget = FieldBox[TabWidget]()
 
   def __init__(self, *args, **kwargs) -> None:

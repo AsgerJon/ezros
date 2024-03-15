@@ -10,9 +10,9 @@ from vistside.widgets import LabelField
 from PySide6.QtGui import QColor, QPainter, QPaintEvent
 from vistside.core import BrushField
 from vistside.widgets import BaseWidget, BaseLayoutField
-from vistutils.fields import Wait
+from vistutils.fields import Wait, FieldBox
 
-from ezros.gui import PingIndicatorField, OpStateField
+from ezros.gui import PingIndicatorField, OpState
 
 
 class ConnectionStatus(BaseWidget):
@@ -25,7 +25,7 @@ class ConnectionStatus(BaseWidget):
 
   headerLabel = LabelField(text='Connection Status')
   pingIndicator = PingIndicatorField()
-  operationalState = OpStateField()
+  operationalState = FieldBox[OpState]
 
   def __init__(self, *args, **kwargs) -> None:
     """Create a new OpState."""

@@ -7,10 +7,10 @@ from time import sleep
 
 from vistside.widgets import BaseLayoutField, BaseWidget
 from vistside.windows import BaseWindow
-from vistutils.fields import Wait
+from vistutils.fields import Wait, FieldBox
 
 from ezros.gui import ClientInfoField, ConnectionStatusField, ClientInfo, \
-  TabField
+  TabField, TabWidget
 
 
 class LayoutWindow(BaseWindow):
@@ -21,7 +21,7 @@ class LayoutWindow(BaseWindow):
   clientInfo = ClientInfoField()
   connectionStatus = ConnectionStatusField()
 
-  tabWidget = TabField()
+  tabWidget = FieldBox[TabWidget]()
 
   def __init__(self, *args, **kwargs) -> None:
     """Create a new LayoutWindow."""
@@ -33,6 +33,5 @@ class LayoutWindow(BaseWindow):
     self.topLayout.addWidget(self.connectionStatus)
     self.topWidget.setLayout(self.topLayout)
     self.baseLayout.addWidget(self.topWidget)
-    self.tabWidget.initUI()
     self.baseLayout.addWidget(self.tabWidget)
     BaseWindow.show(self)

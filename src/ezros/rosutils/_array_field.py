@@ -5,12 +5,8 @@ implementation."""
 from __future__ import annotations
 
 import time
-from typing import Self, Any
 
 import numpy as np
-from icecream import ic
-from vistutils.fields import unParseArgs, Wait
-from vistutils.waitaminute import typeMsg
 
 
 class Array:
@@ -50,22 +46,3 @@ class Array:
     self.__inner_data__[self.__first_index__] = time.time() + value * 1j
     n = self.__inner_data__.shape[0]
     self.__first_index__ = (self.__first_index__ + 1) % n
-
-  @classmethod
-  def getDefault(cls, *args, **kwargs) -> Self:
-    """Returns the default value for the field."""
-    defVal = cls(*args, **kwargs)
-    defVal.apply((args, kwargs))
-    return defVal
-
-  def apply(self, value: Any) -> Self:
-    """Applies the value to the field."""
-    args, kwargs = unParseArgs(value)
-    return self
-
-
-class ArrayField(Wait):
-  """Wraps the Array in a mutable descriptor class"""
-
-  def __init__(self, *args, **kwargs) -> None:
-    Wait.__init__(self, Array, *args, **kwargs)

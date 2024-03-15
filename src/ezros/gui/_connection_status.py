@@ -6,25 +6,25 @@ from __future__ import annotations
 
 from typing import Self, Any
 
-from vistside.widgets import LabelField
+from vistside.widgets import LabelField, LabelWidget
 from PySide6.QtGui import QColor, QPainter, QPaintEvent
-from vistside.core import BrushField
+from vistside.core import BrushField, solidBrush
 from vistside.widgets import BaseWidget, BaseLayoutField
 from vistutils.fields import Wait, FieldBox
+from vistutils.fields._break_point import BreakPoint
 
-from ezros.gui import PingIndicatorField, OpState
+from ezros.gui import PingIndicatorField, OpState, PingIndicator
 
 
 class ConnectionStatus(BaseWidget):
   """ConnectionStatus shows the present connection status of the robot. In
   particular the ping time. """
 
-  fillBrush = BrushField(QColor(0, 0, 255, 63))
-
+  fillColor = FieldBox[QColor](0, 0, 255, 63)
   baseLayout = BaseLayoutField(layout='vertical')
 
-  headerLabel = LabelField(text='Connection Status')
-  pingIndicator = PingIndicatorField()
+  headerLabel = FieldBox[LabelWidget]()
+  pingIndicator = FieldBox[PingIndicator]()
   operationalState = FieldBox[OpState]
 
   def __init__(self, *args, **kwargs) -> None:
@@ -46,7 +46,7 @@ class ConnectionStatus(BaseWidget):
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     viewRect = painter.viewport()
     painter.setPen(self.emptyPen)
-    painter.setBrush(self.fillBrush)
+    painter.setBrush(solidBrush(self.fillColor))
     painter.drawRoundedRect(viewRect, 10, 10)
     painter.end()
 

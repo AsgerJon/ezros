@@ -10,15 +10,17 @@ from vistutils.fields._break_point import BreakPoint
 
 from ezros.gui import ClientInfoField, ConnectionStatusField, TabWidget
 
+tabWidget = FieldBox[TabWidget]()
+
 
 class LayoutWindow(BaseWindow):
   """The LayoutWindow class is a window that contains a layout of widgets."""
 
-  topWidget = Wait(BaseWidget, )
+  topWidget = FieldBox[BaseWidget]()
+  tabWidget = FieldBox[TabWidget]()
   topLayout = BaseLayoutField(layout='horizontal')
   clientInfo = ClientInfoField()
   connectionStatus = ConnectionStatusField()
-  tabWidget = FieldBox[TabWidget]()
 
   def __init__(self, *args, **kwargs) -> None:
     """Create a new LayoutWindow."""

@@ -10,8 +10,10 @@ from typing import Any
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 from icecream import ic
+from vistutils.fields._break_point import BreakPoint
 
 from ezros.app import MainWindow
+from ezros.rosutils._wait import WaitForIt
 
 #
 # import os
@@ -45,6 +47,7 @@ def tester01() -> None:
   """Main application tester"""
 
   app = QApplication(sys.argv)
+
   main = MainWindow()
   main.show()
   app.exec()

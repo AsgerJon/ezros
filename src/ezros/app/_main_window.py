@@ -19,8 +19,8 @@ from ezros.app import LayoutWindow
 class MainWindow(LayoutWindow, ):
   """The MainWindow class is the main application window."""
 
-  dataTimer = TimerField(25, Precise, singleShot=False)
-  paintTimer = TimerField(40, Precise, singleShot=False)
+  dataTimer = TimerField(500, Precise, singleShot=False)
+  paintTimer = TimerField(500, Precise, singleShot=False)
 
   noise = Signal(float)
 
@@ -35,20 +35,21 @@ class MainWindow(LayoutWindow, ):
     """Connect the actions to the slots."""
     LayoutWindow.connectActions(self)
     self.dataTimer.timeout.connect(self.makeNoise)
-    self.noise.connect(self.callback)
+    self.noise.connect(self.tabWidget.plotWidget.callback)
     self.paintTimer.timeout.connect(self.paintBack)
     self.connectionStatus.opState.nowAir.connect(
-      self.tabWidget.plotWidget.lineData.setAir)
+      self.tabWidget.plotWidget.view.setAir)
     self.connectionStatus.opState.nowWater.connect(
-      self.tabWidget.plotWidget.lineData.setWater)
+      self.tabWidget.plotWidget.view.setWater)
     self.connectionStatus.opState.nowPaint.connect(
-      self.tabWidget.plotWidget.lineData.setPaint)
+      self.tabWidget.plotWidget.view.setPaint)
 
+  @Slot()
   def makeNoise(self, ) -> float:
     """Make some noise."""
     t = time.time()
     out = sin(t * 16)
-    out += (random.random() - 0.5) * 0.1
+    out += (random.random() - 0.5) * 0.0001
     self.noise.emit(out)
     return out
 

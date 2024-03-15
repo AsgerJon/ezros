@@ -3,19 +3,17 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from time import sleep
 from typing import Any
 from warnings import warn
 
 from PySide6.QtCore import Qt, Slot, QSize
 from PySide6.QtGui import QPaintEvent
 from PySide6.QtWidgets import QTabWidget
-from icecream import ic
 from vistside.core import parseParent
 from vistside.widgets import LabelField, BaseWidget, BaseLayoutField
-from vistutils.fields import unParseArgs, Wait
+from vistutils.fields import unParseArgs, Wait, FieldBox
 
-from ezros.gui import DynPlotField, DynPlot
+from ezros.gui import DynPlot
 
 TopLeft = Qt.Corner.TopLeftCorner
 TopRight = Qt.Corner.TopRightCorner
@@ -29,7 +27,7 @@ class TabWidget(QTabWidget):
   plotBase = Wait(BaseWidget)
   plotLayout = BaseLayoutField(layout='vertical')
   plotBanner = LabelField('Spray Tool')
-  plotWidget = DynPlotField(256)
+  # plotWidget = FieldBox[DynPlot](256)
   controlBase = Wait(BaseWidget)
   controlLayout = BaseLayoutField(layout='vertical')
   controlBanner = LabelField('Pump Control')
@@ -39,6 +37,7 @@ class TabWidget(QTabWidget):
     """Initializes the TabWidget."""
     parent = parseParent(*args)
     QTabWidget.__init__(self, parent)
+    self.plotWidget = DynPlot(256, self)
 
   def initUI(self, ) -> None:
     """Initializes the user interface."""
@@ -66,22 +65,3 @@ class TabWidget(QTabWidget):
     except Exception as e:
       warn(str(e))
     QTabWidget.paintEvent(self, event)
-
-  @classmethod
-  def getDefault(cls, *args, **kwargs) -> TabWidget:
-    """Returns the default value for the field."""
-    parent = parseParent(*args)
-    return cls(parent).apply((args, kwargs))
-
-  def apply(self, value: Any) -> TabWidget:
-    """Applies the value to the field."""
-    args, kwargs = unParseArgs(value)
-    return self
-
-
-class TabField(Wait):
-  """TabField is a field for a TabWidget."""
-
-  def __init__(self, *args, **kwargs) -> None:
-    """Initializes the TabField."""
-    Wait.__init__(self, TabWidget, *args, **kwargs)

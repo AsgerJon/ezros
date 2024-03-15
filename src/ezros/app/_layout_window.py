@@ -5,9 +5,9 @@ from __future__ import annotations
 
 from vistside.widgets import BaseLayoutField, BaseWidget
 from vistside.windows import BaseWindow
-from vistutils.fields import Wait
+from vistutils.fields import Wait, FieldBox
 
-from ezros.gui import ClientInfoField, ConnectionStatusField, TabField
+from ezros.gui import ClientInfoField, ConnectionStatusField, TabWidget
 
 
 class LayoutWindow(BaseWindow):
@@ -17,11 +17,13 @@ class LayoutWindow(BaseWindow):
   topLayout = BaseLayoutField(layout='horizontal')
   clientInfo = ClientInfoField()
   connectionStatus = ConnectionStatusField()
-  tabWidget = TabField()
+
+  # tabWidget = FieldBox[TabWidget]()
 
   def __init__(self, *args, **kwargs) -> None:
     """Create a new LayoutWindow."""
     BaseWindow.__init__(self, *args, **kwargs, )
+    self.tabWidget = TabWidget(self)
 
   def show(self) -> None:
     """Show the window."""

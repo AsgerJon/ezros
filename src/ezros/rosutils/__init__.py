@@ -5,7 +5,7 @@ ROS through Python. """
 from __future__ import annotations
 
 # from ._validate_initialized import validateInitialized
-from ._array_field import ArrayField
+from ._array_field import Array
 from ._list_field import ListField, ListLike
 from ._validate_topic_name import validateTopicName
 from ._topic_factory import TopicFactory

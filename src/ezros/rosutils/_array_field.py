@@ -24,7 +24,8 @@ class Array:
 
   def _initData(self, ) -> None:
     """Initializes the array with the given data."""
-    self.__inner_data__ = np.zeros((128,), np.complex128)
+    n = self.__num_points__
+    self.__inner_data__ = np.linspace(0, 1, n - 1, dtype=complex)
 
   def __init__(self, *args, **kwargs) -> None:
     """Initializes the array."""
@@ -50,22 +51,3 @@ class Array:
     self.__inner_data__[self.__first_index__] = time.time() + value * 1j
     n = self.__inner_data__.shape[0]
     self.__first_index__ = (self.__first_index__ + 1) % n
-
-  @classmethod
-  def getDefault(cls, *args, **kwargs) -> Self:
-    """Returns the default value for the field."""
-    defVal = cls(*args, **kwargs)
-    defVal.apply((args, kwargs))
-    return defVal
-
-  def apply(self, value: Any) -> Self:
-    """Applies the value to the field."""
-    args, kwargs = unParseArgs(value)
-    return self
-
-
-class ArrayField(Wait):
-  """Wraps the Array in a mutable descriptor class"""
-
-  def __init__(self, *args, **kwargs) -> None:
-    Wait.__init__(self, Array, *args, **kwargs)

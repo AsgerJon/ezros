@@ -11,6 +11,8 @@ from vistside.core import BrushField, parsePen, Black, Tight
 from vistside.widgets import BaseWidget, BaseLayoutField, LabelField
 from vistutils.fields import unParseArgs, Wait
 
+from ezros.rosutils._wait import WaitForIt
+
 
 class ClientInfo(BaseWidget):
   """The ClientInfo class provides static information about the client."""

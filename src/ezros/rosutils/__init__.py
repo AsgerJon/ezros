@@ -5,6 +5,7 @@ ROS through Python. """
 from __future__ import annotations
 
 # from ._validate_initialized import validateInitialized
+from ._wait import WaitForIt
 from ._array_field import Array
 from ._validate_topic_name import validateTopicName
 from ._topic_factory import TopicFactory

@@ -4,16 +4,14 @@ particular the ping time. """
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from typing import Self, Any
-
-from vistside.widgets import LabelField, LabelWidget
+from vistside.widgets import LabelWidget
 from PySide6.QtGui import QColor, QPainter, QPaintEvent
-from vistside.core import BrushField, solidBrush
+from vistside.core import solidBrush
 from vistside.widgets import BaseWidget, BaseLayoutField
-from vistutils.fields import Wait, FieldBox
-from vistutils.fields._break_point import BreakPoint
+from vistutils.fields import FieldBox
 
-from ezros.gui import PingIndicatorField, OpState, PingIndicator
+from ezros.gui import OpState, PingIndicator
+from ezros.rosutils._wait import WaitForIt
 
 
 class ConnectionStatus(BaseWidget):
@@ -30,7 +28,7 @@ class ConnectionStatus(BaseWidget):
   def __init__(self, *args, **kwargs) -> None:
     """Create a new OpState."""
     BaseWidget.__init__(self, *args, **kwargs)
-    self.initUI()
+    # self.initUI()
 
   def initUI(self) -> None:
     """Initialize the user interface."""
@@ -38,6 +36,9 @@ class ConnectionStatus(BaseWidget):
     self.baseLayout.addWidget(self.pingIndicator)
     self.baseLayout.addWidget(self.operationalState)
     self.setLayout(self.baseLayout)
+    with WaitForIt() as yolo:
+      print(__file__)
+      yolo.run_code(self)
 
   def paintEvent(self, event: QPaintEvent) -> None:
     """Paints the widget."""
@@ -49,21 +50,3 @@ class ConnectionStatus(BaseWidget):
     painter.setBrush(solidBrush(self.fillColor))
     painter.drawRoundedRect(viewRect, 10, 10)
     painter.end()
-
-  @classmethod
-  def getDefault(cls, *args, **kwargs) -> Self:
-    """Returns the default value for the field."""
-    return cls().apply((args, kwargs))
-
-  def apply(self, value: Any) -> Self:
-    """Applies the arguments contained in value to the widget."""
-    return self
-
-
-class ConnectionStatusField(Wait):
-  """The ConnectionStatusField class provides a descriptor for instances of
-  ConnectionStatus."""
-
-  def __init__(self, *args, **kwargs) -> None:
-    """Initializes the ConnectionStatusField."""
-    Wait.__init__(self, ConnectionStatus, *args, **kwargs)

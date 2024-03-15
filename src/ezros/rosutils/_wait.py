@@ -5,8 +5,14 @@ from __future__ import annotations
 import subprocess
 
 import subprocess
+import sys
 import tempfile
 import os
+import subprocess
+import tempfile
+import os
+
+from vistutils.text import monoSpace
 
 
 class WaitForIt:
@@ -20,27 +26,32 @@ class WaitForIt:
   def __exit__(self, exc_type, exc_val, exc_tb):
     print("Interactive debugging session ended.")
 
-  def run_code(self):
+  def run_code(self, obj: object = None):
+    this = obj
+    lines = []
     while True:
-      with tempfile.NamedTemporaryFile(suffix=".py") as tmpfile:
-        # Open vi for code editing
-        subprocess.call(["vi", tmpfile.name])
+      os.system('cls' if os.name == 'nt' else 'clear')
 
-        # Read the code from the temporary file
-        with open(tmpfile.name, 'r') as f:
-          code = f.read()
-
+      msg = """Enter code line by line. Enter commands by prepending colon
+      (':'). The following commands are recognized: <br>
+      :q - Quit the interactive debugging session. <br>
+      :RUN - Run the code. <br>
+      :SAVE [fileName] - Save the code to the file specified. <br>
+      :LOAD [fileName] - Load the code from the file specified. <br>
+      :CLEAR - Clear the code. <br>
+      :vi - Open the code in the vi editor."""
+      print(msg)
+      for (i, line) in enumerate([*lines, '']):
+        print('%03d ~ %s' % (i + 1, line))
+      code = input(">>> ")
+      if code.strip()[0] == ":":
         if code.strip() == ":q":
           break
-
-        # Execute the code
-        try:
-          result = subprocess.run(["python", tmpfile.name],
-                                  capture_output=True,
-                                  text=True)
-          if result.stdout:
-            print(result.stdout)
-          if result.stderr:
-            print(f"Error: {result.stderr}")
-        except Exception as e:
-          print(f"Exception occurred: {e}")
+        if code.strip() == ":CLEAR":
+          lines = []
+        if code.strip() == ":vi":
+          raise NotImplementedError
+        if code.strip() == ":RUN":
+          os.system('python -c "%s"' % '\n'.join(lines))
+      else:
+        lines.append(code)

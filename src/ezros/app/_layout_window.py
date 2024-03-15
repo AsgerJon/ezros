@@ -3,12 +3,13 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from PySide6.QtWidgets import QHBoxLayout
 from vistside.widgets import BaseLayoutField, BaseWidget
 from vistside.windows import BaseWindow
-from vistutils.fields import Wait, FieldBox
-from vistutils.fields._break_point import BreakPoint
+from vistutils.fields import FieldBox
 
-from ezros.gui import ClientInfoField, ConnectionStatusField, TabWidget
+from ezros.gui import ClientInfo, TabWidget, ConnectionStatus
+from ezros.rosutils import WaitForIt
 
 tabWidget = FieldBox[TabWidget]()
 
@@ -18,9 +19,9 @@ class LayoutWindow(BaseWindow):
 
   topWidget = FieldBox[BaseWidget]()
   tabWidget = FieldBox[TabWidget]()
-  topLayout = BaseLayoutField(layout='horizontal')
-  clientInfo = ClientInfoField()
-  connectionStatus = ConnectionStatusField()
+  topLayout = FieldBox[QHBoxLayout]()
+  clientInfo = FieldBox[ClientInfo]()
+  connectionStatus = FieldBox[ConnectionStatus]()
 
   def __init__(self, *args, **kwargs) -> None:
     """Create a new LayoutWindow."""
@@ -28,6 +29,8 @@ class LayoutWindow(BaseWindow):
 
   def show(self) -> None:
     """Show the window."""
+    with WaitForIt() as yolo:
+      yolo.run_code(self)
     self.topLayout.addWidget(self.clientInfo)
     self.topLayout.addWidget(self.connectionStatus)
     self.topWidget.setLayout(self.topLayout)

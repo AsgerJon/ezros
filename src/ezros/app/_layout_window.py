@@ -17,7 +17,6 @@ class LayoutWindow(BaseWindow):
   topLayout = BaseLayoutField(layout='horizontal')
   clientInfo = ClientInfoField()
   connectionStatus = ConnectionStatusField()
-
   tabWidget = TabField()
 
   def __init__(self, *args, **kwargs) -> None:

@@ -1,7 +1,8 @@
-"""The 'app' module contains the main application. """
+"""The 'app' module provides the top level windows and the application
+ class for the desktop application."""
 #  MIT Licence
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from ._layout_window import LayoutWindow
-from ._main_window import MainWindow
+
+from ._app import App

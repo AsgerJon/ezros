@@ -6,13 +6,10 @@ from __future__ import annotations
 import os
 import sys
 
-import numpy as np
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
-from icecream import ic
 
 from ezros.app import MainWindow
-from tester_class_02 import TestWindow
 
 
 def tester00() -> None:

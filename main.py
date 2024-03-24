@@ -6,15 +6,18 @@ from __future__ import annotations
 import os
 import sys
 
+from PySide6.QtCharts import QScatterSeries, QChart
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
+import numpy as np
 
 from ezros.app import MainWindow
+import msgs.msg as msg
 
 
 def tester00() -> None:
   """Hello world"""
-  stuff = [os, sys, 'hello world', Qt, ]
+  stuff = [os, sys, 'hello world', Qt, msg]
   for item in stuff:
     print(item)
 
@@ -32,6 +35,12 @@ def tester01() -> None:
 
 
 def tester02() -> None:
+  """lmao"""
+  for item in dir(msg):
+    print(item)
+
+
+def tester03() -> None:
   """lmao"""
 
 

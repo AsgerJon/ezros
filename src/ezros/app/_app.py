@@ -3,6 +3,9 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+import json
+import os
+
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
@@ -21,5 +24,21 @@ class App(QApplication):
     self.setQuitOnLastWindowClosed(True)
     self.setWindowIcon(QIcon(':/icons/ezros.svg'))
 
+  def getSettingsFile(self) -> str:
+    """Returns the path to the defaults file"""
+    appFolder = self.applicationDirPath()
+    return os.path.join(appFolder, 'defaults.json')
 
+  def loadSettings(self) -> dict:
+    """Loads the defaults from the defaults file."""
+    settingsFile = self.getSettingsFile()
+    if os.path.exists(settingsFile):
+      with open(settingsFile, 'r') as file:
+        return json.load(file)
+    return {}
 
+  def saveSettings(self, settings: dict) -> None:
+    """Saves the defaults to the defaults file."""
+    settingsFile = self.getSettingsFile()
+    with open(settingsFile, 'w') as file:
+      json.dump(settings, file, indent=2)

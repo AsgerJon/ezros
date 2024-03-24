@@ -5,3 +5,5 @@ ROS through Python. """
 from __future__ import annotations
 
 from ._resolve_topic_type import resolveTopicType
+from ._ros_pub import Pub
+from ._ros_topic import RosTopic

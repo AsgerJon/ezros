@@ -13,16 +13,13 @@ from PySide6.QtWidgets import QApplication
 class App(QApplication):
   """App is a subclass of QApplication."""
 
+  icons = None
+
   def __init__(self, *args, **kwargs) -> None:
     """Initializes the App instance."""
     QApplication.__init__(self, *args, **kwargs)
     self.setApplicationName('EZROS')
     self.setApplicationDisplayName('EZROS')
-    self.setApplicationVersion('0.1.0')
-    self.setOrganizationName('TMR')
-    self.setOrganizationDomain('tmr.dk')
-    self.setQuitOnLastWindowClosed(True)
-    self.setWindowIcon(QIcon(':/icons/ezros.svg'))
 
   def getSettingsFile(self) -> str:
     """Returns the path to the defaults file"""
@@ -42,3 +39,17 @@ class App(QApplication):
     settingsFile = self.getSettingsFile()
     with open(settingsFile, 'w') as file:
       json.dump(settings, file, indent=2)
+
+  def _getIconPath(self) -> str:
+    """Getter-function for the icon path."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(here, 'icons')
+
+  def _loadIcons(self) -> None:
+    """Loads the icons for the application."""
+    iconPath = self._getIconPath()
+    for item in os.listdir(iconPath):
+      if item.endswith('.png'):
+        icon = QIcon(os.path.join(iconPath, item))
+        self.setWindowIcon(icon)
+        break

@@ -45,10 +45,10 @@ class LayoutWindow(BaseWindow):
     self.setCentralWidget(self.baseWidget)
     BaseWindow.initUi(self)
 
-  # def show(self) -> None:
-  #   """Show the window."""
-  #   self.initUi()
-  #   BaseWindow.show(self)
+  def show(self) -> None:
+    """Show the window."""
+    self.initUi()
+    BaseWindow.show(self)
 
   def preAppend(self, data: Any) -> None:
     """Extracts the floating point value from the data instance before

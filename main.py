@@ -7,12 +7,16 @@ import os
 import sys
 
 from PySide6.QtCharts import QScatterSeries, QChart
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QObject
 from PySide6.QtWidgets import QApplication
+from ezside.windows import TestWindow
+from icecream import ic
 import numpy as np
 
 from ezros.app import MainWindow
 import msgs.msg as msg
+
+ic.configureOutput(includeContext=True, )
 
 
 def tester00() -> None:
@@ -29,7 +33,10 @@ def tester01() -> None:
   """Main application tester"""
 
   app = QApplication(sys.argv)
-  main = MainWindow()
+  ic(app.applicationDirPath())
+  ic(app.applicationFilePath())
+  ic(app.platformName())
+  main = TestWindow()
   main.show()
   app.exec()
 

@@ -14,7 +14,7 @@ from ezside.widgets import Timer, BaseWidget, DataView
 from icecream import ic
 from vistutils.waitaminute import typeMsg
 
-from ezros.widgets import SpinBox
+from ezros.widgets import SpinBox, LiveView
 
 ic.configureOutput(includeContext=True)
 
@@ -25,7 +25,7 @@ class DynChart(BaseWidget):
   independent rate separate from when new data is added to the chart."""
 
   baseLayout = AttriBox[QVBoxLayout]()
-  dataView = AttriBox[DataView]()
+  dataView = AttriBox[LiveView]()
   timer = AttriBox[Timer](10, Precise, singleShot=False)
   controlsLayout = AttriBox[QHBoxLayout]()
   controlsWidget = AttriBox[BaseWidget]()
@@ -80,7 +80,6 @@ class DynChart(BaseWidget):
 
   def setVerticalRange(self, min_: float, max_: float) -> None:
     """Set the vertical range of the chart."""
-    ic(min_, max_)
     self.dataView.innerChart.axes()[1].setRange(min_, max_)
     self.update()
     self.dataView.refresh()

@@ -6,9 +6,12 @@ from __future__ import annotations
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QDoubleSpinBox, QHBoxLayout, QVBoxLayout
 from attribox import AttriBox
+from ezside.core import Tight
 from ezside.widgets import BaseWidget, TextLabel
 from icecream import ic
 from vistutils.parse import maybe
+
+from ezros.widgets import TightLabel
 
 ic.configureOutput(includeContext=True, )
 
@@ -23,7 +26,7 @@ class SpinBox(BaseWidget):
 
   inner = AttriBox[QDoubleSpinBox]()
   baseLayout = AttriBox[QVBoxLayout]()
-  label = AttriBox[TextLabel]()
+  label = AttriBox[TightLabel]()
 
   newValue = Signal(float)
   update = Signal()
@@ -51,6 +54,7 @@ class SpinBox(BaseWidget):
     self.inner.setRange(self.__min_value__, self.__max_value__)
     self.inner.setValue(self.__spin_value__)
     self.label.setText(self.__label_title__)
+    self.label.setSizePolicy(Tight, Tight)
     self.baseLayout.addWidget(self.label)
     self.baseLayout.addWidget(self.inner)
     self.setLayout(self.baseLayout)

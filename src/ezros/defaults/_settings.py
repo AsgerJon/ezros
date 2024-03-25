@@ -25,3 +25,11 @@ class Settings:
     with open(os.path.join(here, '_button_style.qss')) as file:
       print(file.read())
       return file.read()
+
+  labelBackgroundColor = (255, 255, 192, 255)
+  labelBorderColor = (0, 0, 0, 255)
+  labelTextColor = (0, 0, 0, 255)
+  labelTopMargin = 2
+  labelBottomMargin = 2
+  labelLeftMargin = 2
+  labelRightMargin = 2

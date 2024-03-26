@@ -5,12 +5,12 @@ from __future__ import annotations
 
 from abc import abstractmethod
 
-from attribox import AttriBox
+from attribox import AttriBox, this
 from ezside.widgets import BaseWidget
 from icecream import ic
 
 from ezros.app import BaseWindow
-from ezros.widgets import Vertical, RosTalker
+from ezros.widgets import Vertical, RosTalker, StrInput
 
 ic.configureOutput(includeContext=True)
 
@@ -21,11 +21,13 @@ class LayoutWindow(BaseWindow):
 
   baseWidget = AttriBox[BaseWidget]()
   baseLayout = AttriBox[Vertical]()
-  rosTalker = AttriBox[RosTalker]()
+  nodeInput = AttriBox[StrInput](this)
+  topicInput = AttriBox[StrInput](this)
 
   def initUi(self) -> None:
     """Initialize the user interface."""
-    self.baseLayout.addWidget(self.rosTalker)
+    self.baseLayout.addWidget(self.nodeInput)
+    self.baseLayout.addWidget(self.topicInput)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
 

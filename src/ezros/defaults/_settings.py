@@ -31,10 +31,10 @@ class Settings:
   labelBackgroundColor = (255, 255, 192, 255)
   labelBorderColor = (0, 0, 0, 255)
   labelTextColor = (0, 0, 0, 255)
-  labelTopMargin = 8
-  labelBottomMargin = 8
-  labelLeftMargin = 8
-  labelRightMargin = 8
+  labelTopMargin = 2
+  labelBottomMargin = 2
+  labelLeftMargin = 2
+  labelRightMargin = 2
 
   @classmethod
   def getLabelMargins(cls, ) -> QMargins:

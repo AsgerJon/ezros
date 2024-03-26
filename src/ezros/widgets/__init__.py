@@ -11,6 +11,7 @@ from ._live_view import LiveView
 from ._tight_label import TightLabel
 from ._spin_box import SpinBox
 from ._ros_talker import RosTalker
+from ._str_input import StrInput
 from ._dyn_chart import DynChart
 from ._tab_page import TabPage
 from ._tab_widget import TabWidget

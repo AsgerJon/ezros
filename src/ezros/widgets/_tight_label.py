@@ -14,9 +14,11 @@ from ezside.core import SolidLine, Black, SolidFill
 from ezside.widgets import BaseWidget
 from ezside.moreutils import StrField
 from vistutils.text import monoSpace
+from vistutils.waitaminute import typeMsg
 
 from ezros.defaults import Settings
 from ezros.rosutils import IntField
+from ezros.widgets import parseText
 
 
 class TightLabel(BaseWidget):
@@ -30,6 +32,21 @@ class TightLabel(BaseWidget):
   textColor = Black
   hAlign = StrField('Center')
   vAlign = StrField('Center')
+
+  def __init__(self, *args, **kwargs) -> None:
+    """Initialize the widget."""
+    BaseWidget.__init__(self, *args, **kwargs)
+    for arg in args:
+      if isinstance(arg, BaseWidget):
+        self.text = getattr(arg, '__label_title__', )
+        break
+    else:
+      text = parseText(*args, **kwargs)
+      if isinstance(text, str):
+        self.text = text
+      elif text is not None:
+        e = typeMsg('text', text, str)
+        raise TypeError(monoSpace(e % text))
 
   def getFont(self) -> QFont:
     """Returns the font of the label."""

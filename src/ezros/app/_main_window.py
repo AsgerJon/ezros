@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from warnings import warn
 
+from PySide6.QtWidgets import QMainWindow
 from icecream import ic
 from rospy import Subscriber, init_node
 from vistutils.waitaminute import typeMsg
@@ -51,16 +52,12 @@ class MainWindow(LayoutWindow):
     e = typeMsg(name, value, expected)
     raise TypeError(e)
 
-  def debug1Func(self, ) -> None:
-    LayoutWindow.debug1Func(self, )
-    x = self.dynChart.dataView.innerChart.axes()[0].range()
-    y = self.dynChart.dataView.innerChart.axes()[1].range()
-    ic(x, y)
+  def connectActions(self) -> None:
+    """Connect actions."""
 
-  def initUi(self) -> None:
-    """Initialize the user interface."""
-    LayoutWindow.initUi(self)
-    self.show()
-    self.debug1Func()
-    self.dynChart.dataView.innerChart.axes()[0].setRange(0, 100)
-    self.dynChart.dataView.innerChart.axes()[1].setRange(0, 100)
+  def show(self) -> None:
+    """Show"""
+    self.initMenus()
+    self.initUi()
+    self.connectActions()
+    QMainWindow.show(self)

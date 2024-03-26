@@ -9,14 +9,12 @@ from warnings import warn
 from PySide6.QtWidgets import QVBoxLayout
 from attribox import AttriBox
 from ezside import BaseWindow
-from ezside.widgets import BaseWidget, TextLabel, DataView
+from ezside.widgets import BaseWidget
 from icecream import ic
-from rospy import Subscriber, init_node
 from vistutils.text import monoSpace
 from vistutils.waitaminute import typeMsg
 
-from ezros.rosutils import resolveTopicType
-from ezros.widgets import TabWidget, DynChart
+from ezros.widgets import DynChart
 
 ic.configureOutput(includeContext=True)
 
@@ -31,11 +29,6 @@ class LayoutWindow(BaseWindow):
 
   def __init__(self, *args, **kwargs) -> None:
     BaseWindow.__init__(self, *args, **kwargs)
-    name = 'yolo'
-    type_ = resolveTopicType(name)
-    callback = self.dynChart.append
-    init_node('lmao', anonymous=True)
-    self.sub = Subscriber('yolo', resolveTopicType('yolo'), callback)
 
   def initUi(self) -> None:
     """Initialize the user interface."""
@@ -43,12 +36,6 @@ class LayoutWindow(BaseWindow):
     self.baseLayout.addWidget(self.dynChart)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
-    BaseWindow.initUi(self)
-
-  def show(self) -> None:
-    """Show the window."""
-    self.initUi()
-    BaseWindow.show(self)
 
   def preAppend(self, data: Any) -> None:
     """Extracts the floating point value from the data instance before

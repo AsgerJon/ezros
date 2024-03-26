@@ -8,6 +8,7 @@ import os
 
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
+import ezside
 
 
 class App(QApplication):
@@ -20,6 +21,8 @@ class App(QApplication):
     QApplication.__init__(self, *args, **kwargs)
     self.setApplicationName('EZROS')
     self.setApplicationDisplayName('EZROS')
+    self._uri = os.environ.get('ROS_MASTER_URI', 'http://localhost:11311')
+    print(f'ROS_MASTER_URI: {self._uri}')
 
   def getSettingsFile(self) -> str:
     """Returns the path to the defaults file"""

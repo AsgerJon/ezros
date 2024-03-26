@@ -15,7 +15,7 @@ from std_msgs.msg import Header
 from vistutils.waitaminute import typeMsg
 
 from ezros.rosutils import resolveTopicType
-from ezros.widgets import PushButton, LineEdit, SpinBox, Grid
+from ezros.widgets import PushButton, LineEdit, SpinBox, Grid, TightLabel
 
 
 class RosTalker(BaseWidget):
@@ -26,9 +26,10 @@ class RosTalker(BaseWidget):
 
   baseLayout = AttriBox[Grid]()
   sayButton = AttriBox[PushButton]('Say')
-  topic = AttriBox[LineEdit]('topic name')
+  node = AttriBox[LineEdit]('Node name')
+  topic = AttriBox[LineEdit]('Topic name')
   spinBox = AttriBox[SpinBox]('data', 'horizontal', 0, 50, 100)
-  textLabel = AttriBox[TextLabel]('**waiting for publisher**')
+  textLabel = AttriBox[TightLabel]('**waiting for publisher**')
 
   def initUi(self) -> None:
     """Initialize the user interface."""

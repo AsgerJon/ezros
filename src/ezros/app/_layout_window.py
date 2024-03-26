@@ -6,7 +6,7 @@ from __future__ import annotations
 from abc import abstractmethod
 
 from attribox import AttriBox
-from ezside.widgets import BaseWidget, TextLabel, PushButton
+from ezside.widgets import BaseWidget
 from icecream import ic
 
 from ezros.app import BaseWindow
@@ -21,12 +21,10 @@ class LayoutWindow(BaseWindow):
 
   baseWidget = AttriBox[BaseWidget]()
   baseLayout = AttriBox[Vertical]()
-  welcomeLabel = AttriBox[TextLabel]('Welcome to EZROS')
   rosTalker = AttriBox[RosTalker]()
 
   def initUi(self) -> None:
     """Initialize the user interface."""
-    self.baseLayout.addWidget(self.welcomeLabel)
     self.baseLayout.addWidget(self.rosTalker)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)

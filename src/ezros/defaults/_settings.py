@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import os
 
+from PySide6.QtCore import QMargins
+
 
 class Settings:
   """The defaults class provides a base class for all defaults classes in the
@@ -29,7 +31,15 @@ class Settings:
   labelBackgroundColor = (255, 255, 192, 255)
   labelBorderColor = (0, 0, 0, 255)
   labelTextColor = (0, 0, 0, 255)
-  labelTopMargin = 2
-  labelBottomMargin = 2
-  labelLeftMargin = 2
-  labelRightMargin = 2
+  labelTopMargin = 8
+  labelBottomMargin = 8
+  labelLeftMargin = 8
+  labelRightMargin = 8
+
+  @classmethod
+  def getLabelMargins(cls, ) -> QMargins:
+    """Returns the margins of the label."""
+    return QMargins(cls.labelTopMargin,
+                    cls.labelLeftMargin,
+                    cls.labelBottomMargin,
+                    cls.labelRightMargin)

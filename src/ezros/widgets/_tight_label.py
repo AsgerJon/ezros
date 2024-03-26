@@ -3,15 +3,14 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtCore import QRect, QSize, QPoint
+from PySide6.QtCore import QRect, QSize, QPoint, QMargins
 from PySide6.QtGui import QFont, \
   QFontMetrics, \
   QPainter, \
   QPaintEvent, \
   QColor, \
   QBrush, QPen
-from attribox import AttriBox
-from ezside.core import SolidLine, NoWrap, Black, SolidFill
+from ezside.core import SolidLine, Black, SolidFill
 from ezside.widgets import BaseWidget
 from ezside.moreutils import StrField
 from vistutils.text import monoSpace
@@ -30,7 +29,7 @@ class TightLabel(BaseWidget):
   borderColor = Black
   textColor = Black
   hAlign = StrField('Center')
-  vAlign = StrField('Top')
+  vAlign = StrField('Center')
 
   def getFont(self) -> QFont:
     """Returns the font of the label."""
@@ -45,8 +44,7 @@ class TightLabel(BaseWidget):
 
   def getRect(self) -> QRect:
     """Returns the bounding rect of the label."""
-    text = self.text
-    return self.getFontMetrics().boundingRect(text)
+    return self.getFontMetrics().boundingRect(self.text)
 
   def sizeHint(self) -> QSize:
     """Returns the size hint of the label."""
@@ -92,6 +90,33 @@ class TightLabel(BaseWidget):
     size = self.getRect().size()
     return QRect(leftTop, size)
 
+  def alignRect(self,
+                movingRect: QRect | QSize,
+                containingRect: QRect) -> QRect:
+    """Returns the aligned rectangle."""
+    if isinstance(movingRect, QRect):
+      movingRect = movingRect.size()
+    if self.hAlign.lower() == 'center':
+      left = (containingRect.width() - movingRect.width()) // 2
+    elif self.hAlign.lower() == 'left':
+      left = containingRect.left()
+    elif self.hAlign.lower() == 'right':
+      left = containingRect.right() - movingRect.width()
+    else:
+      e = """Unable to recognize horizontal alignment: '%s'"""
+      raise ValueError(monoSpace(e % self.hAlign))
+    if self.vAlign.lower() == 'center':
+      top = (containingRect.height() - movingRect.height()) // 2
+    elif self.vAlign.lower() == 'top':
+      top = containingRect.top()
+    elif self.vAlign.lower() == 'bottom':
+      top = containingRect.bottom() - movingRect.height()
+    else:
+      e = """Unable to recognize vertical alignment: '%s'"""
+      raise ValueError(monoSpace(e % self.vAlign))
+    leftTop = QPoint(left, top)
+    return QRect(leftTop, movingRect)
+
   def getBackgroundBrush(self) -> QBrush:
     """Returns the background brush of the label."""
     brush = QBrush()
@@ -115,18 +140,25 @@ class TightLabel(BaseWidget):
 
   def paintEvent(self, event: QPaintEvent) -> None:
     """Paints the label."""
-    painter = QPainter()
-    painter.begin(self)
-    viewRect = painter.viewport()
-    textRect = self.fitRect(viewRect)
-    painter.setBrush(self.getBackgroundBrush())
-    painter.setPen(self.emptyLine)
-    painter.drawRoundedRect(viewRect, 4, 4)
-    painter.setPen(self.getBorderPen())
-    painter.setBrush(self.emptyBrush)
-    painter.drawRoundedRect(viewRect, 4, 4)
-    painter.drawText(textRect, self.text)
-    painter.end()
+    try:
+      painter = QPainter()
+      painter.begin(self)
+      viewRect = painter.viewport()
+      textRect = self.getRect()
+      marginedSize = (textRect + Settings.getLabelMargins()).size()
+      marginedRect = self.alignRect(marginedSize, viewRect)
+      textRect.moveCenter(marginedRect.center())
+      painter.setBrush(self.getBackgroundBrush())
+      painter.setPen(self.emptyLine)
+      painter.drawRoundedRect(marginedRect, 4, 4)
+      painter.setPen(self.getBorderPen())
+      painter.setBrush(self.emptyBrush)
+      painter.drawRoundedRect(marginedRect, 4, 4)
+      painter.drawText(textRect, self.text)
+      painter.end()
+    except Exception as e:
+      print(e)
+      raise SystemExit from e
 
   def getText(self) -> str:
     """Getter-function for the text"""

@@ -3,13 +3,15 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+import os
 from typing import Any
 from warnings import warn
 
 from PySide6.QtWidgets import QVBoxLayout
 from attribox import AttriBox
 from ezside import BaseWindow
-from ezside.widgets import BaseWidget
+from ezside.core import parseParent
+from ezside.widgets import BaseWidget, TextLabel
 from icecream import ic
 from vistutils.text import monoSpace
 from vistutils.waitaminute import typeMsg
@@ -26,12 +28,19 @@ class LayoutWindow(BaseWindow):
   baseWidget = AttriBox[BaseWidget]()
   baseLayout = AttriBox[QVBoxLayout]()
   dynChart = AttriBox[DynChart]()
+  titleBanner = AttriBox[TextLabel]('EZROS')
 
   def __init__(self, *args, **kwargs) -> None:
-    BaseWindow.__init__(self, *args, **kwargs)
+    parent = parseParent(*args)
+    BaseWindow.__init__(self, )
 
   def initUi(self) -> None:
     """Initialize the user interface."""
+    self.titleBanner.defaultFont.setPointSize(24)
+    self.titleBanner.innerText = os.environ.get('ROS_MASTER_URI',
+                                                'NO ROS MASTER URI SET!')
+    self.titleBanner.initUi()
+    self.baseLayout.addWidget(self.titleBanner)
     self.dynChart.initUi()
     self.baseLayout.addWidget(self.dynChart)
     self.baseWidget.setLayout(self.baseLayout)

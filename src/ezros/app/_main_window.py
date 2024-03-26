@@ -57,7 +57,6 @@ class MainWindow(LayoutWindow):
 
   def show(self) -> None:
     """Show"""
-    self.initMenus()
     self.initUi()
     self.connectActions()
     QMainWindow.show(self)

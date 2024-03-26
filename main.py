@@ -11,7 +11,7 @@ from PySide6.QtWidgets import QApplication
 from icecream import ic
 import msgs.msg as msg
 
-from ezros.app import MainWindow
+from ezros.app import App, MainWindow
 
 ic.configureOutput(includeContext=True, )
 
@@ -29,10 +29,11 @@ fb = lambda n: '' if n % 5 else 'Fizz' + '' if n % 3 else 'Buzz' or str(n)
 def tester01() -> None:
   """Main application tester"""
 
-  app = QApplication(sys.argv)
-  main = MainWindow()
-  main.show()
-  app.exec()
+  app = App(sys.argv)
+  if app.loadEnv():
+    main = MainWindow()
+    main.show()
+    app.exec()
 
 
 def tester02() -> None:
@@ -43,7 +44,9 @@ def tester02() -> None:
 
 def tester03() -> None:
   """lmao"""
+  test = msg.AuxCommand()
+  print(test)
 
 
 if __name__ == '__main__':
-  tester01()
+  tester03()

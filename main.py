@@ -10,6 +10,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 from icecream import ic
 import msgs.msg as msg
+import numpy as np
 
 from ezros.app import App, MainWindow
 

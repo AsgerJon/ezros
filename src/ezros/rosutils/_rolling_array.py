@@ -6,16 +6,19 @@ from __future__ import annotations
 
 import time
 
+from icecream import ic
 import numpy as np
 from vistutils.parse import maybe
 from vistutils.waitaminute import typeMsg
+
+ic.configureOutput(includeContext=True)
 
 
 class RollingArray:
   """RollingArray to keep visual representation classes subservient to the
   actual data structure classes. """
 
-  __fallback_num_points__ = 256
+  __fallback_num_points__ = 16
   __zero_index__ = None
   __num_points__ = None
   __inner_array__ = None
@@ -32,7 +35,7 @@ class RollingArray:
     num = self.__num_points__
     reals = np.linspace(now, then, num, dtype=np.complex64)
     fakes = np.zeros((num,), dtype=np.complex64)
-    self.__inner_array__ = reals + fakes
+    self.__inner_array__ = (reals + fakes).astype(np.complex64)
 
   def _getInnerArray(self, **kwargs) -> np.ndarray:
     """Getter-function for the inner array"""
@@ -57,11 +60,30 @@ class RollingArray:
 
   def rightNow(self) -> tuple[np.ndarray, np.ndarray]:
     """Return the current array"""
-    base = np.roll(self._getInnerArray(), -self.__zero_index__)
-    times = time.time() - base.real
+    base = np.roll(self._getInnerArray(), -self.__zero_index__, )
+    times = base.real
+    times -= max(times)
     values = base.imag
+
     return times.astype(np.float32), values.astype(np.float32)
 
   def append(self, value: float) -> None:
     """Append a value to the array"""
-    self.__inner_array__[self.incZero()] = time.time() + value * 1j
+    self.__inner_array__[self.__zero_index__] = self.moment() + value * 1j
+    self.__zero_index__ += 1
+    if self.__zero_index__ >= self.__num_points__:
+      self.__zero_index__ = 0
+
+  @staticmethod
+  def moment() -> float:
+    """Return the current time"""
+    return time.time()
+
+  def __str__(self) -> str:
+    """Returns the average time and value of the snap"""
+    t, x = self.rightNow()
+    tMin, tMax = t.min(), t.max()
+    xMin, xMax = x.min(), x.max()
+    msg = """%s: %s, %s: %s, %s: %s, %s: %s""" % (
+      'tMin', tMin, 'tMax', tMax, 'xMin', xMin, 'xMax', xMax)
+    return msg

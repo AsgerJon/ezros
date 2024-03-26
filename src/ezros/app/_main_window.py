@@ -25,17 +25,19 @@ class MainWindow(LayoutWindow):
     LayoutWindow.__init__(self, *args, **kwargs)
     self.setWindowTitle('EZROS')
     self.resize(800, 600)
+    self._topicName = '/tool/pump_current'
 
   def createSubscriber(self) -> None:
     """Create a subscriber."""
     if self.__noise_subscriber__ is None:
-      name = 'yolo'
+      name = self._topicName
       type_ = resolveTopicType(name)
       callback = self.dynChart.append
       init_node('lmao', anonymous=True)
-      self.__noise_subscriber__ = Subscriber('yolo', type_, callback)
-    w = """Subscriber already exists."""
-    warn(w)
+      self.__noise_subscriber__ = Subscriber(name, type_, callback)
+    else:
+      w = """Subscriber already exists."""
+      warn(w)
 
   def getSubscriber(self, **kwargs) -> Subscriber:
     """Get the subscriber."""
@@ -54,9 +56,11 @@ class MainWindow(LayoutWindow):
 
   def connectActions(self) -> None:
     """Connect actions."""
+    self.getSubscriber()
 
   def show(self) -> None:
     """Show"""
     self.initUi()
     self.connectActions()
     QMainWindow.show(self)
+    self.dynChart.timer.start()

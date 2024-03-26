@@ -8,8 +8,12 @@ from PySide6.QtCore import Slot
 from attribox import AttriBox
 from ezside.widgets import LineSeries, ScatterSeries
 from ezside.settings import Default
+from icecream import ic
+import numpy as np
 
 from ezros.rosutils import QAttriBox, RollingArray
+
+ic.configureOutput(includeContext=True)
 
 
 class LiveView(QChartView):
@@ -57,12 +61,15 @@ class LiveView(QChartView):
   @Slot(float)
   def append(self, value: float) -> None:
     """Appends a value to the series."""
-    self.scatter.appendValue(value)
-    self.lineVals.appendValue(value)
+    self.rollator.append(value)
 
   @Slot()
   def refresh(self) -> None:
     """Refreshes the data."""
-    self.scatter.updateValues()
-    self.lineVals.updateValues()
-    self.update()
+    self.scatter.clear()
+    self.lineVals.clear()
+    t, x = self.rollator.rightNow()
+    print(t)
+
+    self.scatter.appendNp(t, x)
+    self.lineVals.appendNp(t, x)

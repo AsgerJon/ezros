@@ -10,9 +10,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 from icecream import ic
 import msgs.msg as msg
-import numpy as np
 
-from ezros.app import App, MainWindow
+from ezros.app import MainWindow
 
 ic.configureOutput(includeContext=True, )
 
@@ -30,11 +29,11 @@ fb = lambda n: '' if n % 5 else 'Fizz' + '' if n % 3 else 'Buzz' or str(n)
 def tester01() -> None:
   """Main application tester"""
 
-  app = App(sys.argv)
-  if app.loadEnv():
-    main = MainWindow()
-    main.show()
-    app.exec()
+  app = QApplication(sys.argv)
+  app.setAttribute(Qt.ApplicationAttribute.AA_DontUseNativeMenuBar, True)
+  main = MainWindow()
+  main.show()
+  app.exec()
 
 
 def tester02() -> None:
@@ -45,9 +44,9 @@ def tester02() -> None:
 
 def tester03() -> None:
   """lmao"""
-  test = msg.AuxCommand()
-  print(test)
+  test = msg.Float32Stamped()
+  print(test.__slots__)
 
 
 if __name__ == '__main__':
-  tester03()
+  tester01()

@@ -3,15 +3,10 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from warnings import warn
-
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QApplication
 from icecream import ic
-from rospy import Subscriber, init_node
-from vistutils.waitaminute import typeMsg
 
-from ezros.app import (LayoutWindow)
-from ezros.rosutils import resolveTopicType
+from ezros.app import LayoutWindow
 
 ic.configureOutput(includeContext=True)
 
@@ -19,48 +14,5 @@ ic.configureOutput(includeContext=True)
 class MainWindow(LayoutWindow):
   """The MainWindow class organizes the main application window."""
 
-  __noise_subscriber__ = None
-
-  def __init__(self, *args, **kwargs) -> None:
-    LayoutWindow.__init__(self, *args, **kwargs)
-    self.setWindowTitle('EZROS')
-    self.resize(800, 600)
-    self._topicName = '/tool/pump_current'
-
-  def createSubscriber(self) -> None:
-    """Create a subscriber."""
-    if self.__noise_subscriber__ is None:
-      name = self._topicName
-      type_ = resolveTopicType(name)
-      callback = self.dynChart.append
-      init_node('lmao', anonymous=True)
-      self.__noise_subscriber__ = Subscriber(name, type_, callback)
-    else:
-      w = """Subscriber already exists."""
-      warn(w)
-
-  def getSubscriber(self, **kwargs) -> Subscriber:
-    """Get the subscriber."""
-    if self.__noise_subscriber__ is None:
-      if kwargs.get('_recursion', False):
-        raise RecursionError
-      self.createSubscriber()
-      return self.getSubscriber(_recursion=True)
-    if isinstance(self.__noise_subscriber__, Subscriber):
-      return self.__noise_subscriber__
-    name = 'self.__noise_subscriber__'
-    value = self.__noise_subscriber__
-    expected = Subscriber
-    e = typeMsg(name, value, expected)
-    raise TypeError(e)
-
-  def connectActions(self) -> None:
-    """Connect actions."""
-    self.getSubscriber()
-
-  def show(self) -> None:
-    """Show"""
-    self.initUi()
-    self.connectActions()
-    QMainWindow.show(self)
-    self.dynChart.timer.start()
+  def initActions(self) -> None:
+    self.menuBar.help.about_qt.triggered.connect(QApplication.aboutQt)

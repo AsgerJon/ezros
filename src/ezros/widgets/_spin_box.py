@@ -4,10 +4,10 @@
 from __future__ import annotations
 
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QDoubleSpinBox, QHBoxLayout, QVBoxLayout
+from PySide6.QtWidgets import QDoubleSpinBox, QVBoxLayout, QHBoxLayout
 from attribox import AttriBox
 from ezside.core import Tight
-from ezside.widgets import BaseWidget, TextLabel
+from ezside.widgets import BaseWidget
 from icecream import ic
 from vistutils.parse import maybe
 
@@ -26,6 +26,8 @@ class SpinBox(BaseWidget):
 
   inner = AttriBox[QDoubleSpinBox]()
   baseLayout = AttriBox[QVBoxLayout]()
+  verticalLayout = AttriBox[QVBoxLayout]()
+  horizontalLayout = AttriBox[QHBoxLayout]()
   label = AttriBox[TightLabel]()
 
   newValue = Signal(float)
@@ -37,7 +39,10 @@ class SpinBox(BaseWidget):
     if not args:
       e = """Received no positional arguments"""
       raise ValueError(e)
-    strArgs = [*[arg for arg in args if isinstance(arg, str)], 'SpinBox']
+    strArgs = [arg for arg in args if isinstance(arg, str)]
+    label, _orientation = [*strArgs, None, None][:2]
+    self.__label_title__ = maybe(label, 'label title')
+    self.__orientation__ = maybe(_orientation, 'vertical')
     floatArgs = [arg for arg in args if isinstance(arg, (int, float))]
     self.__label_title__ = strArgs[0]
     min_, val, max_ = [*floatArgs, None, None, None][:3]
@@ -55,10 +60,16 @@ class SpinBox(BaseWidget):
     self.inner.setValue(self.__spin_value__)
     self.label.setText(self.__label_title__)
     self.label.setSizePolicy(Tight, Tight)
-    self.baseLayout.addWidget(self.label)
-    self.baseLayout.addWidget(self.inner)
-    self.setLayout(self.baseLayout)
-    BaseWidget.initUi(self)
+    if self.__orientation__ == 'vertical':
+      self.verticalLayout.addWidget(self.label)
+      self.verticalLayout.addWidget(self.inner)
+      return self.setLayout(self.verticalLayout)
+    elif self.__orientation__ == 'horizontal':
+      self.horizontalLayout.addWidget(self.label)
+      self.horizontalLayout.addWidget(self.inner)
+      return self.setLayout(self.horizontalLayout)
+    e = """Failed to recognize orientation: %s""" % self.__orientation__
+    raise ValueError(e)
 
   def connectActions(self) -> None:
     """Connect actions to slots."""

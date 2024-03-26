@@ -13,7 +13,7 @@ from PySide6.QtGui import QFont, \
 from attribox import AttriBox
 from ezside.core import SolidLine, NoWrap, Black, SolidFill
 from ezside.widgets import BaseWidget
-from moreutils import StrField
+from ezside.moreutils import StrField
 from vistutils.text import monoSpace
 
 from ezros.defaults import Settings

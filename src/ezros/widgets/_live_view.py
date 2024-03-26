@@ -7,7 +7,7 @@ from PySide6.QtCharts import QChartView, QChart
 from PySide6.QtCore import Slot
 from attribox import AttriBox
 from ezside.widgets import LineSeries, ScatterSeries
-from settings import Default
+from ezside.settings import Default
 
 from ezros.rosutils import QAttriBox, RollingArray
 

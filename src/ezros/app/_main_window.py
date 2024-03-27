@@ -16,3 +16,8 @@ class MainWindow(LayoutWindow):
 
   def initActions(self) -> None:
     self.menuBar.help.about_qt.triggered.connect(QApplication.aboutQt)
+    self.menuBar.debug.debug1.triggered.connect(self.debug1func)
+
+  def debug1func(self) -> None:
+    """Debug 1 function"""
+    ic(getattr(self.commandWidget, '_commander'))

@@ -10,7 +10,12 @@ from ezside.widgets import BaseWidget
 from icecream import ic
 
 from ezros.app import BaseWindow
-from ezros.widgets import Vertical, RosTalker, StrInput
+from ezros.widgets import Vertical, \
+  RosTalker, \
+  StrInput, \
+  LineEdit, \
+  PushButton, \
+  CommandControl
 
 ic.configureOutput(includeContext=True)
 
@@ -21,13 +26,11 @@ class LayoutWindow(BaseWindow):
 
   baseWidget = AttriBox[BaseWidget]()
   baseLayout = AttriBox[Vertical]()
-  nodeInput = AttriBox[StrInput](this)
-  topicInput = AttriBox[StrInput](this)
+  commandWidget = AttriBox[CommandControl]()
 
   def initUi(self) -> None:
     """Initialize the user interface."""
-    self.baseLayout.addWidget(self.nodeInput)
-    self.baseLayout.addWidget(self.topicInput)
+    self.baseLayout.addWidget(self.commandWidget)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
 

@@ -9,6 +9,7 @@ from __future__ import annotations
 import os
 
 from PySide6.QtCore import QMargins
+from PySide6.QtGui import QFont
 
 
 class Settings:
@@ -35,6 +36,17 @@ class Settings:
   labelBottomMargin = 2
   labelLeftMargin = 2
   labelRightMargin = 2
+
+  fontFamily = 'Montserrat'
+  buttonFontSize = 12
+
+  @classmethod
+  def getButtonFont(cls) -> QFont:
+    """Get the button font."""
+    font = QFont()
+    font.setFamily(cls.fontFamily)
+    font.setPointSize(cls.buttonFontSize)
+    return font
 
   @classmethod
   def getLabelMargins(cls, ) -> QMargins:

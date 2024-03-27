@@ -9,9 +9,9 @@ from attribox import AttriBox, this
 from ezside.widgets import BaseWidget
 from icecream import ic
 from vistutils.parse import maybe
-from vistutils.waitaminute import typeMsg
 
-from ezros.widgets import Horizontal, parseText
+from ezros.rosutils import EmptyField
+from ezros.widgets import Horizontal
 
 
 class _LineEdit(QLineEdit):
@@ -20,25 +20,7 @@ class _LineEdit(QLineEdit):
 
   def __init__(self, *args, **kwargs) -> None:
     """Initialize the widget."""
-    QLineEdit.__init__(self, )
-    for arg in args:
-      if isinstance(arg, BaseWidget):
-        placeholder = getattr(arg, '__placeholder_text__', None)
-        if isinstance(placeholder, str):
-          self.setPlaceholderText(placeholder)
-          break
-        if placeholder is None:
-          self.setPlaceholderText(self.__fallback_placeholder__)
-          break
-        e = typeMsg('placeholder', placeholder, str)
-        raise TypeError(e)
-    else:
-      for arg in args:
-        if isinstance(arg, str):
-          self.setPlaceholderText(arg)
-          break
-      else:
-        self.setPlaceholderText(self.__fallback_placeholder__)
+    QLineEdit.__init__(self, *args, **kwargs)
 
   def setPlaceholderText(self, placeholderText: str) -> None:
     """Set the placeholder text."""
@@ -49,6 +31,8 @@ class _LineEdit(QLineEdit):
 class LineEdit(BaseWidget):
   """LineEdit wrapper.  """
   __placeholder_text__ = None
+
+  text = EmptyField()
 
   cursorPositionChanged = Signal(int, int)
   editingFinished = Signal()
@@ -61,15 +45,14 @@ class LineEdit(BaseWidget):
   lineEdit = AttriBox[_LineEdit](this)
   placeholderText = AttriBox[str]()
 
-  def __init__(self, *args, **kwargs) -> None:
+  def __init__(self, placeHolder: str = None) -> None:
     """Initialize the widget."""
-    BaseWidget.__init__(self, *args, **kwargs)
-    placeholderText = parseText(*args, **kwargs)
-    if isinstance(placeholderText, str):
-      self.__placeholder_text__ = placeholderText
-      
+    BaseWidget.__init__(self, )
+    self.__placeholder_text__ = maybe(placeHolder, 'Enter text here')
+
   def initUi(self) -> None:
     """Initialize the user interface."""
+    self.lineEdit.lineEdit.setPlaceholderText(self.__placeholder_text__)
     self.baseLayout.addWidget(self.lineEdit)
     self.setLayout(self.baseLayout)
     self.initActions()
@@ -83,3 +66,12 @@ class LineEdit(BaseWidget):
     self.lineEdit.selectionChanged.connect(self.selectionChanged)
     self.lineEdit.textChanged.connect(self.textChanged)
     self.lineEdit.textEdited.connect(self.textEdited)
+
+  def setPlaceholderText(self, text: str) -> None:
+    """Set the placeholder text."""
+    self.lineEdit.setPlaceholderText(text)
+
+  @text.GET
+  def __str__(self) -> str:
+    """String representation"""
+    return QLineEdit.text(self.lineEdit)

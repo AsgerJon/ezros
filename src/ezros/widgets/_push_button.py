@@ -3,17 +3,15 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtCore import Signal
-from PySide6.QtGui import QFont
+from PySide6.QtCore import Signal, QEvent
+from PySide6.QtGui import QFont, QEnterEvent
 from PySide6.QtWidgets import QPushButton
 from attribox import AttriBox
 from ezside.widgets import BaseWidget
 from vistutils.parse import maybe
-from vistutils.text import stringList
-from vistutils.waitaminute import typeMsg
 
 from ezros.defaults import Settings
-from ezros.widgets import Vertical, parseText
+from ezros.widgets import Vertical
 
 
 class _PushButton(QPushButton):
@@ -37,6 +35,11 @@ class PushButton(BaseWidget):
   leftClick = Signal()
   rightClick = Signal()
 
+  holdOn = Signal()
+  holdOff = Signal()
+
+  __mouse_down__ = False
+
   def initUi(self) -> None:
     """Initialize the user interface."""
     BaseWidget.initUi(self)
@@ -51,3 +54,28 @@ class PushButton(BaseWidget):
   def setText(self, text: str) -> None:
     """Set the text."""
     self.innerButton.setText(text)
+
+  def mousePressEvent(self, event) -> None:
+    """Mouse press event."""
+    self.__mouse_down__ = True
+    self.holdOn.emit()
+    BaseWidget.mousePressEvent(self, event)
+
+  def mouseReleaseEvent(self, event) -> None:
+    """Mouse release event."""
+    if self.__mouse_down__:
+      self.holdOff.emit()
+    self.__mouse_down__ = False
+    BaseWidget.mouseReleaseEvent(self, event)
+
+  def enterEvent(self, event: QEnterEvent):
+    """Enter event."""
+    self.__mouse_down__ = False
+    BaseWidget.enterEvent(self, event)
+
+  def leaveEvent(self, event: QEvent) -> None:
+    """Leave event."""
+    if self.__mouse_down__:
+      self.holdOff.emit()
+    self.__mouse_down__ = False
+    BaseWidget.leaveEvent(self, event)

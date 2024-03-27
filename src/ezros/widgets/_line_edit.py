@@ -52,7 +52,7 @@ class LineEdit(BaseWidget):
 
   def initUi(self) -> None:
     """Initialize the user interface."""
-    self.lineEdit.lineEdit.setPlaceholderText(self.__placeholder_text__)
+    self.lineEdit.setPlaceholderText(self.__placeholder_text__)
     self.baseLayout.addWidget(self.lineEdit)
     self.setLayout(self.baseLayout)
     self.initActions()

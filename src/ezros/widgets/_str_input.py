@@ -6,10 +6,9 @@ from __future__ import annotations
 from typing import Optional
 
 from PySide6.QtCore import Signal
-from attribox import AttriBox, scope
+from attribox import AttriBox
 from ezside.widgets import BaseWidget
 from vistutils.parse import maybe
-from vistutils.text import stringList
 from vistutils.waitaminute import typeMsg
 
 from ezros.rosutils import EmptyField

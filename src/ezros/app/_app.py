@@ -3,14 +3,10 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-import json
-import os
-
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
-import ezside
 from icecream import ic
+from rospy import init_node
 
 ic.configureOutput(includeContext=True)
 
@@ -25,4 +21,6 @@ class App(QApplication):
     QApplication.__init__(self, *args, **kwargs)
     self.setApplicationName('EZROS')
     self.setApplicationDisplayName('EZROS')
-    self.setAttribute(Qt.ApplicationAttribute.AA_DontUseNativeMenuBar, True)
+    self.setAttribute(Qt.ApplicationAttribute.AA_DontUseNativeMenuBar,
+                      True)
+    init_node('EZROS', anonymous=False)

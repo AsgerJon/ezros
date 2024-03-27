@@ -8,6 +8,9 @@ from abc import abstractmethod
 from PySide6.QtWidgets import QMainWindow
 from attribox import AttriBox, this
 from ezside import MenuBar, StatusBar
+from icecream import ic
+
+ic.configureOutput(includeContext=True)
 
 
 class BaseWindow(QMainWindow):
@@ -33,6 +36,7 @@ class BaseWindow(QMainWindow):
 
   def show(self) -> None:
     """Show the window."""
+
     self.initMenus()
     self.initUi()
     self.initActions()

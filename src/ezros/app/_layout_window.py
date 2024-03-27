@@ -5,17 +5,15 @@ from __future__ import annotations
 
 from abc import abstractmethod
 
-from attribox import AttriBox, this
+from attribox import AttriBox
 from ezside.widgets import BaseWidget
 from icecream import ic
 
 from ezros.app import BaseWindow
-from ezros.widgets import Vertical, \
-  RosTalker, \
-  StrInput, \
-  LineEdit, \
-  PushButton, \
-  CommandControl
+from ezros.widgets import CommandControl, \
+  Horizontal, \
+  DynWidget, \
+  VerticalSeparator
 
 ic.configureOutput(includeContext=True)
 
@@ -25,12 +23,20 @@ class LayoutWindow(BaseWindow):
   application. """
 
   baseWidget = AttriBox[BaseWidget]()
-  baseLayout = AttriBox[Vertical]()
-  commandWidget = AttriBox[CommandControl]()
+  baseLayout = AttriBox[Horizontal]()
+  dynamicWidget = AttriBox[DynWidget]()
+  v1 = AttriBox[VerticalSeparator]()
+  pumpWidget = AttriBox[CommandControl]('/tool/pump_command')
+  v2 = AttriBox[VerticalSeparator]()
+  sprayWidget = AttriBox[CommandControl]('/tool/spray_command')
 
   def initUi(self) -> None:
     """Initialize the user interface."""
-    self.baseLayout.addWidget(self.commandWidget)
+    self.baseLayout.addWidget(self.dynamicWidget)
+    self.baseLayout.addWidget(self.v1)
+    self.baseLayout.addWidget(self.pumpWidget)
+    self.baseLayout.addWidget(self.v2)
+    self.baseLayout.addWidget(self.sprayWidget)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
 

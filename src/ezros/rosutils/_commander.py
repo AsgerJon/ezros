@@ -3,7 +3,6 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from math import floor
 from typing import Optional, Self
 
 from ezside.core import Precise

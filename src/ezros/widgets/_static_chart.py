@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import Callable
 
-from PySide6.QtCharts import QChartView, QScatterSeries, QChart, QLineSeries
+from PySide6.QtCharts import QChartView, QChart, QLineSeries
 from PySide6.QtGui import QPainter, QColor, QFont
 from PySide6.QtWidgets import QVBoxLayout
 from attribox import AttriBox
@@ -56,7 +56,6 @@ class _StaticChart(QChartView):
     self.setChart(self.__data_chart__)
     self.chart().setTitleFont(titleFont)
     self.repaint()
-    self.setRenderHint(QPainter.Antialiasing)
 
 
 class StaticChart(BaseWidget):

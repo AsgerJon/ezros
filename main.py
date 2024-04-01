@@ -12,9 +12,6 @@ from PySide6.QtWidgets import QApplication
 from icecream import ic
 
 from ezros.app import MainWindow
-from tester_class_02 import TestWindow
-
-
 def tester00() -> None:
   """Hello world"""
   stuff = [os, sys, 'hello world', Qt, ]

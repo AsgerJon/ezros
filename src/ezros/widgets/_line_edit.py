@@ -9,6 +9,7 @@ from attribox import AttriBox, this
 from ezside.widgets import BaseWidget
 from icecream import ic
 from vistutils.parse import maybe
+from vistutils.waitaminute import typeMsg
 
 from ezros.rosutils import EmptyField
 from ezros.widgets import Horizontal
@@ -22,14 +23,10 @@ class _LineEdit(QLineEdit):
     """Initialize the widget."""
     QLineEdit.__init__(self, *args, **kwargs)
 
-  def setPlaceholderText(self, placeholderText: str) -> None:
-    """Set the placeholder text."""
-    ic(self, placeholderText)
-    QLineEdit.setPlaceholderText(self, placeholderText)
-
 
 class LineEdit(BaseWidget):
   """LineEdit wrapper.  """
+  __fallback_placeholder__ = 'Enter text here'
   __placeholder_text__ = None
 
   text = EmptyField()
@@ -45,10 +42,23 @@ class LineEdit(BaseWidget):
   lineEdit = AttriBox[_LineEdit](this)
   placeholderText = AttriBox[str]()
 
-  def __init__(self, placeHolder: str = None) -> None:
+  def __init__(self, *args, **kwargs) -> None:
     """Initialize the widget."""
     BaseWidget.__init__(self, )
-    self.__placeholder_text__ = maybe(placeHolder, 'Enter text here')
+    placeholderKwarg = kwargs.get('placeholder', None)
+    initValueKwarg = kwargs.get('initValue', None)
+    strArgs = [arg for arg in args if isinstance(arg, str)]
+    placeholderArg, initValueArg = [*strArgs, None, None][:2]
+    initValue = maybe(initValueKwarg, initValueArg)
+    if initValue is not None:
+      if isinstance(initValue, str):
+        self.text = initValue
+      else:
+        e = typeMsg('initValue', initValue, str)
+        raise TypeError(e)
+    self.__placeholder_text__ = maybe(placeholderKwarg,
+                                      placeholderArg,
+                                      self.__fallback_placeholder__)
 
   def initUi(self) -> None:
     """Initialize the user interface."""
@@ -75,3 +85,9 @@ class LineEdit(BaseWidget):
   def __str__(self) -> str:
     """String representation"""
     return QLineEdit.text(self.lineEdit)
+
+  @text.SET
+  def setText(self, text: str) -> None:
+    """Set the text."""
+    QLineEdit.setText(self.lineEdit, text)
+    self.update()

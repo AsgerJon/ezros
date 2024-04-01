@@ -100,4 +100,3 @@ class Timer(QTimer):
     self.setInterval(interval)
     self.setTimerType(timerType)
     self.setSingleShot(singleShot)
-    ic(interval)

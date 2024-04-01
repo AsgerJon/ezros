@@ -12,12 +12,21 @@ def addInit(cls: type) -> type:
   """Apply the extension to the class."""
 
   oldAddWidget = getattr(cls, 'addWidget', )
+  oldInit = getattr(cls, '__init__', )
 
-  def addWidget(this: cls, widget: BaseWidget, *args) -> None:
+  def addWidget(this: cls, *args) -> None:
     """Add a widget to the layout."""
-    if isinstance(widget, BaseWidget):
-      widget.initUi()
-    return oldAddWidget(this, widget)
+    for arg in args:
+      if isinstance(arg, BaseWidget):
+        arg.initUi()
+        arg.connectActions()
+        break
+    return oldAddWidget(this, *args)
+
+  def newInit(this: cls, *args, **kwargs) -> None:
+    """Initialize the class."""
+    oldInit(this, *args, **kwargs)
+    this.addWidget = addWidget
 
   setattr(cls, 'addWidget', addWidget)
   return cls

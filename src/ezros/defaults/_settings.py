@@ -9,7 +9,8 @@ from __future__ import annotations
 import os
 
 from PySide6.QtCore import QMargins
-from PySide6.QtGui import QFont, QColor
+from PySide6.QtGui import QFont, QColor, QPainter, QPen
+from ezside.core import DashLine
 
 
 class Settings:
@@ -46,6 +47,45 @@ class Settings:
   numPoints = 256
 
   spacerVisibility = False
+
+  horizontalSeperatorColor = (192, 225, 255, 255)
+  horizontalSeperatorWidth = 2
+  horizontalSeperatorStyle = DashLine
+  verticalSeperatorColor = (192, 225, 255, 255)
+  verticalSeperatorWidth = 2
+  verticalSeperatorStyle = DashLine
+
+  layoutMargins = dict(left=2, top=2, right=2, bottom=2)
+
+  @classmethod
+  def getLayoutMargins(cls) -> QMargins:
+    """Get the layout margins."""
+    return QMargins(cls.layoutMargins['left'],
+                    cls.layoutMargins['top'],
+                    cls.layoutMargins['right'],
+                    cls.layoutMargins['bottom'], )
+
+  @classmethod
+  def applyHorizontalSeperator(cls, painter: QPainter) -> QPainter:
+    """Apply the horizontal seperator."""
+    color = QColor(*cls.horizontalSeperatorColor)
+    pen = QPen()
+    pen.setColor(color)
+    pen.setWidth(cls.horizontalSeperatorWidth)
+    pen.setStyle(cls.horizontalSeperatorStyle)
+    painter.setPen(pen)
+    return painter
+
+  @classmethod
+  def applyVerticalSeperator(cls, painter: QPainter) -> QPainter:
+    """Apply the vertical seperator."""
+    color = QColor(*cls.verticalSeperatorColor)
+    pen = QPen()
+    pen.setColor(color)
+    pen.setWidth(cls.verticalSeperatorWidth)
+    pen.setStyle(cls.verticalSeperatorStyle)
+    painter.setPen(pen)
+    return painter
 
   @classmethod
   def getButtonFont(cls) -> QFont:

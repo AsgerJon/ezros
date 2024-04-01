@@ -40,7 +40,6 @@ class Label(BaseWidget):
     self.__inner_text__ = text
     rect = self.getTextRect()
     self.setMinimumSize(rect.size())
-    ic('cunt')
 
   @text.DEL
   def delText(self) -> None:
@@ -87,7 +86,10 @@ class Label(BaseWidget):
   def getTextRect(self) -> QRect:
     """Returns the bounding rect of the label."""
     margins = Settings.getLabelMargins()
-    return self.getFontMetrics().boundingRect(self.text) + margins
+    if isinstance(self.text, str):
+      return self.getFontMetrics().boundingRect(self.text) + margins
+    e = typeMsg('self.text', self.text, str)
+    raise TypeError(e)
 
   def initUi(self) -> None:
     """Initialize the user interface."""

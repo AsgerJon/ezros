@@ -14,6 +14,8 @@ from vistutils.parse import maybe
 from vistutils.text import stringList
 from vistutils.waitaminute import typeMsg
 
+from ezros.rosutils import initNodeMaybe
+
 ic.configureOutput(includeContext=True)
 
 
@@ -33,7 +35,7 @@ class Commander:
 
   def initiateNode(self, ) -> None:
     """Initiates the node using class specific node name"""
-    init_node(self.__node_name__, anonymous=False)
+    initNodeMaybe(self.__node_name__, anonymous=False)
 
   @classmethod
   def _reset(cls, self: Self, topicName: str) -> Self:

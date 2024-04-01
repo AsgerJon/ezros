@@ -96,15 +96,33 @@ class StrInput(BaseWidget):
   def __init__(self, *args, **kwargs) -> None:
     """Initialize the widget."""
     BaseWidget.__init__(self, *args, **kwargs)
-    title, button, current, placeholder = None, None, None, None
-    try:
-      title, button, current, placeholder = self.parseThis(*args, **kwargs)
-    except ValueError as valueError:
-      title, button, current, placeholder = self.parsePosArgs(*args)
+    # title, button, current, placeholder = None, None, None, None
+    # try:
+    #   title, button, current, placeholder = self.parseThis(*args, **kwargs)
+    # except ValueError as valueError:
+    #   title, button, current, placeholder = self.parsePosArgs(*args)
+    # self.__label_title__ = title
+    # self.__button_text__ = maybe(button, self.__fallback_button__)
+    # self.__current_text__ = maybe(current, self.__fallback_current__)
+    # self.__placeholder_text__ = maybe(placeholder,
+    #                                   self.__fallback_placeholder__)
+    strArgs = [arg for arg in args if isinstance(arg, str)]
+    defVals = [self.__fallback_button__, self.__fallback_current__,
+               self.__fallback_placeholder__]
+    defVals = dict(button=self.__fallback_button__,
+                   current=self.__fallback_current__,
+                   placeHolder=self.__fallback_placeholder__)
+    title, button, current, placeHolder = [*strArgs, *([None, ] * 4)][:4]
+    if title is None:
+      e = """Unable to parse label title"""
+      raise ValueError(e)
+    if not isinstance(title, str):
+      e = typeMsg('title', title, str)
+      raise TypeError(e)
     self.__label_title__ = title
     self.__button_text__ = maybe(button, self.__fallback_button__)
     self.__current_text__ = maybe(current, self.__fallback_current__)
-    self.__placeholder_text__ = maybe(placeholder,
+    self.__placeholder_text__ = maybe(placeHolder,
                                       self.__fallback_placeholder__)
 
   def initUi(self) -> None:

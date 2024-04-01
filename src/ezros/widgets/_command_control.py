@@ -8,6 +8,7 @@ from attribox import AttriBox
 from ezside.core import Precise
 from ezside.widgets import BaseWidget
 from icecream import ic
+from vistutils.waitaminute import typeMsg
 
 from ezros.defaults import Settings
 from ezros.widgets import PushButton, Vertical, VerticalSpacer, Label
@@ -22,20 +23,34 @@ class CommandControl(AbstractCommandWidget):
 
   baseLayout = AttriBox[Vertical]()
   topicLabel = AttriBox[Label]()
-  separator = AttriBox[HorizontalSeparator]()
+  h1 = AttriBox[HorizontalSeparator]()
   activateButton = AttriBox[PushButton]()
   deactivateButton = AttriBox[PushButton]()
   holdButton = AttriBox[PushButton]()
+  h2 = AttriBox[HorizontalSeparator]()
   s = AttriBox[VerticalSpacer]()
 
   def __init__(self, name: str) -> None:
     """Initialize the widget."""
     AbstractCommandWidget.__init__(self, )
-    self._topicName = name
+    if name is None:
+      e = """Required argument 'name' not provided!"""
+      raise ValueError(e)
+    if not isinstance(name, str):
+      e = typeMsg('name', name, str)
+      raise TypeError(e)
+    setattr(self, '__topic_name__', name)
 
   def getTopicName(self) -> str:
     """Get the topic name."""
-    return self._topicName
+    name = getattr(self, '__topic_name__', None)
+    if name is None:
+      e = """The topic name has not been set!"""
+      raise ValueError(e)
+    if isinstance(name, str):
+      return name
+    e = typeMsg('name', name, str)
+    raise TypeError(e)
 
   def initUi(self) -> None:
     """Initialize the user interface."""
@@ -43,7 +58,9 @@ class CommandControl(AbstractCommandWidget):
     self.activeTimer.setTimerType(Precise)
     self.activeTimer.setSingleShot(False)
 
-    self.topicLabel.text = self._topicName
+    self.baseLayout.addWidget(self.h1)
+
+    self.topicLabel.text = self.getTopicName()
     self.topicLabel.setFont(Settings.getHeaderFont())
     self.baseLayout.addWidget(self.topicLabel)
 
@@ -58,6 +75,8 @@ class CommandControl(AbstractCommandWidget):
     self.holdButton.setText('Hold')
     self.holdButton.setFont(Settings.getButtonFont())
     self.baseLayout.addWidget(self.holdButton)
+
+    self.baseLayout.addWidget(self.h2)
 
     self.baseLayout.addWidget(self.s)
 

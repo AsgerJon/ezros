@@ -9,7 +9,7 @@ from attribox import AttriBox
 from ezside.widgets import BaseWidget
 from icecream import ic
 
-from ezros.app import BaseWindow
+from ezside.windows import BaseWindow
 from ezros.widgets import CommandControl, \
   Horizontal, \
   DynWidget, \

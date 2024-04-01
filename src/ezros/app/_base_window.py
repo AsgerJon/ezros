@@ -8,36 +8,19 @@ from abc import abstractmethod
 from PySide6.QtWidgets import QMainWindow
 from attribox import AttriBox, this
 from ezside import MenuBar, StatusBar
+from ezside.windows import BaseWindow as Base
 from icecream import ic
 
 ic.configureOutput(includeContext=True)
 
 
-class BaseWindow(QMainWindow):
+class BaseWindow(Base):
   """BaseWindow class provides menus and actions for the application."""
 
-  menuBar = AttriBox[MenuBar](this)
-  statusBar = AttriBox[StatusBar](this)
-
-  def initMenus(self) -> None:
-    """Initialize the menus."""
-    self.menuBar.initUi()
-    self.setMenuBar(self.menuBar)
-    self.statusBar.initUi()
-    self.setStatusBar(self.statusBar)
-
-  @abstractmethod
   def initUi(self) -> None:
     """Initialize the user interface."""
+    Base.initUi(self)
 
-  @abstractmethod
   def initActions(self) -> None:
     """Initialize the actions."""
-
-  def show(self) -> None:
-    """Show the window."""
-
-    self.initMenus()
-    self.initUi()
-    self.initActions()
-    QMainWindow.show(self)
+    Base.initActions(self)

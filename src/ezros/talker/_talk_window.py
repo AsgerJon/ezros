@@ -9,16 +9,17 @@ from ezside.windows import BaseWindow
 from ezside.widgets import BaseWidget
 from ezside.widgets import CornerPanel, VerticalPanel, HorizontalPanel
 
-from ezros.widgets import TightLabel, Grid, StrInput
+from ezros.widgets import Grid, Label, VerticalSpacer, StrVar
 
 
 class TalkWindow(BaseWindow):
   """Talker class publishes sample data to topics."""
 
-  topicNameWidget = AttriBox[StrInput]('Topic Name',
-                                       'Submit',
-                                       '[Not set!]',
-                                       'Enter topic name here')
+  welcomeBanner = AttriBox[Label]('Welcome!')
+
+  topicNameWidget = AttriBox[StrVar]('Topic Name', )
+
+  v1 = AttriBox[VerticalSpacer]()
 
   baseWidget = AttriBox[BaseWidget]()
   baseLayout = AttriBox[Grid]()
@@ -34,8 +35,9 @@ class TalkWindow(BaseWindow):
 
   def initUi(self) -> None:
     """The initUi method initializes the user interface of the window."""
-    self.setMinimumSize(400, 400)
-    rowCount = 1
+    # self.setMinimumSize(720, 400)
+    self.baseWidget.setMinimumSize(720, 400)
+    rowCount = 3
     colCount = 1
 
     self.baseLayout.addWidget(self.bottomRight, rowCount + 1, 1 + colCount)
@@ -50,6 +52,8 @@ class TalkWindow(BaseWindow):
     self.baseLayout.addWidget(self.topRight, 0, colCount + 1)
 
     self.baseLayout.addWidget(self.topicNameWidget, 1, 1, 1, 1)
+    self.baseLayout.addWidget(self.welcomeBanner, 2, 1, 1, 1)
+    self.baseLayout.addWidget(self.v1, 3, 1, 1, 1)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
 

@@ -6,13 +6,14 @@ from __future__ import annotations
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QLineEdit
 from attribox import AttriBox, this
+from ezside.core import Tight
 from ezside.widgets import BaseWidget
 from icecream import ic
 from vistutils.parse import maybe
 from vistutils.waitaminute import typeMsg
 
 from ezros.rosutils import EmptyField
-from ezros.widgets import Horizontal
+from ezros.widgets import Horizontal, Label
 
 
 class _LineEdit(QLineEdit):
@@ -59,9 +60,14 @@ class LineEdit(BaseWidget):
     self.__placeholder_text__ = maybe(placeholderKwarg,
                                       placeholderArg,
                                       self.__fallback_placeholder__)
+    self.setSizePolicy(Tight, Tight)
+    s = Label.getTextRect(Label(self.__placeholder_text__)).size()
+
+    self.setMinimumSize(s)
 
   def initUi(self) -> None:
     """Initialize the user interface."""
+    self.setSizePolicy(Tight, Tight)
     self.lineEdit.setPlaceholderText(self.__placeholder_text__)
     self.baseLayout.addWidget(self.lineEdit)
     self.setLayout(self.baseLayout)

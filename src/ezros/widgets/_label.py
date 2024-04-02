@@ -10,8 +10,14 @@ from PySide6.QtGui import QPainter, \
   QFont, \
   QPaintEvent, \
   QFontMetrics
-from ezside.core import SolidLine, SolidFill, emptyPen, emptyBrush
-from ezside.moreutils import StrField
+from PySide6.QtWidgets import QSizePolicy
+from ezside.core import SolidLine, \
+  SolidFill, \
+  emptyPen, \
+  emptyBrush, \
+  AlignLeft, \
+  Tight
+from ezside.core import AlignVCenter
 from ezside.widgets import BaseWidget
 from icecream import ic
 from vistutils.waitaminute import typeMsg
@@ -24,7 +30,7 @@ ic.configureOutput(includeContext=True, )
 
 class Label(BaseWidget):
   """Label prints centered text"""
-
+  __fallback_text__ = 'LMAO'
   __inner_text__ = None
 
   text = EmptyField()
@@ -40,6 +46,7 @@ class Label(BaseWidget):
     self.__inner_text__ = text
     rect = self.getTextRect()
     self.setMinimumSize(rect.size())
+    self.update()
 
   @text.DEL
   def delText(self) -> None:
@@ -86,15 +93,37 @@ class Label(BaseWidget):
   def getTextRect(self) -> QRect:
     """Returns the bounding rect of the label."""
     margins = Settings.getLabelMargins()
-    if isinstance(self.text, str):
-      return self.getFontMetrics().boundingRect(self.text) + margins
+    ic(margins)
+    n = max([len(self.text), 8])
+    sampleText = self.text.center(n + 2, '|')
+    if isinstance(sampleText, str):
+      return self.getFontMetrics().boundingRect(sampleText) + margins
     e = typeMsg('self.text', self.text, str)
     raise TypeError(e)
+
+  def update(self) -> None:
+    """Update the label."""
+    self.setMinimumSize(self.getTextRect().size())
+    self.adjustSize()
+    BaseWidget.update(self)
+
+  def __init__(self, text: str = None) -> None:
+    """Initialize the widget."""
+    BaseWidget.__init__(self)
+    if text is not None:
+      if isinstance(text, str):
+        self.text = text
+      else:
+        e = typeMsg('text', text, str)
+        raise TypeError(e)
+    else:
+      self.text = self.__fallback_text__
 
   def initUi(self) -> None:
     """Initialize the user interface."""
     BaseWidget.initUi(self)
     self.setMinimumSize(self.getTextRect().size())
+    self.setSizePolicy(Tight, Tight)
 
   def paintEvent(self, event: QPaintEvent) -> None:
     """Paint the label."""
@@ -118,5 +147,9 @@ class Label(BaseWidget):
     if not isinstance(self.text, str):
       e = typeMsg('self.text', self.text, str)
       raise TypeError(e)
-    painter.drawText(textRect, Qt.AlignCenter, self.text)
+    painter.setFont(self.getTextFont())
+    painter.drawText(textRect, AlignLeft | AlignVCenter, self.text)
+    # painter.drawText(textRect, Qt.AlignCenter, self.text)
     painter.end()
+    self.setMinimumSize(viewRect.size())
+    self.adjustSize()

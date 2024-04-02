@@ -16,6 +16,4 @@ class MainWindow(LayoutWindow):
 
   def initActions(self) -> None:
     """Initialize the actions."""
-    self.mainMenuBar.files.exit.triggered.connect(QApplication.quit)
-    self.mainMenuBar.help.about_qt.triggered.connect(QApplication.aboutQt)
-    self.mainMenuBar.debug.debug1.triggered.connect(self.debug1Func)
+    pass

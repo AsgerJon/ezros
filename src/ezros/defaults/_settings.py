@@ -36,8 +36,8 @@ class Settings:
   labelBorderWidth = 2
   labelTopMargin = 2
   labelBottomMargin = 2
-  labelLeftMargin = 32
-  labelRightMargin = 32
+  labelLeftMargin = 4
+  labelRightMargin = 4
 
   fontFamily = 'Montserrat'
   buttonFontSize = 12
@@ -46,7 +46,7 @@ class Settings:
 
   numPoints = 256
 
-  spacerVisibility = False
+  spacerVisibility = True
 
   horizontalSeperatorColor = (192, 225, 255, 255)
   horizontalSeperatorWidth = 2

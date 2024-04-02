@@ -6,6 +6,8 @@ from __future__ import annotations
 import os
 import sys
 
+import numpy as np
+
 from ezros.app import App, MainWindow
 from PySide6.QtCore import Qt
 from icecream import ic
@@ -33,9 +35,7 @@ def tester01() -> None:
   """Main application tester"""
 
   app = App(sys.argv)
-
   main = MainWindow()
-
   main.show()
   app.exec()
 
@@ -81,6 +81,16 @@ def tester05() -> None:
   yolo = Float32Stamped(std_msg.Header(), 69)
   print(55 * '*')
   print(yolo)
+
+
+def tester06() -> None:
+  """THESE arrays fuck me"""
+
+  x = np.linspace(100, 150, 10)
+  print(x)
+  print(np.max(x))
+  x -= np.max(x)
+  print(x)
 
 
 if __name__ == '__main__':

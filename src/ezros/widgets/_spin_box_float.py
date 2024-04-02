@@ -6,17 +6,18 @@ from __future__ import annotations
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QDoubleSpinBox, QVBoxLayout, QHBoxLayout
 from attribox import AttriBox
-from ezside.core import Tight
+from ezside.core import Tight, AlignCenter
 from ezside.widgets import BaseWidget
 from icecream import ic
 from vistutils.parse import maybe
 
-from ezros.widgets import TightLabel
+from ezros.rosutils import EmptyField
+from ezros.widgets import TightLabel, Label
 
 ic.configureOutput(includeContext=True, )
 
 
-class SpinBox(BaseWidget):
+class SpinBoxFloat(BaseWidget):
   """SpinBox widget. """
 
   __label_title__ = None
@@ -24,12 +25,15 @@ class SpinBox(BaseWidget):
   __spin_value__ = None
   __max_value__ = None
 
+  value = EmptyField()
+
   inner = AttriBox[QDoubleSpinBox]()
   baseLayout = AttriBox[QVBoxLayout]()
   verticalLayout = AttriBox[QVBoxLayout]()
   horizontalLayout = AttriBox[QHBoxLayout]()
-  label = AttriBox[TightLabel]()
+  label = AttriBox[Label]()
 
+  valueChanged = Signal(float)
   newValue = Signal(float)
   update = Signal()
 
@@ -60,6 +64,7 @@ class SpinBox(BaseWidget):
     self.inner.setValue(self.__spin_value__)
     self.label.setText(self.__label_title__)
     self.label.setSizePolicy(Tight, Tight)
+    self.label.setAlignment(AlignCenter)
     if self.__orientation__ == 'vertical':
       self.verticalLayout.addWidget(self.label)
       self.verticalLayout.addWidget(self.inner)
@@ -74,6 +79,7 @@ class SpinBox(BaseWidget):
   def connectActions(self) -> None:
     """Connect actions to slots."""
     self.inner.valueChanged.connect(self.newValue.emit)
+    self.inner.valueChanged.connect(self.valueChanged.emit)
     self.inner.editingFinished.connect(self.update.emit)
 
   def __str__(self, ) -> str:
@@ -89,3 +95,8 @@ class SpinBox(BaseWidget):
     value = self.__spin_value__
     clsName = self.__class__.__qualname__
     return '%s(%s, %s, %s, %s)' % (clsName, title, min_, value, max_)
+
+  @value.GET
+  def getValue(self, ) -> float:
+    """Return the value of the spin box."""
+    return self.inner.value()

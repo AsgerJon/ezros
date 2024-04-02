@@ -30,6 +30,8 @@ ic.configureOutput(includeContext=True, )
 
 class Label(BaseWidget):
   """Label prints centered text"""
+  __fallback_alignment__ = AlignLeft | AlignVCenter
+  __alignment_flags__ = None
   __fallback_text__ = 'LMAO'
   __inner_text__ = None
 
@@ -93,7 +95,6 @@ class Label(BaseWidget):
   def getTextRect(self) -> QRect:
     """Returns the bounding rect of the label."""
     margins = Settings.getLabelMargins()
-    ic(margins)
     n = max([len(self.text), 8])
     sampleText = self.text.center(n + 2, '|')
     if isinstance(sampleText, str):
@@ -125,6 +126,14 @@ class Label(BaseWidget):
     self.setMinimumSize(self.getTextRect().size())
     self.setSizePolicy(Tight, Tight)
 
+  def getAlignment(self) -> Qt.AlignmentFlag:
+    """Returns the alignment of the label."""
+    return self.__alignment_flags__ or self.__fallback_alignment__
+
+  def setAlignment(self, alignment: Qt.AlignmentFlag) -> None:
+    """Set the alignment of the label."""
+    self.__alignment_flags__ = alignment
+
   def paintEvent(self, event: QPaintEvent) -> None:
     """Paint the label."""
     painter = QPainter()
@@ -148,7 +157,7 @@ class Label(BaseWidget):
       e = typeMsg('self.text', self.text, str)
       raise TypeError(e)
     painter.setFont(self.getTextFont())
-    painter.drawText(textRect, AlignLeft | AlignVCenter, self.text)
+    painter.drawText(textRect, self.getAlignment(), self.text)
     # painter.drawText(textRect, Qt.AlignCenter, self.text)
     painter.end()
     self.setMinimumSize(viewRect.size())

@@ -21,6 +21,7 @@ Raises:
 from __future__ import annotations
 
 from rospy import get_caller_id, init_node, ROSException, ROSInitException
+from vistutils.parse import maybe
 
 
 def initNodeMaybe(nodeName: str = None, **kwargs) -> str:
@@ -42,6 +43,7 @@ def initNodeMaybe(nodeName: str = None, **kwargs) -> str:
     ROSInitException: If the node initialization fails due to improper
     arguments, with a detailed explanation.
   """
+  nodeName = maybe(nodeName, 'EZROS')
   try:
     init_node(nodeName, **kwargs)
     return nodeName

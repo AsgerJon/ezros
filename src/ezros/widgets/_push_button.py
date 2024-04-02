@@ -40,6 +40,16 @@ class PushButton(BaseWidget):
 
   __mouse_down__ = False
 
+  def __init__(self, *args) -> None:
+    """Initialize the widget."""
+    BaseWidget.__init__(self)
+    for arg in args:
+      if isinstance(arg, str):
+        self.setText(arg)
+        break
+    else:
+      self.setText('CLICK')
+
   def initUi(self) -> None:
     """Initialize the user interface."""
     BaseWidget.initUi(self)

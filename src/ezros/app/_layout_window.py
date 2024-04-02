@@ -4,16 +4,15 @@
 from __future__ import annotations
 
 from abc import abstractmethod
+import time
 
 from attribox import AttriBox
 from ezside.widgets import BaseWidget
 from icecream import ic
-
 from ezside.windows import BaseWindow
-from ezros.widgets import CommandControl, \
-  Horizontal, \
-  DynWidget, \
-  VerticalSeparator
+
+from ezros.widgets import CommandControl, Label
+from ezros.widgets import DynWidget, VerticalSeparator, Grid, TimerWidget
 
 ic.configureOutput(includeContext=True)
 
@@ -21,10 +20,13 @@ ic.configureOutput(includeContext=True)
 class LayoutWindow(BaseWindow):
   """The LayoutWindow class provides a base class for all windows in the
   application. """
+  __right_now__ = None
 
   baseWidget = AttriBox[BaseWidget]()
-  baseLayout = AttriBox[Horizontal]()
+  baseLayout = AttriBox[Grid]()
   dynamicWidget = AttriBox[DynWidget]()
+  fuck = AttriBox[Label]()
+  # timerWidget = AttriBox[TimerWidget]()
   v1 = AttriBox[VerticalSeparator]()
   pumpWidget = AttriBox[CommandControl]('/tool/pump_command')
   v2 = AttriBox[VerticalSeparator]()
@@ -32,11 +34,13 @@ class LayoutWindow(BaseWindow):
 
   def initUi(self) -> None:
     """Initialize the user interface."""
-    self.baseLayout.addWidget(self.dynamicWidget)
-    self.baseLayout.addWidget(self.v1)
-    self.baseLayout.addWidget(self.pumpWidget)
-    self.baseLayout.addWidget(self.v2)
-    self.baseLayout.addWidget(self.sprayWidget)
+    self.__right_now__ = time.time()
+    self.baseLayout.addWidget(self.dynamicWidget, 0, 0, 2, 1)
+    self.baseLayout.addWidget(self.fuck, 1, 0)
+    self.baseLayout.addWidget(self.v1, 0, 1, 2, 1)
+    self.baseLayout.addWidget(self.pumpWidget, 0, 2, 2, 1)
+    self.baseLayout.addWidget(self.v2, 0, 3, 2, 1)
+    self.baseLayout.addWidget(self.sprayWidget, 0, 4, 2, 1)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
 

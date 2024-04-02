@@ -3,8 +3,14 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtCharts import QChart, QChartView, QScatterSeries
-from PySide6.QtCore import Slot, QPointF
+from random import random
+
+from PySide6.QtCharts import QChart, \
+  QChartView, \
+  QScatterSeries, \
+  QLineSeries, \
+  QValueAxis
+from PySide6.QtCore import Slot, QPointF, Qt
 from attribox import AttriBox
 from ezside.widgets import BaseWidget
 from icecream import ic
@@ -29,31 +35,44 @@ class DynWidget(BaseWidget):
 
   def __init__(self, numPoints: int = None) -> None:
     BaseWidget.__init__(self)
-    self._series = QScatterSeries()
-    self._chart = QChart()
-    self._chart.addSeries(self._series)
-    self._chart.createDefaultAxes()
-    self._view = QChartView()
-    self._view.setChart(self._chart)
+    self.chart = QChart()
+    self.series = QLineSeries()
+    self.chart.addSeries(self.series)
+
+    # Axis configuration
+    self.xAxis = QValueAxis()
+    self.xAxis.setRange(0, 10)  # Set X axis range
+    self.xAxis.setLabelFormat("%d")
+    self.xAxis.setTitleText("Time")
+
+    self.yAxis = QValueAxis()
+    self.yAxis.setRange(0, 100)  # Set Y axis range
+    self.yAxis.setLabelFormat("%d")
+    self.yAxis.setTitleText("Value")
+
+    self.chart.addAxis(self.xAxis, Qt.AlignmentFlag.AlignBottom)
+    self.series.attachAxis(self.xAxis)
+    self.chart.addAxis(self.yAxis, Qt.AlignmentFlag.AlignLeft)
+    self.series.attachAxis(self.yAxis)
+
+    self.chartView = QChartView(self.chart)
 
   def initUi(self) -> None:
     """Initialize the user interface."""
     BaseWidget.initUi(self)
-    self.baseLayout.addWidget(self._view)
+    self.baseLayout.addWidget(self.chartView)
     self.setLayout(self.baseLayout)
 
   def refresh(self, array: np.ndarray) -> None:
     """Update the widget."""
     data = array.tolist()
     tMin, tMax = array.real.min(), array.real.max()
-    self._series.clear()
-    self._chart.removeSeries(self._series)
+    # self.chart.axes()[0].setRange(tMin, tMax)
+    # self.chart.axes()[1].setRange(-2, 2)
+    self.series.clear()
+    self.chart.removeSeries(self.series)
     for (i, item) in enumerate(data):
       if not i % 77:
         print(item.real, item.imag)
-      self._series.append(QPointF(item.real, item.imag))
-    self._chart.addSeries(self._series)
-    self._chart.axes()[0].setRange(tMin, tMax)
-    self._chart.axes()[1].setRange(-2, 2)
-    self._view.update()
-    self.update()
+      self.series.append(QPointF(item.real, item.imag))
+    self.chart.addSeries(self.series)

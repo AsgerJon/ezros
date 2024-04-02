@@ -17,7 +17,7 @@ class RollingArray():
   """RollingArray to keep visual representation classes subservient to the
   actual data structure classes. """
 
-  __fallback_num_points__ = 256
+  __fallback_num_points__ = 16
   __zero_index__ = None
   __num_points__ = None
   __inner_array__ = None

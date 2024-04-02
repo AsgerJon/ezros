@@ -4,13 +4,13 @@
 # Copyright (c) 2024 Asger Jon Vistisen
 #
 
-source /home/AsgerJon/.zshrc
+source /home/asgerjon/.zshrc
 
 ,mamba
 
 mamba activate rosenv
-export TALKERDIR=/home/AsgerJon/PycharmProjects/ezros/src/ezros/talker
-export EZROSDIR=/home/AsgerJon/PycharmProjects/ezros/src
+export TALKERDIR=/home/asgerjon/PycharmProjects/ezros/src/ezros/talker
+export EZROSDIR=/home/asgerjon/PycharmProjects/ezros/src
 export CATKINDIR=$HOME/catkin_ws/devel/lib/python3.11/site-packages
 export MSGSDIR=$HOME/catkin_ws/devel/lib/python3.11/site-packages/msgs
 cd $TALKERDIR || exit

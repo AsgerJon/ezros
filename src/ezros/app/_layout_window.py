@@ -11,6 +11,7 @@ from ezside.widgets import BaseWidget
 from icecream import ic
 from ezside.windows import BaseWindow
 
+from ezros.rosutils._deez_charts import ComplexDataChartWidget
 from ezros.widgets import CommandControl, Label
 from ezros.widgets import DynWidget, VerticalSeparator, Grid, TimerWidget
 
@@ -24,8 +25,7 @@ class LayoutWindow(BaseWindow):
 
   baseWidget = AttriBox[BaseWidget]()
   baseLayout = AttriBox[Grid]()
-  dynamicWidget = AttriBox[DynWidget]()
-  fuck = AttriBox[Label]()
+  dynamicWidget = AttriBox[ComplexDataChartWidget]()
   # timerWidget = AttriBox[TimerWidget]()
   v1 = AttriBox[VerticalSeparator]()
   pumpWidget = AttriBox[CommandControl]('/tool/pump_command')
@@ -36,7 +36,6 @@ class LayoutWindow(BaseWindow):
     """Initialize the user interface."""
     self.__right_now__ = time.time()
     self.baseLayout.addWidget(self.dynamicWidget, 0, 0, 2, 1)
-    self.baseLayout.addWidget(self.fuck, 1, 0)
     self.baseLayout.addWidget(self.v1, 0, 1, 2, 1)
     self.baseLayout.addWidget(self.pumpWidget, 0, 2, 2, 1)
     self.baseLayout.addWidget(self.v2, 0, 3, 2, 1)

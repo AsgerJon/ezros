@@ -3,6 +3,7 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from random import random
 import time
 
 from PySide6.QtCore import QTimer
@@ -41,11 +42,11 @@ class MainWindow(LayoutWindow):
   def receiveData(self, data: complex) -> None:
     """Receive data from the ROS thread."""
     # self.pumpData.explicitAppend(data)
-    data -= (self.__zero_time__ + 0j)
-    self.statusBar().showMessage('%.12E | %.3EI' % (data.real, data.imag))
+    data -= (self.__zero_time__ + 1e-08 * (random() - 0.5) * 1j)
+    self.statusBar().showMessage('%.16E | %.16EI' % (data.real, data.imag))
     self.pumpData.explicitAppend(data)
 
   def refreshChart(self, ) -> None:
     """Refresh the chart."""
     data = self.pumpData.complexNow()
-    self.dynamicWidget.refresh(data)
+    self.dynamicWidget.refreshChart(data)

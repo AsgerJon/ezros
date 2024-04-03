@@ -46,7 +46,7 @@ class Settings:
 
   numPoints = 256
 
-  spacerVisibility = True
+  spacerVisibility = False
 
   horizontalSeperatorColor = (192, 225, 255, 255)
   horizontalSeperatorWidth = 2

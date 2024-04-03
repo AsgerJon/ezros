@@ -12,7 +12,7 @@ from ._spacers import HorizontalSeparator, VerticalSeparator
 from ._str_var import StrVar
 from ._timer import Timer
 from ._abstract_command_widget import AbstractCommandWidget
-
+from ._dyn_chart import ComplexDataChartWidget
 from ._dyn_widget import DynWidget
 from ._push_button import PushButton
 from ._command_control import CommandControl

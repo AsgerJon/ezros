@@ -12,10 +12,9 @@ from typing import Any
 
 from PySide6.QtCore import QThread, Signal
 from icecream import ic
-from msgs.msg import Float32Stamped
 from rospy import Subscriber, spin
 
-from ezros.rosutils import resolveTopicType, serialize, initNodeMaybe
+from ezros.rosutils import resolveTopicType, initNodeMaybe
 
 ic.configureOutput(includeContext=True)
 

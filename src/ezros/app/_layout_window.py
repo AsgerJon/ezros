@@ -11,8 +11,7 @@ from ezside.widgets import BaseWidget
 from icecream import ic
 from ezside.windows import BaseWindow
 
-from ezros.rosutils._deez_charts import ComplexDataChartWidget
-from ezros.widgets import CommandControl, Label
+from ezros.widgets import CommandControl, Label, ComplexDataChartWidget
 from ezros.widgets import DynWidget, VerticalSeparator, Grid, TimerWidget
 
 ic.configureOutput(includeContext=True)
@@ -34,12 +33,13 @@ class LayoutWindow(BaseWindow):
 
   def initUi(self) -> None:
     """Initialize the user interface."""
+    self.setMinimumSize(1200, 600)
     self.__right_now__ = time.time()
-    self.baseLayout.addWidget(self.dynamicWidget, 0, 0, 2, 1)
+    self.baseLayout.addWidget(self.dynamicWidget, 0, 0, 1, 1)
     self.baseLayout.addWidget(self.v1, 0, 1, 2, 1)
-    self.baseLayout.addWidget(self.pumpWidget, 0, 2, 2, 1)
+    self.baseLayout.addWidget(self.pumpWidget, 0, 2, 1, 1)
     self.baseLayout.addWidget(self.v2, 0, 3, 2, 1)
-    self.baseLayout.addWidget(self.sprayWidget, 0, 4, 2, 1)
+    self.baseLayout.addWidget(self.sprayWidget, 0, 4, 1, 1)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
 

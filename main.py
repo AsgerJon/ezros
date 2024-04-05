@@ -6,6 +6,8 @@ from __future__ import annotations
 import os
 import sys
 
+sys.path.append(os.path.join(sys.path[0], 'src'))
+
 import numpy as np
 
 from ezros.app import App, MainWindow
@@ -33,7 +35,7 @@ fb = lambda n: '' if n % 5 else 'Fizz' + '' if n % 3 else 'Buzz' or str(n)
 
 def tester01() -> None:
   """Main application tester"""
-
+  ic(sys.path)
   app = App(sys.argv)
   main = MainWindow()
   main.show()

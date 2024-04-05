@@ -24,7 +24,8 @@ class MainWindow(LayoutWindow):
 
   __zero_time__ = time.time()
 
-  pumpCurrent = AttriBox[RosThread]('/tool/spray_current')
+  pumpCurrent = AttriBox[RosThread]('/tool/pump_current')
+  sprayCurrent = AttriBox[RosThread]('/tool/spray_current')
   pumpData = AttriBox[RollingArray](Settings.numPoints)
   pumpTimer = AttriBox[EZTimer](15, Precise)
 
@@ -35,23 +36,31 @@ class MainWindow(LayoutWindow):
 
   def initActions(self) -> None:
     """Initialize the actions."""
-    ic('initActions')
-    self.pumpCurrent.data.connect(self.receiveData)
+    self.pumpCurrent.data.connect(self.receivePumpData)
+    self.sprayCurrent.data.connect(self.receiveSprayData)
     self.pumpTimer.timeout.connect(self.refreshChart)
     self.pumpCurrent.start()
+    self.sprayCurrent.start()
     self.pumpTimer.start()
 
-  def receiveData(self, data: complex) -> None:
+  def receivePumpData(self, data: complex) -> None:
     """Receive data from the ROS thread."""
     # self.pumpData.explicitAppend(data)
     data -= (self.__zero_time__ + 1e-08 * (random() - 0.5) * 1j)
     self.statusBar().showMessage('%.16E | %.16EI' % (data.real, data.imag))
-    self.dynamicWidget.addData(data)
+    self.pumpPlot.addData(data)
+
+  def receiveSprayData(self, data: complex) -> None:
+    """Receive data from the ROS thread."""
+    # self.pumpData.explicitAppend(data)
+    data -= (self.__zero_time__ + 1e-08 * (random() - 0.5) * 1j)
+    self.sprayPlot.addData(data)
 
   def refreshChart(self, ) -> None:
     """Refresh the chart."""
     data = self.pumpData.complexNow()
-    self.dynamicWidget.refreshChart()
+    self.pumpPlot.refreshChart()
+    self.sprayPlot.refreshChart()
 
   def closeEvent(self, event: QCloseEvent) -> None:
     """Close the window."""
@@ -61,9 +70,9 @@ class MainWindow(LayoutWindow):
   def debug1Func(self, ) -> None:
     """Debug function 1."""
     LayoutWindow.debug1Func(self)
-    self.dynamicWidget.setMax()
+    self.pumpPlot.setMax()
 
   def debug2Func(self, ) -> None:
     """Debug function 2."""
     LayoutWindow.debug2Func(self)
-    self.dynamicWidget.setMin()
+    self.pumpPlot.setMin()

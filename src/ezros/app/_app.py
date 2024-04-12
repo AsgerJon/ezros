@@ -1,5 +1,5 @@
 """App subclasses the QApplication class."""
-#  MIT Licence
+#  GPL-3.0 license
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
@@ -15,12 +15,10 @@ class App(QApplication):
   """App is a subclass of QApplication."""
 
   __caller_id__ = None
-  # __catkin_source__ = sourceCatkin('192.168.1.85', )
-
-  icons = None
 
   def __init__(self, *args, **kwargs) -> None:
     """Initializes the App instance."""
+    print('App.__init__')
     QApplication.__init__(self, *args, **kwargs)
     self.setApplicationName('EZROS')
     self.setApplicationDisplayName('EZROS')

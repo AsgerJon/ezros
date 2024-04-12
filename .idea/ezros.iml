@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tests_" isTestSource="true" />
     </content>
-    <orderEntry type="jdk" jdkName="rostest" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="rosenv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

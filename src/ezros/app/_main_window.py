@@ -1,5 +1,5 @@
 """The MainWindow class organizes the main application window."""
-#  MIT Licence
+#  GPL-3.0 license
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from icecream import ic
 
 from ezros.app import LayoutWindow
 from ezros.defaults import Settings
-from ezros.rosutils import RosThread, RollingArray, EZTimer
+from ezros.rosutils import SubRos, RollingArray, EZTimer
 
 ic.configureOutput(includeContext=True)
 
@@ -22,57 +22,23 @@ ic.configureOutput(includeContext=True)
 class MainWindow(LayoutWindow):
   """The MainWindow class organizes the main application window."""
 
-  __zero_time__ = time.time()
-
-  pumpCurrent = AttriBox[RosThread]('/tool/pump_current')
-  sprayCurrent = AttriBox[RosThread]('/tool/spray_current')
-  pumpData = AttriBox[RollingArray](Settings.numPoints)
-  pumpTimer = AttriBox[EZTimer](15, Precise)
-
-  def __init__(self, *args, **kwargs) -> None:
-    LayoutWindow.__init__(self, *args, **kwargs)
+  def __init__(self, ) -> None:
+    """Initialize the main window."""
+    LayoutWindow.__init__(self, )
     self.setWindowTitle('EZROS')
-    self.setMouseTracking(True)
+    self.rosThread = SubRos('/tool/pump_current')
 
   def initActions(self) -> None:
     """Initialize the actions."""
-    self.pumpCurrent.data.connect(self.receivePumpData)
-    self.sprayCurrent.data.connect(self.receiveSprayData)
-    self.pumpTimer.timeout.connect(self.refreshChart)
-    self.pumpCurrent.start()
-    self.sprayCurrent.start()
-    self.pumpTimer.start()
-
-  def receivePumpData(self, data: complex) -> None:
-    """Receive data from the ROS thread."""
-    # self.pumpData.explicitAppend(data)
-    data -= (self.__zero_time__ + 1e-08 * (random() - 0.5) * 1j)
-    self.statusBar().showMessage('%.16E | %.16EI' % (data.real, data.imag))
-    self.pumpPlot.addData(data)
-
-  def receiveSprayData(self, data: complex) -> None:
-    """Receive data from the ROS thread."""
-    # self.pumpData.explicitAppend(data)
-    data -= (self.__zero_time__ + 1e-08 * (random() - 0.5) * 1j)
-    self.sprayPlot.addData(data)
-
-  def refreshChart(self, ) -> None:
-    """Refresh the chart."""
-    data = self.pumpData.complexNow()
-    self.pumpPlot.refreshChart()
-    self.sprayPlot.refreshChart()
+    self.rosThread.data.connect(self.onData)
+    self.rosThread.start()
 
   def closeEvent(self, event: QCloseEvent) -> None:
     """Close the window."""
     if not LayoutWindow.closeEvent(self, event):
       sys.exit(0)
 
-  def debug1Func(self, ) -> None:
-    """Debug function 1."""
-    LayoutWindow.debug1Func(self)
-    self.pumpPlot.setMax()
-
-  def debug2Func(self, ) -> None:
-    """Debug function 2."""
-    LayoutWindow.debug2Func(self)
-    self.pumpPlot.setMin()
+  def onData(self, data: complex) -> None:
+    """Update the data."""
+    value = data.imag
+    self.baseLabel.setText('Pump Current: %.6E' % value)

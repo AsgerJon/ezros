@@ -44,8 +44,8 @@ class RosToggle(BaseWidget):
   h2Spacer = AttriBox[HorizontalSpacer]()
   v1Spacer = AttriBox[VerticalSpacer]()
   v2Spacer = AttriBox[VerticalSpacer]()
-  activator = AttriBox[Button]()
-  deactivator = AttriBox[Button]()
+  activator = AttriBox[Button]('Activate')
+  deactivator = AttriBox[Button]('Deactivate')
   stateLabel = AttriBox[Label]()
 
   stateChanged = Signal(bool)

@@ -53,8 +53,8 @@ class Defaults:
 
   pumpCurrentMarkerSize = 5
 
-  pingFontSize = 20
-  pingFontColor = QColor(255, 255, 0, 255)
+  pingFontSize = 16
+  pingFontColor = QColor(0, 0, 63, 255)
 
   @classmethod
   def getPingFont(cls) -> QFont:

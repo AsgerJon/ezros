@@ -6,9 +6,15 @@ from __future__ import annotations
 
 from subprocess import PIPE, run
 
-from PySide6.QtCore import Qt, QRect, QPoint, QTimer
-from PySide6.QtGui import QPainter, QBrush, QColor, QPaintEvent, QPen
-from ezside.core import SolidFill, SolidLine, emptyBrush, AlignCenter
+from PySide6.QtCore import Qt, QRect, QPoint, QTimer, QMargins
+from PySide6.QtGui import QPainter, \
+  QBrush, \
+  QColor, \
+  QPaintEvent, \
+  QPen, \
+  QFontMetrics
+from PySide6.QtWidgets import QSizePolicy
+from ezside.core import SolidFill, SolidLine, emptyBrush, AlignCenter, Expand
 from ezside.widgets import BaseWidget
 from vistutils.waitaminute import typeMsg
 
@@ -32,11 +38,16 @@ class Pinginator(BaseWidget):
     if res.returncode:
       e = str(res.stderr)
       raise RuntimeError(e)
-    return int(res.stdout.split('time=')[1].split(' ms')[0])
+    out = float(res.stdout.split('time=')[1].split(' ms')[0])
+    return int(round(out))
 
   def _update(self) -> None:
     """Update the latency."""
     self.__inner_latency__ = self._ping()
+    fontMetrics = QFontMetrics(Defaults.getPingFont())
+    margins = QMargins(4, 4, 4, 4)
+    rect = fontMetrics.boundingRect('PING: 999 ms')
+    self.setMinimumSize((rect + margins).size())
 
   def _createTimer(self) -> None:
     """Create a timer."""
@@ -63,6 +74,8 @@ class Pinginator(BaseWidget):
 
   def _getBrush(self) -> QBrush:
     """Getter-function for state aware brush. """
+    if self.__inner_latency__ is None:
+      self._update()
     brush = QBrush()
     brush.setStyle(SolidFill)
     if self.__inner_latency__ < 25:
@@ -118,6 +131,7 @@ class Pinginator(BaseWidget):
   def initUi(self) -> None:
     """Initialize the user interface."""
     BaseWidget.initUi(self)
-    self.setMinimumSize(200, 50)
+    self.setMinimumSize(64, 48)
     self._getTimer().start()
+    self.setSizePolicy(Expand, QSizePolicy.Policy.Preferred)
     self.update()

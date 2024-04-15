@@ -12,6 +12,7 @@ from typing import Any, Callable
 
 from PySide6.QtCore import QThread, Signal
 from icecream import ic
+from msgs.msg import Float32Stamped
 from rospy import Subscriber, spin
 from vistutils.waitaminute import typeMsg
 
@@ -48,11 +49,9 @@ class SubRos(QThread):
                                          self._getCallback())
     spin()
 
-  def _fallbackCallback(self, data: Any) -> None:
+  def _fallbackCallback(self, data: Float32Stamped) -> None:
     """Callback function for the subscriber."""
-    value = data.data
-    when = data.header.stamp.to_sec()
-    self.data.emit(when + value * 1j)
+    self.data.emit(data)
 
   def _setCallback(self, callMeMaybe: Callable) -> Callable:
     """Setter-function for the callback."""

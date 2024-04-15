@@ -4,8 +4,9 @@
 from __future__ import annotations
 
 from PySide6.QtCore import QThread, Slot, QTimer, Signal
-from msg import AuxCommand
-from rospy import Publisher, Time
+from icecream import ic
+from msgs.msg import AuxCommand
+from rospy import Publisher, Time, spin
 from vistutils.parse import maybe
 from vistutils.text import monoSpace
 from vistutils.waitaminute import typeMsg
@@ -24,6 +25,7 @@ class AuxPubRos(QThread):
   __inner_publisher__ = None
   __fallback_period__ = Defaults.publisherInterval
   __topic_name__ = None
+  __is_running__ = False
 
   period = EmptyField()
   timer = EmptyField()
@@ -53,6 +55,7 @@ class AuxPubRos(QThread):
       self.__inner_timer__.setInterval(self.period)
     self.__inner_timer__.setSingleShot(False)
     self.__inner_timer__.timeout.connect(self._publish)
+    self.__inner_timer__.start()
 
   @timer.GET
   def _getTimer(self, **kwargs) -> QTimer:
@@ -120,6 +123,9 @@ class AuxPubRos(QThread):
 
   def _publish(self) -> None:
     """Publisher-function for the ROS message."""
+    ic('_publish')
+    ic(self.state)
+    ic('__is_running__')
     if isinstance(self.publisher, Publisher):
       self.publisher.publish(self._getCommand())
       self.published.emit(self.__inner_state__)
@@ -133,19 +139,22 @@ class AuxPubRos(QThread):
     self.__topic_name__ = topicName
 
   @Slot()
-  def start(self, ) -> None:
+  def activate(self, ) -> None:
     """Slot for changing the signal state to True"""
+    ic('activate')
     if not self.state:
       self.state = True
       self.stateChanged.emit(True)
 
   @Slot()
-  def stop(self, ) -> None:
+  def deactivate(self, ) -> None:
     """Slot for changing the signal state to False"""
+    ic('deactivate')
     if self.state:
       self.state = False
       self.stateChanged.emit(False)
 
   def run(self):
-    if isinstance(self.timer, QTimer):
-      self.timer.start()
+    ic('aux pub ros started')
+    ic(self.publisher)
+    self.__is_running__ = True

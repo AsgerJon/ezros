@@ -8,5 +8,8 @@ from ._ez_timer import EZTimer
 from ._init_node_maybe import initNodeMaybe
 from ._resolve_topic_type import resolveTopicType
 from ._sub_ros import SubRos
+from ._aux_pub_ros import AuxPubRos
+from ._bool_pub_ros import BoolPubRos
 from ._rolling_array import RollingArray
+from ._live_data import LiveData
 from ._int_field import IntField

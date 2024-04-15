@@ -30,7 +30,7 @@ fi
 function ,ros() {
   ,mamba
   mamba activate rosenv
-  export ROS_MASTER_URI="http://192.168.1.66:11311"
+  export ROS_MASTER_URI="http://192.168.1.85:11311"
   export ROS_IP="192.168.1.165"
   export MAMBA_ROS="/home/AsgerJon/miniforge3/envs/rosenv"
   export CATKIN_DIR="/home/AsgerJon/catkin_ws"

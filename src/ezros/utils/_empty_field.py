@@ -1,6 +1,6 @@
 """EmptyField provides a mostly empty constructor except for the field
 name and field owner filled out by the __set_name__ method.  """
-#  MIT Licence
+#  GPL-3.0 license
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
@@ -124,7 +124,9 @@ class EmptyField(QObject):
       '%s' belonging to: '%s', the following error occurred when the field 
       instance '%s' failed to return a getter function!"""
       fieldName = self.getFieldName()
-      insName = str(instance)
+      # insName = str(instance)
+      # insName = instance.__name__
+      insName = 'urmom'
       ownerName = self.getFieldOwner().__qualname__
       msg = e % (fieldName, insName, ownerName, fieldName)
       raise TypeError(monoSpace(msg)) from attributeError
@@ -144,7 +146,8 @@ class EmptyField(QObject):
       '%s' belonging to: '%s', the following error occurred when the getter 
       function was called!"""
       fieldName = self.getFieldName()
-      insName = str(instance)
+      # insName = str(instance)
+      insName = 'urmom'
       ownerName = self.getFieldOwner().__qualname__
       msg = e % (fieldName, insName, ownerName)
       raise RuntimeError(monoSpace(msg)) from exception

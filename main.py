@@ -5,9 +5,11 @@ from __future__ import annotations
 
 import os
 import sys
+from subprocess import run, PIPE
 from typing import Callable
 
 import numpy as np
+from PySide6.QtCharts import QChart
 
 from ezros.app import App, MainWindow
 from PySide6.QtCore import Qt
@@ -39,14 +41,24 @@ def tester01() -> int:
 
 def tester02() -> None:
   """lmao"""
+  for (key, val) in QChart.__dict__.items():
+    print(key, type(val))
 
 
 def tester03() -> None:
   """lmao"""
+  url = os.environ.get('ROS_MASTER_URI').replace(':11311', '')
+  url = url.replace('http://', '')
+  ic(url)
+  res = run(['ping', url, '-c', '1'],
+            stdout=PIPE,
+            stderr=PIPE,
+            text=True)
+  print(res.stdout)
 
 
 def tester06() -> None:
-  """THESE arrays fuck me"""
+  """/etc/hosts"""
   """127.0.0.1	localhost
 127.0.1.1	TMR
 192.168.1.85	tinybox9542

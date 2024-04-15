@@ -1,100 +1,162 @@
 """RollingArray to keep visual representation classes subservient to the
 actual data structure classes. """
-#  MIT Licence
+#  GPL-3.0 license
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+import time
+
+from PySide6.QtCharts import QScatterSeries, QChart, QChartView, QValueAxis
+from PySide6.QtCore import QTimer, Slot, Qt
+from PySide6.QtWidgets import QGraphicsView
+from attribox import AttriBox
+from ezside.widgets import BaseWidget, Vertical
 from icecream import ic
 from msgs.msg import Float32Stamped
 import numpy as np
 from rospy import Time
 from vistutils.waitaminute import typeMsg
 
+from ezros.settings import Defaults
+from ezros.utils import EmptyField
+
 ic.configureOutput(includeContext=True)
 
 
-class RollingArray():
+class RollingArray(BaseWidget):
   """RollingArray to keep visual representation classes subservient to the
   actual data structure classes. """
 
-  __fallback_num_points__ = 16
-  __zero_index__ = None
-  __num_points__ = None
-  __inner_array__ = None
-  __zero_time__ = None
+  __max_num_points__ = Defaults.maxNumPoints
 
-  def __init__(self, *args) -> None:
-    self.__zero_time__ = Time.now().to_sec()
-    intArgs = [arg for arg in args if isinstance(arg, int)]
-    self._numPoints = [*intArgs, self.__fallback_num_points__][0]
-    self._createInnerArray()
+  __inner_data__ = None
+  __inner_timer__ = None
+  __inner_series__ = None
+  __inner_chart__ = None
+  __inner_view__ = None
+  __iter_contents__ = None
 
-  def _createInnerArray(self) -> None:
-    """Creates the inner array"""
-    if self.__zero_index__ is not None:
-      raise ValueError('The inner array has already been created')
-    self.__zero_index__ = 0
-    self.__inner_array__ = np.zeros((self._numPoints,), dtype=np.complex64)
-    # self.__inner_array__ = np.full_like(zeros, np.nan, dtype=np.complex64)
+  data = EmptyField()
+  timer = EmptyField()
+  baseLayout = AttriBox[Vertical]()
+  series = AttriBox[QScatterSeries]()
+  axisX = AttriBox[QValueAxis]()
+  axisY = AttriBox[QValueAxis]()
+  chart = AttriBox[QChart]()
+  live = AttriBox[QChartView]()
 
-  def _getInnerArray(self, **kwargs) -> np.ndarray:
-    """Getter-function for the inner array"""
-    if self.__inner_array__ is None:
+  @data.GET
+  def _getInnerData(self, **kwargs) -> list[complex]:
+    """Getter-function for the inner data."""
+    if self.__inner_data__ is None:
       if kwargs.get('_recursion', False):
         raise RecursionError
-      self._createInnerArray()
-      return self._getInnerArray(_recursion=True)
-    if isinstance(self.__inner_array__, np.ndarray):
-      return self.__inner_array__
-    e = typeMsg('self.__inner_array__', self.__inner_array__, np.ndarray)
+      kwargs['_recursion'] = True
+      self.__inner_data__ = []
+      return self._getInnerData(**kwargs)
+    if isinstance(self.__inner_data__, list):
+      rightNow = Time.now().to_nsec() * 1e-09
+      return [arg - rightNow + 0j for arg in self.__inner_data__]
+    e = typeMsg('__inner_data__', self.__inner_data__, list)
     raise TypeError(e)
 
-  # def rightNow(self) -> tuple[np.ndarray, np.ndarray]:
-  #   """Return the current array"""
-  #   withNans = self._getInnerArray()
-  #   yeetNans = withNans[~np.isnan(withNans)]
-  #   rolled = np.roll(yeetNans, -self.__zero_index__, )
-  #   times = rolled.real.astype(np.float32)
-  #   values = rolled.imag.astype(np.float32)
-  #   return times, values
+  def _createTimer(self) -> None:
+    """Creator-function for the timer."""
+    self.__inner_timer__ = QTimer()
+    self.__inner_timer__.setInterval(Defaults.chartUpdateInterval)
+    self.__inner_timer__.setTimerType(Defaults.timerType)
+    self.__inner_timer__.setSingleShot(False)
+    self.__inner_timer__.timeout.connect(self.update)
 
-  def explicitAppend(self, complexNumber: complex) -> None:
-    """Append a value to the array"""
-    self.__inner_array__[self.__zero_index__] = complexNumber
-    self.__zero_index__ += 1
-    if self.__zero_index__ >= self._numPoints:
-      self.__zero_index__ = 0
+  @timer.GET
+  def _getTimer(self, **kwargs) -> QTimer:
+    """Getter-function for the timer."""
+    if self.__inner_timer__ is None:
+      if kwargs.get('_recursion', False):
+        raise RecursionError
+      self._createTimer()
+      return self._getTimer(_recursion=True)
+    if isinstance(self.__inner_timer__, QTimer):
+      return self.__inner_timer__
+    e = typeMsg('__inner_timer__', self.__inner_timer__, QTimer)
+    raise TypeError(e)
 
-  #
-  # def append(self, data: Float32Stamped) -> None:
-  #   """Append a value to the array"""
-  #   value = data.data
-  #   timeStamp = data.header.stamp.to_secs() - self.__zero_time__
-  #   ic(timeStamp)
-  #   self.__inner_array__[self.__zero_index__] = timeStamp + 1j * value
-  #   self.__zero_index__ += 1
-  #   if self.__zero_index__ >= self._numPoints:
-  #     self.__zero_index__ = 0
+  def __iter__(self, ) -> RollingArray:
+    """Iterator for the RollingArray."""
+    if isinstance(self.data, list):
+      rightNow = Time.now()
+      self.__iter_contents__ = [i for i in self.data]
+      return self
 
-  # def __str__(self) -> str:
-  #   """Returns the average time and value of the snap"""
-  #   t, x = self.rightNow()
-  #   tMin, tMax = t.min(), t.max()
-  #   xMin, xMax = x.min(), x.max()
-  #   msg = """%s: %s, %s: %s, %s: %s, %s: %s""" % (
-  #     'tMin', tMin, 'tMax', tMax, 'xMin', xMin, 'xMax', xMax)
-  #   return msg
-  #
-  # def appendVals(self, time: float, value: float) -> None:
-  #   """Append a value to the array"""
-  #   value = 0. if value != value else value  # Trust me bro
-  #   prev = self.__inner_array__[self.__zero_index__]
-  #   self.__zero_index__ += 1
-  #   if self.__zero_index__ >= self._numPoints:
-  #     self.__zero_index__ = 0
-  #   self.__inner_array__[self.__zero_index__] = time + 1j * value -
-  #   prev.real
+  def __next__(self) -> complex:
+    """Next method for the RollingArray."""
+    try:
+      return self.__iter_contents__.pop(0)
+    except IndexError:
+      raise StopIteration
 
-  def complexNow(self) -> np.ndarray:
-    """Return the current array"""
-    return np.roll(self.__inner_array__, -self.__zero_index__, )
+  def __len__(self, ) -> int:
+    """Length method for the RollingArray."""
+    if isinstance(self.data, list):
+      return len(self.data)
+    e = typeMsg('self.data', self.data, list)
+    raise TypeError(e)
+
+  def __bool__(self, ) -> bool:
+    """Boolean method for the RollingArray."""
+    if isinstance(self.data, list):
+      return True if self.data else False
+    e = typeMsg('self.data', self.data, list)
+    raise TypeError(e)
+
+  @Slot(complex)
+  def append(self, dataPoint: complex) -> complex:
+    """Appends and returns given data point"""
+    self.__inner_data__.append(dataPoint)
+    return dataPoint
+
+  @Slot()
+  def update(self) -> None:
+    """Updates the chart."""
+    ic('Updating chart: %d' % len(self.data))
+    if not isinstance(self.data, list):
+      e = typeMsg('self.data', self.data, list)
+      raise TypeError(e)
+    if not isinstance(self.series, QScatterSeries):
+      e = typeMsg('self.series', self.series, QScatterSeries)
+      raise TypeError(e)
+    if not isinstance(self.chart, QChart):
+      e = typeMsg('self.chart', self.chart, QChart)
+      raise TypeError(e)
+    if not isinstance(self.live, QChartView):
+      e = typeMsg('self.live', self.live, QChartView)
+      raise TypeError(e)
+    # self.chart.removeSeries(self.series)
+    self.series.clear()
+    rightNow = time.time()
+    for dataPoint in self.data:
+      self.series.append(dataPoint.real - rightNow, dataPoint.imag)
+      # print(dataPoint.real, dataPoint.imag)
+    # self.chart.addSeries(self.series)
+    # self.chart.createDefaultAxes()
+    # self.chart.axes(Qt.Orientation.Vertical)
+    # self.live.setChart(self.chart)
+    # self.chart.update()
+    self.live.update()
+    BaseWidget.update(self)
+
+  def initUi(self) -> None:
+    """The initUi method initializes the user interface of the window"""
+    self.axisX.setRange(-Defaults.maxAge, 0)
+    self.axisY.setRange(-2, 2)
+    self.chart.addAxis(self.axisX, Qt.AlignmentFlag.AlignBottom)
+    self.chart.addAxis(self.axisY, Qt.AlignmentFlag.AlignLeft)
+    self.chart.addSeries(self.series)
+    self.live.setChart(self.chart)
+    self.baseLayout.addWidget(self.live)
+    self.setLayout(self.baseLayout)
+    if isinstance(self.timer, QTimer):
+      self.timer.start()
+    else:
+      e = typeMsg('self.timer', self.timer, QTimer)
+      raise TypeError(e)

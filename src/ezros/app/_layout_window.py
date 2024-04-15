@@ -7,11 +7,16 @@ from abc import abstractmethod
 import time
 
 from attribox import AttriBox
-from ezside.widgets import BaseWidget, Grid, Label, PushButton
+from ezside.widgets import BaseWidget, \
+  Grid, \
+  Label, \
+  PushButton, \
+  HorizontalSpacer
 from icecream import ic
 from ezside.windows import BaseWindow
 
-from ezros.widgets import Button
+from ezros.rosutils import RollingArray, LiveData
+from ezros.widgets import Button, RosToggle
 
 ic.configureOutput(includeContext=True)
 
@@ -23,12 +28,25 @@ class LayoutWindow(BaseWindow):
   baseWidget = AttriBox[BaseWidget]()
   baseLayout = AttriBox[Grid]()
   baseLabel = AttriBox[Label]('LMAO')
-  pumpButton = AttriBox[Button]('Pump Control')
+  activatePump = AttriBox[Button]('Pump ON')
+  deactivatePump = AttriBox[Button]('Pump OFF')
+  pumpStatus = AttriBox[Label]('Pump Status: OFF')
+  pumpToggle = AttriBox[RosToggle]('/tool/pump_command')
+  sprayToggle = AttriBox[RosToggle]('/tool/spray_command')
+  hSpacer = AttriBox[HorizontalSpacer]()
+  pumpData = AttriBox[LiveData]()
 
   def initUi(self) -> None:
     """Initialize the user interface."""
-    self.setMinimumSize(1200, 600)
-    self.baseLayout.addWidget(self.baseLabel, 0, 0)
+    self.setMinimumSize(640, 480)
+    self.baseLayout.addWidget(self.sprayToggle, 0, 0, 1, 1)
+    self.baseLayout.addWidget(self.hSpacer, 0, 1, 1, 1)
+    self.baseLayout.addWidget(self.pumpToggle, 0, 2, 1, 1)
+    # self.baseLayout.addWidget(self.activatePump, 1, 0)
+    # self.baseLayout.addWidget(self.deactivatePump, 1, 1)
+    # self.baseLayout.addWidget(self.pumpStatus, 2, 0, 1, 2)
+    self.baseLayout.addWidget(self.baseLabel, 1, 0, 1, 3)
+    self.baseLayout.addWidget(self.pumpData, 2, 0, 1, 3)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
 

@@ -8,9 +8,9 @@ from typing import Union, Any
 import ezside.core
 from PySide6.QtCharts import QValueAxis, QChart
 from PySide6.QtCore import QRect, QPointF, QSizeF, QRectF
-from PySide6.QtGui import QColor, QBrush
+from PySide6.QtGui import QColor, QBrush, QFont, QPen
 from PySide6.QtWidgets import QGraphicsRectItem
-from ezside.core import SolidFill
+from ezside.core import SolidFill, SolidLine
 
 PRect = Union[QRect, QRectF]
 GRect = QGraphicsRectItem
@@ -18,6 +18,8 @@ GRect = QGraphicsRectItem
 
 class Defaults:
   """The Defaults class centralizes default values"""
+
+  appFontFamily = 'Montserrat'
 
   publisherQueue = 10
   publisherInterval = 100
@@ -50,6 +52,25 @@ class Defaults:
   pumpCurrentThemeName = 'BrownSand'
 
   pumpCurrentMarkerSize = 5
+
+  pingFontSize = 20
+  pingFontColor = QColor(255, 255, 0, 255)
+
+  @classmethod
+  def getPingFont(cls) -> QFont:
+    """Getter-function for the ping font"""
+    font = QFont(cls.appFontFamily)
+    font.setPointSize(cls.pingFontSize)
+    return font
+
+  @classmethod
+  def getPingPen(cls) -> QPen:
+    """Getter-function for the ping pen"""
+    pen = QPen()
+    pen.setStyle(SolidLine)
+    pen.setColor(cls.pingFontColor)
+    pen.setWidth(1)
+    return pen
 
   @classmethod
   def getPumpCurrentDangerColor(cls) -> QColor:

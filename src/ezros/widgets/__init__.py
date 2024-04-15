@@ -3,5 +3,6 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from ._pinginator import Pinginator
 from ._button import Button
 from ._ros_toggle import RosToggle

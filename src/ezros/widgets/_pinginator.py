@@ -6,11 +6,13 @@ from __future__ import annotations
 
 from subprocess import PIPE, run
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QPainter, QBrush
-from ezside.core import SolidFill
+from PySide6.QtCore import Qt, QRect, QPoint, QTimer
+from PySide6.QtGui import QPainter, QBrush, QColor, QPaintEvent, QPen
+from ezside.core import SolidFill, SolidLine, emptyBrush, AlignCenter
 from ezside.widgets import BaseWidget
 from vistutils.waitaminute import typeMsg
+
+from ezros.settings import Defaults
 
 
 class Pinginator(BaseWidget):
@@ -63,11 +65,59 @@ class Pinginator(BaseWidget):
     """Getter-function for state aware brush. """
     brush = QBrush()
     brush.setStyle(SolidFill)
+    if self.__inner_latency__ < 25:
+      brush.setColor(QColor(0, 255, 0))
+    elif self.__inner_latency__ < 50:
+      brush.setColor(QColor(144, 255, 0))
+    elif self.__inner_latency__ < 75:
+      brush.setColor(QColor(192, 255, 0))
+    elif self.__inner_latency__ < 100:
+      brush.setColor(QColor(255, 255, 0))
+    elif self.__inner_latency__ < 125:
+      brush.setColor(QColor(255, 192, 0))
+    elif self.__inner_latency__ < 150:
+      brush.setColor(QColor(255, 144, 0))
+    elif self.__inner_latency__ < 175:
+      brush.setColor(QColor(255, 91, 0))
+    else:
+      brush.setColor(QColor(255, 0, 0))
+    return brush
 
-  def paintEvent(self) -> None:
+  def _getPen(self) -> QPen:
+    """Getter-function for the pen."""
+    pen = QPen()
+    pen.setColor(QColor(0, 0, 0))
+    pen.setWidth(max([int(self.__inner_latency__ / 50), 1]))
+    pen.setStyle(SolidLine)
+    return pen
+
+  def _getText(self) -> str:
+    """Getter-function for the text"""
+    return 'PING: %d ms' % self.__inner_latency__
+
+  def paintEvent(self, event: QPaintEvent) -> None:
     """Paint the widget."""
     painter = QPainter()
     painter.begin(self)
     viewRect = painter.viewport()
-
+    viewSize = viewRect.size()
+    padRect = QRect(QPoint(0, 0), viewSize)
+    padRect.moveCenter(viewRect.center())
+    painter.setBrush(self._getBrush())
+    painter.setPen(self._getPen())
+    painter.drawRoundedRect(padRect, 10, 10)
+    painter.setBrush(emptyBrush())
+    painter.setPen(Defaults.getPingPen())
+    painter.setFont(Defaults.getPingFont())
+    text = self._getText()
+    textRect = painter.boundingRect(padRect, AlignCenter, text)
+    textRect.moveCenter(viewRect.center())
+    painter.drawText(textRect, AlignCenter, text)
     painter.end()
+
+  def initUi(self) -> None:
+    """Initialize the user interface."""
+    BaseWidget.initUi(self)
+    self.setMinimumSize(200, 50)
+    self._getTimer().start()
+    self.update()

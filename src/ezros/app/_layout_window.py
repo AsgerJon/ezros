@@ -16,7 +16,7 @@ from icecream import ic
 from ezside.windows import BaseWindow
 
 from ezros.rosutils import RollingArray, LiveData
-from ezros.widgets import Button, RosToggle
+from ezros.widgets import Button, RosToggle, Pinginator
 
 ic.configureOutput(includeContext=True)
 
@@ -34,13 +34,14 @@ class LayoutWindow(BaseWindow):
   pumpToggle = AttriBox[RosToggle]('/tool/pump_command')
   sprayToggle = AttriBox[RosToggle]('/tool/spray_command')
   hSpacer = AttriBox[HorizontalSpacer]()
+  pinginator = AttriBox[Pinginator]()
   pumpData = AttriBox[LiveData]()
 
   def initUi(self) -> None:
     """Initialize the user interface."""
     self.setMinimumSize(640, 480)
     self.baseLayout.addWidget(self.sprayToggle, 0, 0, 1, 1)
-    self.baseLayout.addWidget(self.hSpacer, 0, 1, 1, 1)
+    self.baseLayout.addWidget(self.pinginator, 0, 1, 1, 1)
     self.baseLayout.addWidget(self.pumpToggle, 0, 2, 1, 1)
     # self.baseLayout.addWidget(self.activatePump, 1, 0)
     # self.baseLayout.addWidget(self.deactivatePump, 1, 1)

@@ -38,13 +38,14 @@ class RosToggle(BaseWidget):
   state = EmptyField()
   topicName = EmptyField()
   pubThread = EmptyField()
-  activator = EmptyField()
-  deactivator = EmptyField()
 
   baseLayout = AttriBox[Grid]()
-  hSpacer = AttriBox[HorizontalSpacer]()
+  h1Spacer = AttriBox[HorizontalSpacer]()
+  h2Spacer = AttriBox[HorizontalSpacer]()
   v1Spacer = AttriBox[VerticalSpacer]()
   v2Spacer = AttriBox[VerticalSpacer]()
+  activator = AttriBox[Button]()
+  deactivator = AttriBox[Button]()
   stateLabel = AttriBox[Label]()
 
   stateChanged = Signal(bool)
@@ -52,26 +53,6 @@ class RosToggle(BaseWidget):
   deactivated = Signal()
   activateClicked = Signal()
   deactivateClicked = Signal()
-
-  @activator.GET
-  def _getActivator(self) -> QPushButton:
-    """Getter-function for the activator."""
-    if self.__activator_button__ is None:
-      self.__activator_button__ = QPushButton()
-      self.__activator_button__.setText('- ON -')
-      self.__activator_button__.setEnabled(True)
-      self.__activator_button__.clicked.connect(self.activate)
-    return self.__activator_button__
-
-  @deactivator.GET
-  def _getDeactivator(self) -> QPushButton:
-    """Getter-function for the deactivator."""
-    if self.__deactivator_button__ is None:
-      self.__deactivator_button__ = QPushButton()
-      self.__deactivator_button__.setText('- OFF -')
-      self.__deactivator_button__.setEnabled(False)
-      self.__deactivator_button__.clicked.connect(self.deactivate)
-    return self.__deactivator_button__
 
   @state.GET
   def _getState(self, **kwargs) -> bool:
@@ -134,14 +115,13 @@ class RosToggle(BaseWidget):
 
   def initUi(self) -> None:
     """Initialize the user interface."""
-    self.activator.setText('- ON -')
-    self.deactivator.setText('- OFF -')
     self.baseLayout.addWidget(self.stateLabel, 0, 0, 1, 3)
     self.baseLayout.addWidget(self.activator, 1, 0)
-    self.baseLayout.addWidget(self.hSpacer, 1, 1, 1, 1)
+    self.baseLayout.addWidget(self.h1Spacer, 1, 1, 1, 1)
     self.baseLayout.addWidget(self.deactivator, 1, 2)
-    # self.baseLayout.addWidget(self.v1Spacer, 2, 0, 1, 1)
-    # self.baseLayout.addWidget(self.v2Spacer, 2, 2, 1, 1)
+    self.baseLayout.addWidget(self.v1Spacer, 2, 0, 1, 1)
+    self.baseLayout.addWidget(self.v2Spacer, 2, 2, 1, 1)
+    self.baseLayout.addWidget(self.h2Spacer, 3, 0, 1, 3)
     self.setLayout(self.baseLayout)
     self.activator.setEnabled(False if self else True)
     self.deactivator.setEnabled(True if self else False)
@@ -153,12 +133,11 @@ class RosToggle(BaseWidget):
     self.activator.clicked.connect(self.activateClicked)
     self.deactivator.clicked.connect(self.deactivate)
     self.deactivator.clicked.connect(self.deactivateClicked)
-    # self.stateChanged.connect(self.stateChanged.emit)
     self.stateChanged.connect(self.updateLabel)
     if isinstance(self.pubThread, BoolPubRos):
-      self.pubThread.stateChanged.connect(self._setState)
-      self.pubThread.activated.connect(self.activated)
-      self.pubThread.deactivated.connect(self.deactivated)
+      self.activated.connect(self.pubThread.activate)
+      self.deactivated.connect(self.pubThread.deactivate)
+      self.pubThread.start()
     else:
       e = typeMsg('pubThread', self.pubThread, BoolPubRos)
       raise TypeError(e)

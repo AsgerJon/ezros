@@ -7,12 +7,8 @@ from __future__ import annotations
 from subprocess import PIPE, run
 
 from PySide6.QtCore import Qt, QRect, QPoint, QTimer, QMargins
-from PySide6.QtGui import QPainter, \
-  QBrush, \
-  QColor, \
-  QPaintEvent, \
-  QPen, \
-  QFontMetrics
+from PySide6.QtGui import QPainter, QBrush, QColor, QPaintEvent, QPen
+from PySide6.QtGui import QFontMetrics
 from PySide6.QtWidgets import QSizePolicy
 from ezside.core import SolidFill, SolidLine, emptyBrush, AlignCenter, Expand
 from ezside.widgets import BaseWidget

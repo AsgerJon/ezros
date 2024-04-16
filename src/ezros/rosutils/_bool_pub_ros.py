@@ -24,6 +24,7 @@ class BoolPubRos(QThread):
   __topic_name__ = None
   __topic_type__ = None
 
+  published = Signal(bool)
   activated = Signal()
   deactivated = Signal()
   stateChanged = Signal(bool)
@@ -102,4 +103,5 @@ class BoolPubRos(QThread):
     """Runs the thread."""
     while isinstance(self.publisher, Publisher):
       self.publisher.publish(self._getMsg())
+      self.published.emit(self.__inner_state__)
       self.msleep(50)

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from PyQt5.QtGui import QMouseEvent
 from PySide6.QtCore import Signal, Slot
 from PySide6.QtWidgets import QPushButton
 from attribox import AttriBox
@@ -137,6 +138,7 @@ class RosToggle(BaseWidget):
     if isinstance(self.pubThread, BoolPubRos):
       self.activated.connect(self.pubThread.activate)
       self.deactivated.connect(self.pubThread.deactivate)
+      self.pubThread.published.connect(self.updateButtons)
       self.pubThread.start()
     else:
       e = typeMsg('pubThread', self.pubThread, BoolPubRos)
@@ -144,6 +146,8 @@ class RosToggle(BaseWidget):
 
   def updateLabel(self, ) -> None:
     """Update the label."""
+    self.activator.setEnabled(False if self else True)
+    self.deactivator.setEnabled(True if self else False)
     updatedText = '%s: %s' % (self.topicName, 'ON' if self else 'OFF')
     self.stateLabel.text = updatedText
 
@@ -175,4 +179,28 @@ class RosToggle(BaseWidget):
   def __init__(self, topicName: str) -> None:
     """Initialize the RosToggle instance."""
     BaseWidget.__init__(self)
+    self.setMouseTracking(True)
     self.topicName = topicName
+
+  def mouseMoveEvent(self, event: QMouseEvent) -> None:
+    """Mouse move event."""
+    self.activator.setEnabled(False if self else True)
+    self.deactivator.setEnabled(True if self else False)
+    return BaseWidget.mouseMoveEvent(self, event)
+
+  def mousePressEvent(self, event: QMouseEvent) -> None:
+    """Mouse Press Event"""
+    self.activator.setEnabled(False if self else True)
+    self.deactivator.setEnabled(True if self else False)
+    return BaseWidget.mousePressEvent(self, event)
+
+  def mouseReleaseEvent(self, event: QMouseEvent) -> None:
+    """Mouse Press Event"""
+    self.activator.setEnabled(False if self else True)
+    self.deactivator.setEnabled(True if self else False)
+    return BaseWidget.mouseReleaseEvent(self, event)
+
+  def updateButtons(self) -> None:
+    """Updates the states of the buttons."""
+    self.activator.setEnabled(False if self else True)
+    self.deactivator.setEnabled(True if self else False)

@@ -100,7 +100,7 @@ class Pinginator(BaseWidget):
     """Getter-function for the pen."""
     pen = QPen()
     pen.setColor(QColor(0, 0, 0))
-    pen.setWidth(max([int(self.__inner_latency__ / 50), 1]))
+    pen.setWidth(1)
     pen.setStyle(SolidLine)
     return pen
 
@@ -121,7 +121,9 @@ class Pinginator(BaseWidget):
     painter.drawRoundedRect(padRect, 10, 10)
     painter.setBrush(emptyBrush())
     painter.setPen(Defaults.getPingPen())
-    painter.setFont(Defaults.getPingFont())
+    font = Defaults.getPingFont()
+    font.setPointSize(12)
+    painter.setFont(font)
     text = self._getText()
     textRect = painter.boundingRect(padRect, AlignCenter, text)
     textRect.moveCenter(viewRect.center())
@@ -131,7 +133,7 @@ class Pinginator(BaseWidget):
   def initUi(self) -> None:
     """Initialize the user interface."""
     BaseWidget.initUi(self)
-    self.setMinimumSize(64, 48)
+    self.setFixedSize(48, 32)
     self._getTimer().start()
     self.setSizePolicy(Expand, QSizePolicy.Policy.Preferred)
     self.update()

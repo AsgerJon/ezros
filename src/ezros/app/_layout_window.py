@@ -7,13 +7,9 @@ from abc import abstractmethod
 import time
 
 from attribox import AttriBox
-from ezside.widgets import BaseWidget, \
-  Grid, \
-  Label, \
-  PushButton, \
-  HorizontalSpacer
+from ezside import BaseWindow
+from ezside.widgets import BaseWidget, Grid, Label, HorizontalSpacer
 from icecream import ic
-from ezside.windows import BaseWindow
 
 from ezros.rosutils import RollingArray, LiveData
 from ezros.widgets import Button, RosToggle, Pinginator

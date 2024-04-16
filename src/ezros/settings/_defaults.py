@@ -34,12 +34,12 @@ class Defaults:
   timerType = ezside.core.Precise
 
   #  Max age of chart items
-  maxAge = 3
+  maxAge = 8
 
   #  Pump current plot ranges
   pumpCurrentMinView = -0.1
-  pumpCurrentMaxView = 2
-  pumpCurrentMaxSafe = 1.5
+  pumpCurrentMaxView = 4
+  pumpCurrentMaxSafe = 3.5
   pumpCurrentEpoch = 3
   pumpCurrentDataPoints = 128
   pumpCurrentDangerColor = {

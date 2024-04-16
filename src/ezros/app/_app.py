@@ -23,4 +23,5 @@ class App(QApplication):
     self.setApplicationName('EZROS')
     self.setApplicationDisplayName('EZROS')
     self.setAttribute(MenuFlag, True)
-    self.__caller_id__ = initNodeMaybe('EZROS', anonymous=False)
+    self.__caller_id__ = initNodeMaybe('EZROS', anonymous=False,
+                                       xmlrpc_port=33333, tcpros_port=33334)

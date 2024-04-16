@@ -26,7 +26,7 @@ from vistutils.parse import maybe
 from ezros.utils import Announcer
 
 
-def initNodeMaybe(nodeName: str = None, **kwargs) -> str:
+def initNodeMaybe(nodeName: str = None, *args, **kwargs) -> str:
   """
   Initializes a ROS node if it hasn't been initialized yet with the
   given name, or returns the caller ID of the already initialized node.

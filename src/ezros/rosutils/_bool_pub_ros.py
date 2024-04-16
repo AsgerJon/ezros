@@ -78,7 +78,7 @@ class BoolPubRos(QThread):
     auxCommand = AuxCommand()
     auxCommand.activate = True if self else False
     auxCommand.when = Time.now()
-    auxCommand.for_duration = Duration.from_sec(0.1)
+    auxCommand.for_duration = Duration.from_sec(1)
     return auxCommand
 
   def activate(self) -> None:
@@ -104,4 +104,4 @@ class BoolPubRos(QThread):
     while isinstance(self.publisher, Publisher):
       self.publisher.publish(self._getMsg())
       self.published.emit(self.__inner_state__)
-      self.msleep(50)
+      self.msleep(250)

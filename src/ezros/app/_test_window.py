@@ -27,6 +27,12 @@ class TestWindow(BaseWindow):
     self.mapping.title = 'mapping'
     self.xMin.title = 'xMin'
     self.xMax.title = 'xMax'
+    self.mapping.hSpacer.setDebugFlag(False)
+    self.mapping.vSpacer.setDebugFlag(False)
+    self.xMin.hSpacer.setDebugFlag(False)
+    self.xMin.vSpacer.setDebugFlag(False)
+    self.xMax.hSpacer.setDebugFlag(False)
+    self.xMax.vSpacer.setDebugFlag(False)
     self.domainLayout.addWidget(self.xMin)
     self.domainLayout.addWidget(self.xMax)
     self.domainWidget.setLayout(self.domainLayout)

@@ -19,6 +19,7 @@ import msgs.msg as msg
 import std_msgs.msg as std_msg
 from vistutils.text import monoSpace
 
+from ezros.app._test_window import TestWindow
 from ezros.utils import Announcer
 
 ic.configureOutput(includeContext=True, )
@@ -39,10 +40,12 @@ def tester01() -> int:
   return app.exec()
 
 
-def tester02() -> None:
+def tester02() -> int:
   """lmao"""
-  for (key, val) in QChart.__dict__.items():
-    print(key, type(val))
+  app = App(sys.argv)
+  testWindow = TestWindow()
+  testWindow.show()
+  return app.exec()
 
 
 def tester03() -> None:
@@ -81,4 +84,4 @@ def main(callMeMaybe: Callable) -> Announcer:
 
 
 if __name__ == '__main__':
-  tester01()
+  tester02()

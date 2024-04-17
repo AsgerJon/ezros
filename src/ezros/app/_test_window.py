@@ -6,8 +6,11 @@ from __future__ import annotations
 from attribox import AttriBox
 from ezside import BaseWindow
 from ezside.widgets import Vertical, BaseWidget, EntryForm, Horizontal
+from icecream import ic
 
 from ezros.mathview import Canvas
+
+ic.configureOutput(includeContext=True, )
 
 
 class TestWindow(BaseWindow):
@@ -50,5 +53,8 @@ class TestWindow(BaseWindow):
 
   def updateDomain(self, *_) -> None:
     """Update the domain of the mapping."""
+    ic(self.xMin.value)
+    ic(self.xMax.value)
+    ic(float(self.xMin.value), float(self.xMax.value))
     self.canvas.setDomain(float(self.xMin.value), float(self.xMax.value))
     self.canvas.update()

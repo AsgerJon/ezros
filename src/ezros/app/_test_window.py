@@ -45,3 +45,10 @@ class TestWindow(BaseWindow):
   def initActions(self) -> None:
     """Initialize the actions."""
     self.mapping.newText.connect(self.canvas.setMapping)
+    self.xMin.newText.connect(self.updateDomain)
+    self.xMax.newText.connect(self.updateDomain)
+
+  def updateDomain(self, *_) -> None:
+    """Update the domain of the mapping."""
+    self.canvas.setDomain(float(self.xMin.value), float(self.xMax.value))
+    self.canvas.update()

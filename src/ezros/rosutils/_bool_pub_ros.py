@@ -3,7 +3,7 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from PySide6.QtCore import QThread, Signal
+from PySide6.QtCore import QThread, Signal, Slot
 from msgs.msg import AuxCommand
 from rospy import Time, Publisher, Duration
 from vistutils.text import monoSpace
@@ -19,6 +19,7 @@ class BoolPubRos(QThread):
   that is either ON or OFF to a named ROS topic. Please note that this
   class supports only boolean topic types such as AuxCommand"""
 
+  __allow_run__ = None
   __inner_state__ = None
   __inner_publisher__ = None
   __topic_name__ = None
@@ -31,6 +32,10 @@ class BoolPubRos(QThread):
 
   topicName = EmptyField()
   publisher = EmptyField()
+
+  exitRequested = Signal()
+  exitedSafely = Signal()
+  exitedError = Signal(Exception)
 
   @topicName.GET
   def _getTopicName(self) -> str:
@@ -101,7 +106,27 @@ class BoolPubRos(QThread):
 
   def run(self) -> None:
     """Runs the thread."""
-    while isinstance(self.publisher, Publisher):
+    self.__allow_run__ = True
+    while isinstance(self.publisher, Publisher) and self.__allow_run__:
       self.publisher.publish(self._getMsg())
       self.published.emit(self.__inner_state__)
       self.msleep(250)
+    if isinstance(self.publisher, Publisher):
+      return self.exitedSafely.emit()
+    try:
+      e = typeMsg('self.publisher', self.publisher, Publisher)
+      raise TypeError(e)
+    except TypeError as typeError:
+      self.exitedError.emit(typeError)
+
+  @Slot()
+  def requestExit(self) -> None:
+    """Requests the thread to exit."""
+    self.exitRequested.emit()
+    self.__allow_run__ = False
+    self.quit()
+    self.wait()
+    self.finished.emit()
+    self.exit(0)
+    self.deleteLater()
+    self.finished.emit()

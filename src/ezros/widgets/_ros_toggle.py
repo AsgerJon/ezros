@@ -47,6 +47,7 @@ class RosToggle(BaseWidget):
   v2Spacer = AttriBox[VerticalSpacer]()
   activator = AttriBox[Button]('Activate')
   deactivator = AttriBox[Button]('Deactivate')
+  topicLabel = AttriBox[Label]()
   stateLabel = AttriBox[Label]()
 
   stateChanged = Signal(bool)
@@ -116,6 +117,7 @@ class RosToggle(BaseWidget):
 
   def initUi(self) -> None:
     """Initialize the user interface."""
+    # self.baseLayout.addWidget(self.topicLabel, 0, 0, 1, 3)
     self.baseLayout.addWidget(self.stateLabel, 0, 0, 1, 3)
     self.baseLayout.addWidget(self.activator, 1, 0)
     self.baseLayout.addWidget(self.h1Spacer, 1, 1, 1, 1)
@@ -181,6 +183,7 @@ class RosToggle(BaseWidget):
     BaseWidget.__init__(self)
     self.setMouseTracking(True)
     self.topicName = topicName
+    self.updateLabel()
 
   def mouseMoveEvent(self, event: QMouseEvent) -> None:
     """Mouse move event."""
@@ -204,3 +207,11 @@ class RosToggle(BaseWidget):
     """Updates the states of the buttons."""
     self.activator.setEnabled(False if self else True)
     self.deactivator.setEnabled(True if self else False)
+
+  @Slot()
+  def requestExit(self) -> None:
+    """Request the exit."""
+    if isinstance(self.pubThread, BoolPubRos):
+      return self.pubThread.requestExit()
+    e = typeMsg('pubThread', self.pubThread, BoolPubRos)
+    raise TypeError(e)

@@ -32,7 +32,17 @@ class Canvas(BaseWidget):
   @staticmethod
   def compile(mappingStr: str) -> Callable:
     """Compile the mapping."""
-    return eval(f'lambda x: {mappingStr}')
+    func = eval(f'lambda x: {mappingStr}')
+
+    def wrapper(x: float) -> float:
+      """Wrapper for the function."""
+      x += 0j
+      out = func(x)
+      if out.imag ** 2 > 1e-06:
+        return 0.
+      return out.real
+
+    return wrapper
 
   def setMapping(self, *args) -> None:
     """Set the mapping of the canvas."""
@@ -46,7 +56,7 @@ class Canvas(BaseWidget):
     else:
       self.__real_to_real__ = self.compile(callableCode)
     self.update()
-    
+
   def getMapping(self, ) -> Callable:
     """Return the mapping of the canvas."""
     if self.__real_to_real__ is None:

@@ -84,4 +84,4 @@ def main(callMeMaybe: Callable) -> Announcer:
 
 
 if __name__ == '__main__':
-  tester02()
+  tester01()

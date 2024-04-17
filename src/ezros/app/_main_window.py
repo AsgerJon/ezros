@@ -53,14 +53,4 @@ class MainWindow(LayoutWindow):
 
   def debug2Func(self, ) -> None:
     """Debug2 function."""
-    note = 'Shading entire scene rect'
-    print(note)
-    self.statusBar().showMessage(note)
-    self.pumpData.shadeSceneRect()
-
-  def debug3Func(self, ) -> None:
-    """Debug2 function."""
-    note = 'Shading entire scene rect'
-    print(note)
-    self.statusBar().showMessage(note)
-    self.pumpData.shadePlotArea()
+    LayoutWindow.debug2Func(self)

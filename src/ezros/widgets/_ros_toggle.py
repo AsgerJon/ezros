@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from PySide6.QtCore import Signal, Slot
 from attribox import AttriBox
+from ezside.core import Tight, Expand, AlignCenter
 from ezside.widgets import BaseWidget, Button, Label, Grid
 from vistutils.waitaminute import typeMsg
 
@@ -35,6 +36,8 @@ class RosToggle(BaseWidget):
 
   def initUi(self, ) -> None:
     """Initialize the user interface."""
+    self.offButton.setEnabled(False)
+    self.onButton.setEnabled(True)
     self.baseLayout.addWidget(self.header, 0, 0, 1, 3)
     self.baseLayout.addWidget(self.onButton, 1, 0)
     self.baseLayout.addWidget(self.indicator, 1, 1)

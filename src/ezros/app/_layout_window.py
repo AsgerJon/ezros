@@ -5,9 +5,14 @@ from __future__ import annotations
 
 from abc import abstractmethod
 
+from PySide6.QtGui import QFont
 from attribox import AttriBox
 from ezside import BaseWindow
-from ezside.widgets import BaseWidget, Grid, Label
+from ezside.widgets import BaseWidget, \
+  Grid, \
+  Label, \
+  HeaderLabel, \
+  HorizontalSlider
 from icecream import ic
 
 from ezros.rosutils import LiveData
@@ -22,22 +27,27 @@ class LayoutWindow(BaseWindow):
 
   baseWidget = AttriBox[BaseWidget]()
   baseLayout = AttriBox[Grid]()
-  header = AttriBox[Label]('LMAO')
+  header = AttriBox[HeaderLabel]('LMAO')
   pinginator = AttriBox[Pinginator]()
   pumpControl = AttriBox[RosToggle]('Pump Control')
   sprayControl = AttriBox[RosToggle]('Spray Control')
+  offTimer = AttriBox[HorizontalSlider]('OFF Timer')
+  onTimer = AttriBox[HorizontalSlider]('ON Timer')
   pumpData = AttriBox[LiveData]()
   pumpCurrentLabel = AttriBox[Label]('')
 
   def initUi(self) -> None:
     """Initialize the user interface."""
     self.setMinimumSize(640, 480)
+    self.header.setFont(QFont('Montserrat', 24))
     self.baseLayout.addWidget(self.header, 0, 0, 1, 3)
-    self.baseLayout.addWidget(self.sprayControl, 1, 0, 1, 1)
-    self.baseLayout.addWidget(self.pinginator, 1, 1, 1, 1)
-    self.baseLayout.addWidget(self.pumpControl, 1, 2, 1, 1)
-    self.baseLayout.addWidget(self.pumpCurrentLabel, 2, 0, 1, 3)
-    self.baseLayout.addWidget(self.pumpData, 3, 0, 1, 3)
+    self.baseLayout.addWidget(self.offTimer, 1, 0, 1, 1)
+    self.baseLayout.addWidget(self.onTimer, 1, 2, 1, 1)
+    self.baseLayout.addWidget(self.sprayControl, 2, 0, 1, 1)
+    self.baseLayout.addWidget(self.pinginator, 2, 1, 1, 1)
+    self.baseLayout.addWidget(self.pumpControl, 2, 2, 1, 1)
+    self.baseLayout.addWidget(self.pumpCurrentLabel, 3, 0, 1, 3)
+    self.baseLayout.addWidget(self.pumpData, 4, 0, 1, 3)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
 

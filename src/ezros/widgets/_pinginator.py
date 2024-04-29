@@ -24,16 +24,16 @@ class Pinginator(BaseWidget):
   __inner_timer__ = None
   __inner_latency__ = None
 
-  @staticmethod
-  def _ping() -> float:
+  def _ping(self) -> float:
     """Ping the network."""
     res = run(['ping', '9.9.9.9', '-c', '1'],
               stdout=PIPE,
               stderr=PIPE,
               text=True)
     if res.returncode:
-      e = str(res.stderr)
-      raise RuntimeError(e)
+      if self.__inner_latency__ is None:
+        return 999
+      return self.__inner_latency__
     out = float(res.stdout.split('time=')[1].split(' ms')[0])
     return out
 

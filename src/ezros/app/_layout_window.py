@@ -16,7 +16,7 @@ from ezside.widgets import BaseWidget, \
 from icecream import ic
 
 from ezros.rosutils import LiveData
-from ezros.widgets import RosToggle, Pinginator
+from ezros.widgets import RosToggle, Pinginator, ControlPeriodic
 
 ic.configureOutput(includeContext=True)
 
@@ -31,8 +31,7 @@ class LayoutWindow(BaseWindow):
   pinginator = AttriBox[Pinginator]()
   pumpControl = AttriBox[RosToggle]('Pump Control')
   sprayControl = AttriBox[RosToggle]('Spray Control')
-  offTimer = AttriBox[HorizontalSlider]('OFF Timer')
-  onTimer = AttriBox[HorizontalSlider]('ON Timer')
+  controlPeriodic = AttriBox[ControlPeriodic]()
   pumpData = AttriBox[LiveData]()
   pumpCurrentLabel = AttriBox[Label]('')
 
@@ -41,8 +40,7 @@ class LayoutWindow(BaseWindow):
     self.setMinimumSize(640, 480)
     self.header.setFont(QFont('Montserrat', 24))
     self.baseLayout.addWidget(self.header, 0, 0, 1, 3)
-    self.baseLayout.addWidget(self.offTimer, 1, 0, 1, 1)
-    self.baseLayout.addWidget(self.onTimer, 1, 2, 1, 1)
+    self.baseLayout.addWidget(self.controlPeriodic, 1, 0, 1, 3)
     self.baseLayout.addWidget(self.sprayControl, 2, 0, 1, 1)
     self.baseLayout.addWidget(self.pinginator, 2, 1, 1, 1)
     self.baseLayout.addWidget(self.pumpControl, 2, 2, 1, 1)

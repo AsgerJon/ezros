@@ -4,5 +4,4 @@ to be integral to any one project. """
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from ._empty_field import EmptyField
 from ._announcer import Announcer

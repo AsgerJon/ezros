@@ -17,7 +17,7 @@ from ezside.core import AlignLeft, AlignBottom
 from ezside.widgets import BaseWidget
 from msgs.msg import Float32Stamped
 
-from ezros.settings import Defaults
+from ezros.defaults import Settings
 
 
 class LiveData(BaseWidget):
@@ -32,11 +32,11 @@ class LiveData(BaseWidget):
     self._xAxis = None
     self._yAxis = None
     self._series = QScatterSeries()
-    self._series.setMarkerSize(Defaults.pumpCurrentMarkerSize)
+    self._series.setMarkerSize(Settings.pumpCurrentMarkerSize)
     fillColor = self._series.color()
     self._series.setBorderColor(fillColor)
     self._chart = QChart()
-    self._chart.setTheme(Defaults.getPumpCurrentTheme())
+    self._chart.setTheme(Settings.getPumpCurrentTheme())
     self._view = QChartView()
     self._timer = QTimer()
     self._timer.setInterval(25)
@@ -44,8 +44,8 @@ class LiveData(BaseWidget):
 
   def initUi(self) -> None:
     """The initUi method initializes the user interface of the window."""
-    self._xAxis = Defaults.getPumpCurrentXAxis()
-    self._yAxis = Defaults.getPumpCurrentYAxis()
+    self._xAxis = Settings.getPumpCurrentXAxis()
+    self._yAxis = Settings.getPumpCurrentYAxis()
     self._chart.addSeries(self._series)
     self._chart.addAxis(self._xAxis, AlignBottom)
     self._chart.addAxis(self._yAxis, AlignLeft)
@@ -58,13 +58,13 @@ class LiveData(BaseWidget):
 
   def append(self, data: Float32Stamped) -> None:
     """Appends the given value"""
-    while len(self._data) + 2 > Defaults.maxNumPoints:
+    while len(self._data) + 2 > Settings.maxNumPoints:
       self._data.pop(0)
     self._data.append(data.header.stamp.to_nsec() * 1e-09 + data.data * 1j)
 
   def newDangerShade(self) -> QGraphicsRectItem:
     """Plots only the rectangle containing the scene"""
-    return Defaults.getPumpCurrentDangerRect(self._view.chart().plotArea())
+    return Settings.getPumpCurrentDangerRect(self._view.chart().plotArea())
 
   def resetDangerShade(self) -> None:
     """Resets the danger shade."""
@@ -91,6 +91,6 @@ class LiveData(BaseWidget):
     rightNow = self._data[-1].real
     for item in self._data:
       age = rightNow - item.real
-      if age < Defaults.maxAge:
+      if age < Settings.maxAge:
         self._series.append(-age, item.imag)
     self.updateDangerShade()

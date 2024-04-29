@@ -2,15 +2,25 @@
 application. During development values are placed in the class body. Once
 deployed values that should be configurable by the user are loaded from a
 file. When the users make defaults changes, this file is updated."""
-#  MIT Licence
+#  GPL-3.0 license
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-import os
+from typing import Union
 
-from PySide6.QtCore import QMargins
-from PySide6.QtGui import QFont, QColor, QPainter, QPen
-from ezside.core import DashLine
+import ezside.core
+from PySide6.QtCore import QRect, QPointF, QSizeF, QRectF
+from PySide6.QtGui import QBrush
+from PySide6.QtWidgets import QGraphicsRectItem
+from ezside.core import SolidFill, SolidLine
+
+PRect = Union[QRect, QRectF]
+GRect = QGraphicsRectItem
+
+from typing import Any
+
+from PySide6.QtCharts import QChart, QValueAxis
+from PySide6.QtGui import QFont, QColor, QPen
 
 
 class Settings:
@@ -19,109 +29,127 @@ class Settings:
   deployed values that should be configurable by the user are loaded from a
   file. When the users make defaults changes, this file is updated."""
 
-  @staticmethod
-  def getButtonStyle() -> str:
-    """Get the button style."""
-    cornerRadius = 4
-    borderWidth = 2
-    borderColor = '#000000'
-    here = os.path.dirname(os.path.abspath(__file__))
-    with open(os.path.join(here, '_button_style.qss')) as file:
-      print(file.read())
-      return file.read()
+  appFontFamily = 'Montserrat'
 
-  labelBackgroundColor = (255, 255, 192, 255)
-  labelBorderColor = (0, 0, 0, 255)
-  labelTextColor = (0, 0, 0, 255)
-  labelBorderWidth = 2
-  labelTopMargin = 2
-  labelBottomMargin = 2
-  labelLeftMargin = 4
-  labelRightMargin = 4
+  publisherQueue = 10
+  publisherInterval = 100
 
-  fontFamily = 'Montserrat'
-  buttonFontSize = 12
-  labelFontSize = 14
-  headerFontSize = 16
+  #  Maximum number of points
+  maxNumPoints = 256
 
-  numPoints = 256
+  #  Time in milliseconds between updates of chart views
+  chartUpdateInterval = 25
 
-  spacerVisibility = False
+  #  Default timer type
+  timerType = ezside.core.Precise
 
-  horizontalSeperatorColor = (192, 225, 255, 255)
-  horizontalSeperatorWidth = 2
-  horizontalSeperatorStyle = DashLine
-  verticalSeperatorColor = (192, 225, 255, 255)
-  verticalSeperatorWidth = 2
-  verticalSeperatorStyle = DashLine
+  #  Max age of chart items
+  maxAge = 8
 
-  layoutMargins = dict(left=2, top=2, right=2, bottom=2)
+  #  Pump current plot ranges
+  pumpCurrentMinView = -0.1
+  pumpCurrentMaxView = 4
+  pumpCurrentMaxSafe = 3.5
+  pumpCurrentEpoch = 3
+  pumpCurrentDataPoints = 128
+  pumpCurrentDangerColor = {
+    'red': 255,
+    'green': 0,
+    'blue': 0,
+    'alpha': 63
+  }
 
-  @classmethod
-  def getLayoutMargins(cls) -> QMargins:
-    """Get the layout margins."""
-    return QMargins(cls.layoutMargins['left'],
-                    cls.layoutMargins['top'],
-                    cls.layoutMargins['right'],
-                    cls.layoutMargins['bottom'], )
+  pumpCurrentThemeName = 'BrownSand'
+
+  pumpCurrentMarkerSize = 5
+
+  pingFontSize = 16
+  pingFontColor = QColor(0, 0, 63, 255)
 
   @classmethod
-  def applyHorizontalSeperator(cls, painter: QPainter) -> QPainter:
-    """Apply the horizontal seperator."""
-    color = QColor(*cls.horizontalSeperatorColor)
-    pen = QPen()
-    pen.setColor(color)
-    pen.setWidth(cls.horizontalSeperatorWidth)
-    pen.setStyle(cls.horizontalSeperatorStyle)
-    painter.setPen(pen)
-    return painter
-
-  @classmethod
-  def applyVerticalSeperator(cls, painter: QPainter) -> QPainter:
-    """Apply the vertical seperator."""
-    color = QColor(*cls.verticalSeperatorColor)
-    pen = QPen()
-    pen.setColor(color)
-    pen.setWidth(cls.verticalSeperatorWidth)
-    pen.setStyle(cls.verticalSeperatorStyle)
-    painter.setPen(pen)
-    return painter
-
-  @classmethod
-  def getButtonFont(cls) -> QFont:
-    """Get the button font."""
-    font = QFont()
-    font.setFamily(cls.fontFamily)
-    font.setPointSize(cls.buttonFontSize)
+  def getPingFont(cls) -> QFont:
+    """Getter-function for the ping font"""
+    font = QFont(cls.appFontFamily)
+    font.setPointSize(cls.pingFontSize)
     return font
 
   @classmethod
-  def getLabelMargins(cls, ) -> QMargins:
-    """Returns the margins of the label."""
-    return QMargins(cls.labelLeftMargin,
-                    cls.labelTopMargin,
-                    cls.labelRightMargin,
-                    cls.labelBottomMargin, )
+  def getPingPen(cls) -> QPen:
+    """Getter-function for the ping pen"""
+    pen = QPen()
+    pen.setStyle(SolidLine)
+    pen.setColor(cls.pingFontColor)
+    pen.setWidth(1)
+    return pen
 
   @classmethod
-  def getHeaderFont(cls) -> QFont:
-    """Get the header font."""
-    font = QFont()
-    font.setFamily(cls.fontFamily)
-    font.setPointSize(cls.headerFontSize)
-    return font
+  def getPumpCurrentDangerColor(cls) -> QColor:
+    """Getter-function for the danger color cast as instance of QColor"""
+    return QColor(cls.pumpCurrentDangerColor['red'],
+                  cls.pumpCurrentDangerColor['green'],
+                  cls.pumpCurrentDangerColor['blue'],
+                  cls.pumpCurrentDangerColor['alpha'])
 
   @classmethod
-  def getLabelBackgroundColor(cls) -> QColor:
-    """Get the label background color."""
-    return QColor(*cls.labelBackgroundColor)
+  def getPumpCurrentDangerBrush(cls) -> QBrush:
+    """Getter-function for the danger brush"""
+    dangerBrush = QBrush()
+    dangerBrush.setColor(cls.getPumpCurrentDangerColor())
+    dangerBrush.setStyle(SolidFill)
+    return dangerBrush
 
   @classmethod
-  def getLabelBorderColor(cls) -> QColor:
-    """Get the label border color."""
-    return QColor(*cls.labelBorderColor)
+  def getPumpCurrentDangerRect(cls, viewRect: PRect) -> GRect:
+    """Getter-function for the danger rectangle"""
+    if isinstance(viewRect, QRect):
+      viewRect = viewRect.toRectF()
+    dangerPixelWidth = viewRect.width()
+    dangerHeight = cls.pumpCurrentMaxView - cls.pumpCurrentMaxSafe
+    viewHeight = cls.pumpCurrentMaxView - cls.pumpCurrentMinView
+    dangerPixelHeight = viewRect.height() * dangerHeight / viewHeight
+    dangerPixelLeft = viewRect.left()
+    dangerPixelTop = viewRect.top()
+    dangerPixelBottom = dangerPixelTop + dangerPixelHeight
+    dangerPixelRight = viewRect.right()
+    topLeft = QPointF(dangerPixelLeft, dangerPixelTop)
+    size = QSizeF(dangerPixelWidth, dangerPixelHeight)
+    rect = QRectF(topLeft, size)
+    dangerRect = QGraphicsRectItem(rect)
+    dangerRect.setBrush(cls.getPumpCurrentDangerBrush())
+    dangerRect.setPen(ezside.core.emptyPen())
+    return dangerRect
 
   @classmethod
-  def getLabelTextColor(cls) -> QColor:
-    """Get the label text color."""
-    return QColor(*cls.labelTextColor)
+  def getPumpCurrentXAxis(cls, ) -> QValueAxis:
+    """Getter-function for the x-axis of the pump current plot"""
+    xAxis = QValueAxis()
+    xAxis.setRange(-cls.pumpCurrentEpoch, 0)
+    xAxis.setTickCount(7)
+    return xAxis
+
+  @classmethod
+  def getPumpCurrentYAxis(cls, ) -> QValueAxis:
+    """Getter-function for the y-axis of the pump current plot"""
+    yAxis = QValueAxis()
+    yAxis.setRange(cls.pumpCurrentMinView, cls.pumpCurrentMaxView)
+    yAxis.setTickCount(8)
+    return yAxis
+
+  @classmethod
+  def getPumpCurrentTheme(cls) -> Any:
+    """Getter-function for the pump current theme"""
+    themeName = cls.pumpCurrentThemeName
+    themes = {
+      'BrownSand': QChart.ChartTheme.ChartThemeBrownSand,
+      'BlueCerulean': QChart.ChartTheme.ChartThemeBlueCerulean,
+      'Dark': QChart.ChartTheme.ChartThemeDark,
+      'BlueNcs': QChart.ChartTheme.ChartThemeBlueNcs,
+      'HighContrast': QChart.ChartTheme.ChartThemeHighContrast,
+      'Light': QChart.ChartTheme.ChartThemeLight,
+      'Qt': QChart.ChartTheme.ChartThemeQt,
+      'BlueIcy': QChart.ChartTheme.ChartThemeBlueIcy,
+    }
+    for (key, val) in themes.items():
+      if key.lower() == themeName.lower():
+        return val
+    return themes['BrownSand']

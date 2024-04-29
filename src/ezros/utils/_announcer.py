@@ -3,9 +3,8 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from vistutils.fields import EmptyField
 from vistutils.waitaminute import typeMsg
-
-from ezros.utils import EmptyField
 
 
 class MetaAnnouncer(type):

@@ -14,7 +14,7 @@ from ezside.core import SolidFill, SolidLine, emptyBrush, AlignCenter, Expand
 from ezside.widgets import BaseWidget
 from vistutils.waitaminute import typeMsg
 
-from ezros.settings import Defaults
+from ezros.defaults import Settings
 
 
 class Pinginator(BaseWidget):
@@ -25,7 +25,7 @@ class Pinginator(BaseWidget):
   __inner_latency__ = None
 
   @staticmethod
-  def _ping() -> int:
+  def _ping() -> float:
     """Ping the network."""
     res = run(['ping', '9.9.9.9', '-c', '1'],
               stdout=PIPE,
@@ -35,12 +35,12 @@ class Pinginator(BaseWidget):
       e = str(res.stderr)
       raise RuntimeError(e)
     out = float(res.stdout.split('time=')[1].split(' ms')[0])
-    return int(round(out))
+    return out
 
   def _update(self) -> None:
     """Update the latency."""
     self.__inner_latency__ = self._ping()
-    fontMetrics = QFontMetrics(Defaults.getPingFont())
+    fontMetrics = QFontMetrics(Settings.getPingFont())
     margins = QMargins(4, 4, 4, 4)
     rect = fontMetrics.boundingRect('PING: 999 ms')
     self.setMinimumSize((rect + margins).size())
@@ -102,7 +102,7 @@ class Pinginator(BaseWidget):
 
   def _getText(self) -> str:
     """Getter-function for the text"""
-    return 'PING: %d ms' % self.__inner_latency__
+    return 'PING: %.3f ms' % self.__inner_latency__
 
   def paintEvent(self, event: QPaintEvent) -> None:
     """Paint the widget."""
@@ -116,8 +116,8 @@ class Pinginator(BaseWidget):
     painter.setPen(self._getPen())
     painter.drawRoundedRect(padRect, 10, 10)
     painter.setBrush(emptyBrush())
-    painter.setPen(Defaults.getPingPen())
-    font = Defaults.getPingFont()
+    painter.setPen(Settings.getPingPen())
+    font = Settings.getPingFont()
     font.setPointSize(12)
     painter.setFont(font)
     text = self._getText()

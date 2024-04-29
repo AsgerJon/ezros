@@ -11,7 +11,7 @@ from typing import Callable
 import numpy as np
 from PySide6.QtCharts import QChart
 
-from ezros.app import App, MainWindow
+from ezros.app import EZRos, MainWindow
 from PySide6.QtCore import Qt
 from icecream import ic
 from msgs.msg import Float32Stamped
@@ -19,7 +19,7 @@ import msgs.msg as msg
 import std_msgs.msg as std_msg
 from vistutils.text import monoSpace
 
-from ezros.app._test_window import TestWindow
+from ezros.app import TestWindow
 from ezros.utils import Announcer
 
 ic.configureOutput(includeContext=True, )
@@ -34,9 +34,7 @@ def tester00() -> None:
 
 def tester01() -> int:
   """Main application tester"""
-  app = App(sys.argv)
-  mainWindow = MainWindow()
-  mainWindow.show()
+  app = EZRos(MainWindow)
   return app.exec()
 
 
@@ -78,10 +76,11 @@ ff02::2 ip6-allrouters
 def main(callMeMaybe: Callable) -> Announcer:
   """This function decides the test function called"""
   mainAnnouncer = Announcer('Running: %s' % callMeMaybe.__name__)
-  res = callMeMaybe()
-  mainAnnouncer.exit('Completed with res: %d' % res)
+  exitCode = callMeMaybe()
+  mainAnnouncer.exit(exitCode)
+  print('Completed with res: %d' % exitCode)
   return mainAnnouncer
 
 
 if __name__ == '__main__':
-  tester01()
+  main(tester01)

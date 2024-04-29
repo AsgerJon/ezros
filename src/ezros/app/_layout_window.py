@@ -4,15 +4,14 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-import time
 
 from attribox import AttriBox
 from ezside import BaseWindow
-from ezside.widgets import BaseWidget, Grid, Label, HorizontalSpacer
+from ezside.widgets import BaseWidget, Grid, Label
 from icecream import ic
 
-from ezros.rosutils import RollingArray, LiveData
-from ezros.widgets import Button, RosToggle, Pinginator
+from ezros.rosutils import LiveData
+from ezros.widgets import RosToggle, Pinginator
 
 ic.configureOutput(includeContext=True)
 
@@ -23,27 +22,22 @@ class LayoutWindow(BaseWindow):
 
   baseWidget = AttriBox[BaseWidget]()
   baseLayout = AttriBox[Grid]()
-  baseLabel = AttriBox[Label]('LMAO')
-  activatePump = AttriBox[Button]('Pump ON')
-  deactivatePump = AttriBox[Button]('Pump OFF')
-  pumpStatus = AttriBox[Label]('Pump Status: OFF')
-  pumpToggle = AttriBox[RosToggle]('/tool/pump_command')
-  sprayToggle = AttriBox[RosToggle]('/tool/spray_command')
-  hSpacer = AttriBox[HorizontalSpacer]()
+  header = AttriBox[Label]('LMAO')
   pinginator = AttriBox[Pinginator]()
+  pumpControl = AttriBox[RosToggle]('Pump Control')
+  sprayControl = AttriBox[RosToggle]('Spray Control')
   pumpData = AttriBox[LiveData]()
+  pumpCurrentLabel = AttriBox[Label]('')
 
   def initUi(self) -> None:
     """Initialize the user interface."""
     self.setMinimumSize(640, 480)
-    self.baseLayout.addWidget(self.sprayToggle, 0, 0, 1, 1)
-    self.baseLayout.addWidget(self.pinginator, 0, 1, 1, 1)
-    self.baseLayout.addWidget(self.pumpToggle, 0, 2, 1, 1)
-    # self.baseLayout.addWidget(self.activatePump, 1, 0)
-    # self.baseLayout.addWidget(self.deactivatePump, 1, 1)
-    # self.baseLayout.addWidget(self.pumpStatus, 2, 0, 1, 2)
-    self.baseLayout.addWidget(self.baseLabel, 1, 0, 1, 3)
-    self.baseLayout.addWidget(self.pumpData, 2, 0, 1, 3)
+    self.baseLayout.addWidget(self.header, 0, 0, 1, 3)
+    self.baseLayout.addWidget(self.sprayControl, 1, 0, 1, 1)
+    self.baseLayout.addWidget(self.pinginator, 1, 1, 1, 1)
+    self.baseLayout.addWidget(self.pumpControl, 1, 2, 1, 1)
+    self.baseLayout.addWidget(self.pumpCurrentLabel, 2, 0, 1, 3)
+    self.baseLayout.addWidget(self.pumpData, 3, 0, 1, 3)
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)
 

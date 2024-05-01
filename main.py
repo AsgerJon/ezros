@@ -40,9 +40,7 @@ def tester01() -> int:
 
 def tester02() -> int:
   """lmao"""
-  app = App(sys.argv)
-  testWindow = TestWindow()
-  testWindow.show()
+  app = EZRos(TestWindow)
   return app.exec()
 
 

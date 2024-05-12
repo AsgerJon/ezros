@@ -5,4 +5,7 @@ ROS through Python. """
 from __future__ import annotations
 
 from ._init_node_maybe import initNodeMaybe
+from ._ros_object import RosObject
+from ._ros_topic import RosTopic
 from ._resolve_topic_type import resolveTopicType
+from ._ros_object import RosObject

@@ -5,22 +5,15 @@ from __future__ import annotations
 
 import os
 import sys
-from subprocess import run, PIPE
+import time
 from typing import Callable
 
-import numpy as np
-from PySide6.QtCharts import QChart
-
-from ezros.app import EZRos, MainWindow
 from PySide6.QtCore import Qt
 from icecream import ic
-from msgs.msg import Float32Stamped
-import msgs.msg as msg
-import std_msgs.msg as std_msg
-from vistutils.text import monoSpace
+from ezros.app import EZRos, MainWindow
 
-from ezros.app import TestWindow
-from ezros.utils import Announcer
+# from msgs.msg import Float32Stamped
+# import msgs.msg as msg
 
 ic.configureOutput(includeContext=True, )
 
@@ -34,50 +27,39 @@ def tester00() -> None:
 
 def tester01() -> int:
   """Main application tester"""
-  app = EZRos(MainWindow)
-  return app.exec()
+  return EZRos(MainWindow).exec()
 
 
-def tester02() -> int:
-  """lmao"""
-  app = EZRos(TestWindow)
-  return app.exec()
+#   """/etc/hosts"""
+#   """127.0.0.1	localhost
+# 127.0.1.1	TMR
+# 192.168.1.85	tinybox9542
+# 192.168.1.209	tinybox6112
+# # The following lines are desirable for IPv6 capable hosts
+# ::1     ip6-localhost ip6-loopback
+# fe00::0 ip6-localnet
+# ff00::0 ip6-mcastprefix
+# ff02::1 ip6-allnodes
+# ff02::2 ip6-allrouters
+# """
 
 
-def tester03() -> None:
-  """lmao"""
-  url = os.environ.get('ROS_MASTER_URI').replace(':11311', '')
-  url = url.replace('http://', '')
-  ic(url)
-  res = run(['ping', url, '-c', '1'],
-            stdout=PIPE,
-            stderr=PIPE,
-            text=True)
-  print(res.stdout)
-
-
-def tester06() -> None:
-  """/etc/hosts"""
-  """127.0.0.1	localhost
-127.0.1.1	TMR
-192.168.1.85	tinybox9542
-192.168.1.209	tinybox6112
-# The following lines are desirable for IPv6 capable hosts
-::1     ip6-localhost ip6-loopback
-fe00::0 ip6-localnet
-ff00::0 ip6-mcastprefix
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-"""
-
-
-def main(callMeMaybe: Callable) -> Announcer:
-  """This function decides the test function called"""
-  mainAnnouncer = Announcer('Running: %s' % callMeMaybe.__name__)
-  exitCode = callMeMaybe()
-  mainAnnouncer.exit(exitCode)
-  print('Completed with res: %d' % exitCode)
-  return mainAnnouncer
+def main(callMeMaybe: Callable) -> None:
+  """Main Tester Script"""
+  tic = time.time()
+  print('Running python script located at: \n%s' % sys.argv[0])
+  print('Started at: %s' % time.ctime())
+  print(77 * '-')
+  retCode = 0
+  try:
+    retCode = callMeMaybe()
+  except Exception as exception:
+    print('Exception: %s' % exception)
+    raise exception
+  retCode = 0 if retCode is None else retCode
+  print(77 * '-')
+  print('Return Code: %s' % retCode)
+  print('Runtime: %.3f seconds' % (time.time() - tic))
 
 
 if __name__ == '__main__':

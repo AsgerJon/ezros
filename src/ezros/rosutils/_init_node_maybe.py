@@ -23,8 +23,6 @@ from __future__ import annotations
 from rospy import get_caller_id, init_node, ROSException, ROSInitException
 from vistutils.parse import maybe
 
-from ezros.utils import Announcer
-
 
 def initNodeMaybe(nodeName: str = None, *args, **kwargs) -> str:
   """

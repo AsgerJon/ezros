@@ -51,6 +51,7 @@ class LayoutWindow(BaseWindow):
     #  TopicSelection
     self.topicSelection = TopicSelection()
     self.topicSelection.initUi()
+    self.topicSelection.initSignalSlot()
     self.baseLayout.addWidget(self.topicSelection)
     #  Setting layout and central widget
     self.baseWidget.setLayout(self.baseLayout)

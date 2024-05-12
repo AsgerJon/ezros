@@ -180,8 +180,10 @@ class TopicComboBox(BaseWidget):
     if topicType is None:
       e = """Unable to obtain the topic type for topic named: '%s'!"""
       raise KeyError(monoSpace(e % topicName))
+    if isinstance(topicType, type):
+      topicType = topicType.__name__
     for i in range(self.typeComboBox.count()):
-      if self.typeComboBox.itemText(i) == topicType.__name__:
+      if self.typeComboBox.itemText(i) == topicType:
         self.typeComboBox.setCurrentIndex(i)
         return
     e = """Unable to find the topic type: '%s' of topic named: '%s' in the 

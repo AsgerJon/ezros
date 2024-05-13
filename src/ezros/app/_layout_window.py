@@ -37,7 +37,6 @@ class LayoutWindow(BaseWindow):
   @abstractmethod
   def initSignalSlot(self) -> None:
     """Initialize the signal-slot connections."""
-    pass
 
   def initUi(self) -> None:
     """Initialize the user interface."""

@@ -5,13 +5,12 @@ complemented with a topic selection widget. """
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from typing import Callable, Any
+from typing import Any
 
-from PySide6.QtWidgets import QVBoxLayout
-from ezside.widgets import CanvasWidget, LiveChart, PushButton, Label
-
-from ezros.rosutils import RosTopic
+from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout
+from ezside.widgets import CanvasWidget, PushButton, BaseWidget
 from ezros.widgets import TopicComboBox
+from ezside.widgets.charts import RealTimeView
 
 
 class TopicChart(CanvasWidget):
@@ -20,41 +19,62 @@ class TopicChart(CanvasWidget):
   complemented with a topic selection widget. """
 
   baseLayout: QVBoxLayout
+  headerLayout: QHBoxLayout
+  headerWidget: BaseWidget
+  clearButton: PushButton
   topicComboBox: TopicComboBox
   selectButton: PushButton
-  clearButton: PushButton
-  liveData: LiveChart
-  footerLabel: Label
-
-  def callbackFactory(self, topic: str | RosTopic) -> Callable:
-    """The callbackFactory method creates a callback function for the
-    topic."""
-
-    def callMeMaybe(data: Any) -> None:
-      """The callMeMaybe method is the callback function for the topic."""
-      self.masterCallback(data.data)
-
-    return callMeMaybe
-
-  def masterCallback(self, data: float) -> None:
-    """The masterCallback method is the callback function for the topic."""
+  realTimeView: RealTimeView
 
   def initUi(self, ) -> None:
-    """The initUi method initializes the user interface for the widget."""
-    self.baseLayout = QVBoxLayout(self)
+    """Initializes the user interface for the TopicChart."""
+    #  Base Layout
+    self.baseLayout = QVBoxLayout()
+    self.baseLayout.setContentsMargins(0, 0, 0, 0, )
     self.baseLayout.setSpacing(0)
-    self.baseLayout.setContentsMargins(0, 0, 0, 0)
-
+    #  Header Layout
+    self.headerLayout = QHBoxLayout()
+    self.headerLayout.setContentsMargins(0, 0, 0, 0, )
+    self.headerLayout.setSpacing(0)
+    #  Clear Button
+    self.clearButton = PushButton('Clear')
+    self.clearButton.initUi()
+    self.headerLayout.addWidget(self.clearButton)
+    #  Topic ComboBox
     self.topicComboBox = TopicComboBox()
-    self.baseLayout.addWidget(self.topicComboBox)
-
-    self.selectButton = PushButton('Select', )
+    self.headerLayout.addWidget(self.topicComboBox)
+    #  Select Button
+    self.selectButton = PushButton('Select')
     self.selectButton.initUi()
-    self.selectButton.initSignalSlot()
-    self.baseLayout.addWidget(self.selectButton)
-
-    self.liveData = LiveChart(self)
-    self.liveData.initUi()
-    self.baseLayout.addWidget(self.liveData)
-
+    self.headerLayout.addWidget(self.selectButton)
+    #  Header Layout Widget
+    self.headerWidget = BaseWidget()
+    self.headerWidget.setLayout(self.headerLayout)
+    self.baseLayout.addWidget(self.headerWidget)
+    #  Real Time View
+    self.realTimeView = RealTimeView()
+    self.realTimeView.initUi()
+    self.baseLayout.addWidget(self.realTimeView)
+    #  Setting layout
     self.setLayout(self.baseLayout)
+
+  def initSignalSlot(self, ) -> None:
+    """Initializes the signal slot connections for the TopicChart."""
+
+  @classmethod
+  def styleTypes(cls) -> dict[str, type]:
+    """The styleTypes method provides the type expected at each name."""
+    canvasWidgetStyleTypes = CanvasWidget.styleTypes()
+    topicChartStyleTypes = {}
+    return {**canvasWidgetStyleTypes, **topicChartStyleTypes}
+
+  @classmethod
+  def staticStyles(cls) -> dict[str, Any]:
+    """Returns the static styles for the TopicChart."""
+    canvasWidgetStyles = CanvasWidget.staticStyles()
+    topicChartStyles = {}
+    return {**canvasWidgetStyles, **topicChartStyles}
+
+  def dynStyles(self, ) -> dict[str, Any]:
+    """Implementation of dynamic fields"""
+    return {}

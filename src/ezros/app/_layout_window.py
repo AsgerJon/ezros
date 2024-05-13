@@ -12,7 +12,7 @@ from ezside.core import AlignTop, AlignLeft
 from ezside.widgets import BaseWidget
 from icecream import ic
 
-from ezros.widgets import TopicSelection
+from ezros.widgets import TopicSelection, TopicChart
 
 ic.configureOutput(includeContext=True)
 
@@ -32,7 +32,7 @@ class LayoutWindow(BaseWindow):
   debug9: QAction
   baseLayout: QVBoxLayout
   baseWidget: BaseWidget
-  topicSelection: TopicSelection
+  topicChart: TopicChart
 
   @abstractmethod
   def initSignalSlot(self) -> None:
@@ -49,10 +49,9 @@ class LayoutWindow(BaseWindow):
     self.baseLayout.setSpacing(0)
     self.baseWidget = BaseWidget()
     #  TopicSelection
-    self.topicSelection = TopicSelection()
-    self.topicSelection.initUi()
-    self.topicSelection.initSignalSlot()
-    self.baseLayout.addWidget(self.topicSelection)
+    self.topicChart = TopicChart()
+    self.topicChart.initUi()
+    self.baseLayout.addWidget(self.topicChart)
     #  Setting layout and central widget
     self.baseWidget.setLayout(self.baseLayout)
     self.setCentralWidget(self.baseWidget)

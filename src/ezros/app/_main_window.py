@@ -8,8 +8,6 @@ import rospy
 
 from ezros.app import LayoutWindow
 
-# from msgs.msg import Float32Stamped
-
 ic.configureOutput(includeContext=True)
 
 
@@ -21,14 +19,12 @@ class MainWindow(LayoutWindow):
     self.debug1.triggered.connect(self.onDebug1)
     self.debug2.triggered.connect(self.onDebug2)
     self.debug3.triggered.connect(self.onDebug3)
-    self.topicSelection.topicComboBox.info.connect(self.onDebug1)
 
   def onDebug1(self, *args) -> None:
     """Debug1 action."""
     text = [*args, ''][0]
     print('info text: %s' % text)
     self.mainStatusBar.showMessage('Debug1 action triggered.', 5000)
-    self.topicSelection.echoValue(7777)
 
   def onDebug2(self) -> None:
     """Debug2 action."""

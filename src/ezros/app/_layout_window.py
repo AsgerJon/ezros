@@ -12,7 +12,7 @@ from ezside.core import AlignTop, AlignLeft
 from ezside.widgets import BaseWidget
 from icecream import ic
 
-from ezros.widgets import TopicSelection, TopicChart
+from ezros.widgets import TopicChart
 
 ic.configureOutput(includeContext=True)
 

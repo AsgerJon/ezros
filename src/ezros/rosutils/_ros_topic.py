@@ -13,16 +13,6 @@ from vistutils.fields import EmptyField
 ic.configureOutput(includeContext=True)
 
 
-class _Subscriber(Subscriber):
-  """subclass implementing a hook in unregister"""
-
-  def unregister(self) -> None:
-    """Unregisters the subscriber. """
-    Subscriber.unregister(self, )
-    self.callback = None
-    ic('Subscriber unregistered!')
-
-
 class RosTopic:
   """This class combines QObject and ROS functionality on a topic level. """
 

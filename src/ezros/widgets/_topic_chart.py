@@ -41,8 +41,6 @@ class TopicChart(CanvasWidget):
     """Lock the topic selection."""
     subCreator = self.topicComboBox.currentItem().subCreatorFactory()
 
-    ic(self.topicComboBox.currentItem())
-
     @subCreator
     def callMeMaybe(data: Any) -> None:
       """Callback function for the anonymous subscriber that updates the

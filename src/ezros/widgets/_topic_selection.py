@@ -8,18 +8,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from PySide6.QtCore import QMargins, Signal
+from PySide6.QtCore import Signal
 from PySide6.QtGui import QColor
-from PySide6.QtWidgets import QGridLayout, QLineEdit
-from ezside.core import Prefer, parseBrush, SolidFill, parsePen, SolidLine
-from ezside.widgets import BaseWidget, Label, PushButton
-from icecream import ic
-from rospy import Subscriber
-from vistutils.fields import EmptyField
-from vistutils.text import monoSpace
-from vistutils.waitaminute import typeMsg
-
-from ezros.widgets import TopicComboBox
+from ezside.core import parseBrush, SolidFill, parsePen, SolidLine
+from ezside.widgets import Label, PushButton
 
 
 class _Button(PushButton):

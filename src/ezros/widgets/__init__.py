@@ -8,5 +8,3 @@ from ._topic_type_combo_box import TopicTypeComboBox
 from ._topic_chart import TopicChart
 from ._topic_selection import TopicSelection
 from ._topic_info import TopicInfo
-from ._ros_toggle import RosToggle
-from ._control_periodic import ControlPeriodic

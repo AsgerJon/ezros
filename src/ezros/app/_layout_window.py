@@ -40,7 +40,7 @@ class LayoutWindow(BaseWindow):
 
   def initUi(self) -> None:
     """Initialize the user interface."""
-    self.setMinimumSize(480, 320)
+    self.setMinimumSize(640, 480)
     #  Layout and base widget
     self.baseLayout = QVBoxLayout()
     self.baseLayout.setAlignment(AlignTop | AlignLeft)
@@ -50,6 +50,7 @@ class LayoutWindow(BaseWindow):
     #  TopicSelection
     self.topicChart = TopicChart()
     self.topicChart.initUi()
+    self.topicChart.initSignalSlot()
     self.baseLayout.addWidget(self.topicChart)
     #  Setting layout and central widget
     self.baseWidget.setLayout(self.baseLayout)

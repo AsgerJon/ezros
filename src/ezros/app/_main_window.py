@@ -3,6 +3,9 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from math import sin
+import time
+
 from icecream import ic
 import rospy
 
@@ -22,15 +25,12 @@ class MainWindow(LayoutWindow):
 
   def onDebug1(self, *args) -> None:
     """Debug1 action."""
-    text = [*args, ''][0]
-    print('info text: %s' % text)
-    self.mainStatusBar.showMessage('Debug1 action triggered.', 5000)
+    self.topicChart.realTimeView.append(sin(time.time()))
 
   def onDebug2(self) -> None:
     """Debug2 action."""
     self.mainStatusBar.showMessage('Debug2 action triggered.', 5000)
-    for item in dir(rospy.topics):
-      ic(item)
+    self.topicChart.realTimeView.chart().series()
 
   def onDebug3(self) -> None:
     """Debug3 action."""

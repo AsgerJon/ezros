@@ -3,6 +3,8 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from typing import Callable, TYPE_CHECKING
+
 from icecream import ic
 from rospy import Subscriber
 import rostopic
@@ -52,3 +54,30 @@ class RosTopic:
   def _getTopicType(self) -> type:
     """Getter-function for the topic type. """
     return self.__topic_type__
+
+  def __str__(self) -> str:
+    """Returns the string representation of the RosTopic. """
+    clsName = self.__class__.__name__
+    rosName = self.__topic_name__
+    rosType = self.__topic_type__.__name__
+    return '%s[%s]' % (rosName, rosType)
+
+  def __repr__(self) -> str:
+    """Returns the string representation of the RosTopic. """
+    clsName = self.__class__.__name__
+    rosName = self.__topic_name__
+    rosType = self.__topic_type__.__name__
+    return '%s(%s)' % (clsName, rosName)
+
+  def subCreatorFactory(self) -> Callable:
+    """Returns a decorator creating a subscriber with the decorated
+    callable as the callback."""
+
+    def subCreator(callMeMaybe: Callable) -> Subscriber:
+      """Creates a subscriber with the callback as the callback."""
+      rosName, rosType = self.topicName, self.topicType
+      if TYPE_CHECKING:
+        assert isinstance(rosName, str) and isinstance(rosType, type)
+      return Subscriber(rosName, rosType, callMeMaybe)
+
+    return subCreator

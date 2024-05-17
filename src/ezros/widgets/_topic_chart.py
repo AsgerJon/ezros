@@ -8,14 +8,16 @@ from __future__ import annotations
 from typing import Any, Callable
 
 from PySide6.QtCore import Slot
+from attribox import AttriBox
 from icecream import ic
 from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout
 from ezside.widgets import CanvasWidget, PushButton, BaseWidget
 from ezside.widgets.charts import RealTimeView
 from rospy import Subscriber, init_node
 from vistutils.parse import maybe
+from vistutils.waitaminute import typeMsg
 
-from ezros.widgets import TopicComboBox
+from ezros.widgets import TopicComboBox, TopicSelector
 
 ic.configureOutput(includeContext=True)
 
@@ -26,20 +28,18 @@ class TopicChart(CanvasWidget):
   complemented with a topic selection widget. """
 
   baseLayout: QVBoxLayout
-  headerLayout: QHBoxLayout
-  headerWidget: BaseWidget
-  clearButton: PushButton
-  topicComboBox: TopicComboBox
-  selectButton: PushButton
   realTimeView: RealTimeView
   sub: Subscriber
+
+  topicSelector = AttriBox[TopicSelector]()
 
   __callback_functions__ = None
 
   @Slot()
   def _lockTopic(self, ) -> None:
     """Lock the topic selection."""
-    rosTopic = self.topicComboBox.currentItem()
+
+    rosTopic = self.topicSelector.rosTopic
 
     @rosTopic.subCreatorFactory('LMAO', )
     def callMeMaybe(data: Any) -> None:
@@ -49,6 +49,13 @@ class TopicChart(CanvasWidget):
 
     if isinstance(callMeMaybe, Subscriber):
       self.sub = callMeMaybe
+    else:
+      e = typeMsg('callMeMaybe', callMeMaybe, Subscriber)
+      raise TypeError(e)
+
+  def _clearTopic(self) -> None:
+    """Clear the topic selection."""
+    self.sub.unregister()
 
   def initUi(self, ) -> None:
     """Initializes the user interface for the TopicChart."""
@@ -56,25 +63,9 @@ class TopicChart(CanvasWidget):
     self.baseLayout = QVBoxLayout()
     self.baseLayout.setContentsMargins(0, 0, 0, 0, )
     self.baseLayout.setSpacing(0)
-    #  Header Layout
-    self.headerLayout = QHBoxLayout()
-    self.headerLayout.setContentsMargins(0, 0, 0, 0, )
-    self.headerLayout.setSpacing(0)
-    #  Clear Button
-    self.clearButton = PushButton('Clear')
-    self.clearButton.initUi()
-    self.headerLayout.addWidget(self.clearButton)
-    #  Topic ComboBox
-    self.topicComboBox = TopicComboBox()
-    self.headerLayout.addWidget(self.topicComboBox)
-    #  Select Button
-    self.selectButton = PushButton('Select')
-    self.selectButton.initUi()
-    self.headerLayout.addWidget(self.selectButton)
-    #  Header Layout Widget
-    self.headerWidget = BaseWidget()
-    self.headerWidget.setLayout(self.headerLayout)
-    self.baseLayout.addWidget(self.headerWidget)
+    self.topicSelector.initUi()
+    self.topicSelector.initSignalSlot()
+    self.baseLayout.addWidget(self.topicSelector)
     #  Real Time View
     self.realTimeView = RealTimeView()
     self.realTimeView.__inner_chart__.legend().setVisible(False)
@@ -86,7 +77,8 @@ class TopicChart(CanvasWidget):
 
   def initSignalSlot(self, ) -> None:
     """Initializes the signal slot connections for the TopicChart."""
-    self.selectButton.singleClick.connect(self._lockTopic)
+    self.topicSelector.topicSelected.connect(self._lockTopic)
+    self.topicSelector.topicReset.connect(self._clearTopic)
 
   def _getCallbackFunctions(self) -> list[Callable]:
     """Get the callback functions for the TopicChart."""
@@ -104,21 +96,3 @@ class TopicChart(CanvasWidget):
     """General callback for the TopicChart."""
     for callMeMaybe in self._getCallbackFunctions():
       callMeMaybe(*args)
-
-  @classmethod
-  def styleTypes(cls) -> dict[str, type]:
-    """The styleTypes method provides the type expected at each name."""
-    canvasWidgetStyleTypes = CanvasWidget.styleTypes()
-    topicChartStyleTypes = {}
-    return {**canvasWidgetStyleTypes, **topicChartStyleTypes}
-
-  @classmethod
-  def staticStyles(cls) -> dict[str, Any]:
-    """Returns the static styles for the TopicChart."""
-    canvasWidgetStyles = CanvasWidget.staticStyles()
-    topicChartStyles = {}
-    return {**canvasWidgetStyles, **topicChartStyles}
-
-  def dynStyles(self, ) -> dict[str, Any]:
-    """Implementation of dynamic fields"""
-    return {}

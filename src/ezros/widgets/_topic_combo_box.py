@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from typing import Self
 
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QComboBox, QWidget
 from icecream import ic
 from rospy import get_published_topics
@@ -20,6 +21,9 @@ class TopicComboBox(QComboBox):
   with the available topics on the ROS master, subject to some filtering. """
 
   __iter_contents__ = None
+  __inner_contents__ = None
+
+  topicViewed = Signal(RosTopic)
 
   def __init__(self, *args) -> None:
     """Initializes the TopicComboBox instance. """
@@ -32,6 +36,11 @@ class TopicComboBox(QComboBox):
     self.resetTopics()
     self.setEditable(True)
     self.lineEdit().setPlaceholderText('Select a topic...')
+
+  def appendTopic(self, topic: RosTopic) -> None:
+    """Appends the topic """
+    existing = [*(self.__inner_contents__ or []), ]
+    self.__inner_contents__ = [*existing, topic, ]
 
   def resetTopics(self) -> None:
     """Resets the topics listed. """
@@ -46,6 +55,7 @@ class TopicComboBox(QComboBox):
   def addItem(self, topicName: str, *args) -> None:
     """Adds an item to the combobox. """
     rosTopic = RosTopic(topicName)
+    self.appendTopic(rosTopic)
     QComboBox.addItem(self, topicName, rosTopic)
 
   def addItems(self, topicNames: list[str]) -> None:
@@ -72,3 +82,7 @@ class TopicComboBox(QComboBox):
       return self.__iter_contents__.pop(0)
     else:
       raise StopIteration
+
+  def __getitem__(self, index: int) -> RosTopic:
+    """Returns the item at the given index. """
+    return self.__inner_contents__[index]

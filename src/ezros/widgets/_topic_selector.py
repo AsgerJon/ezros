@@ -6,20 +6,21 @@ with a clear button."""
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
-from typing import Any
-
 from PySide6.QtCore import Signal, Slot
-from PySide6.QtGui import QColor
 from PySide6.QtWidgets import QHBoxLayout
 from attribox import AttriBox
-from ezside.core import parseBrush, SolidFill, parsePen, SolidLine
-from ezside.widgets import Label, PushButton, CanvasWidget
+from ezside.core import Prefer, Expand, Tight
+from ezside.widgets import PushButton, CanvasWidget
+from icecream import ic
+from vistutils.fields import EmptyField
 
 from ezros.rosutils import RosTopic
 from ezros.widgets import TopicComboBox
 
+ic.configureOutput(includeContext=True)
 
-class TopicSelection(CanvasWidget):
+
+class TopicSelector(CanvasWidget):
   """TopicSelection provides topic selection functionality. A dropdown menu
   lists all available topics, a lineedit enables filtering, and a
   confirmation button locks the topic. Once locked, the topic can be changed
@@ -34,25 +35,55 @@ class TopicSelection(CanvasWidget):
   topicViewed = Signal(RosTopic)
   topicSelected = Signal(RosTopic)
 
+  topicName = EmptyField()
+  topicType = EmptyField()
+  rosTopic = EmptyField()
+
+  @topicName.GET
+  def _getTopicName(self) -> str:
+    """Getter-function for the topic name."""
+    return self.topicComboBox.currentItem().topicName
+
+  @topicType.GET
+  def _getTopicType(self) -> str:
+    """Getter-function for the topic type."""
+    return self.topicComboBox.currentItem().topicType
+
+  @rosTopic.GET
+  def _getRosTopic(self) -> RosTopic:
+    """Getter-function for the ROS topic."""
+    return self.topicComboBox.currentItem()
+
   def initUi(self, ) -> None:
     """Initializes the user interface for the TopicSelection."""
     #  Base Layout
     self.baseLayout = QHBoxLayout()
     self.baseLayout.setContentsMargins(0, 0, 0, 0, )
     self.baseLayout.setSpacing(4)
-    #  TopicComboBox
-    self.baseLayout.addWidget(self.topicComboBox)
     #  ClearButton
+    self.clearButton.setEnabled(False)
+    self.clearButton.initUi()
     self.baseLayout.addWidget(self.clearButton)
+    #  TopicComboBox
+    self.topicComboBox.setSizePolicy(Expand, Tight)
+    self.baseLayout.addWidget(self.topicComboBox)
     #  SelectButton
+    self.selectButton.setEnabled(True)
+    self.selectButton.initUi()
     self.baseLayout.addWidget(self.selectButton)
     self.setLayout(self.baseLayout)
 
   def initSignalSlot(self) -> None:
     """Initializes the signal-slot connections."""
-    self.clearButton.clicked.connect(self.resetTopic)
-    self.topicComboBox.currentItemChanged.connect(self.viewTopic)
-    self.selectButton.clicked.connect(self.selectTopic)
+    self.clearButton.initSignalSlot()
+    self.selectButton.initSignalSlot()
+    self.clearButton.singleLeft.connect(self.resetTopic)
+    self.topicComboBox.currentIndexChanged.connect(self._topicViewChange)
+    self.selectButton.singleLeft.connect(self.selectTopic)
+
+  def _topicViewChange(self, index: int) -> None:
+    """Handles the topic view changed signal. """
+    ic(self.topicComboBox[index])
 
   @Slot()
   def resetTopic(self) -> None:
@@ -66,11 +97,12 @@ class TopicSelection(CanvasWidget):
     """Slot that views the selected topic. """
     self.topicViewed.emit(topic)
 
-  @Slot(RosTopic)
-  def selectTopic(self, topic: RosTopic) -> None:
+  @Slot()
+  def selectTopic(self, ) -> None:
     """Slot that selects the topic. """
+    ic('lmao')
     self.clearButton.setEnabled(True)
     self.selectButton.setEnabled(False)
-    name = topic.topicName
-    self.topicComboBox.lineEdit().setPrefix('Selected: %s  | ' % name)
-    self.topicSelected.emit(self.topicComboBox.currentItem())
+    topic = self.topicComboBox.currentItem()
+    self.topicSelected.emit(topic)
+    self.update()

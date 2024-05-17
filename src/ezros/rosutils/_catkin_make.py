@@ -7,9 +7,10 @@ import os
 from subprocess import Popen, PIPE
 
 from icecream import ic
+from vistutils.text import stringList
 
 from ezros.env import getParentDir, changeDir
-from ezros.rosutils import CATKIN_WS
+from ezros.rosutils import CATKIN_WS, getRosPackages
 
 ic.configureOutput(includeContext=True)
 
@@ -51,7 +52,7 @@ def _collectCommands() -> list[str]:
     _sourceMambaCommand(),
     _activateCondaCommand(),
     """cd %s""" % CATKIN_WS,
-    """rm -rf build devel""",
+    """rm -rf build devel logs""",
     """catkin build""",
     """exit"""
   ]
@@ -69,7 +70,45 @@ def _postCommands() -> list[str]:
   ]
 
 
-def _getPythonPath() -> str:
+def _realPythonPath() -> str:
+  """Returns the path to the real python files."""
+  return changeDir(_getThisConda(), 'lib', 'python3.11', 'site-packages')
+
+
+def _moveCommands() -> list[str]:
+  """Collects the commands to move the python files. """
+  rosPackages = [os.path.basename(p) for p in getRosPackages()]
+  realPythonPath = _realPythonPath()
+  catkinPath = _catkinPythonPath()
+  oldPythonFiles = [os.path.join(realPythonPath, p) for p in rosPackages]
+  newPythonFiles = [os.path.join(catkinPath, p) for p in rosPackages]
+
+  out = [_sourceCondaCommand(),
+         _sourceMambaCommand(),
+         _activateCondaCommand()]
+
+  safetyWords = stringList("""lib, python3.11, site-packages""")
+  for files in oldPythonFiles:
+    if not os.path.isabs(files):
+      e = """Received unexpected file path: '%s' when listing folders 
+      for removal!"""
+      raise RuntimeError(e % files)
+    if not all(word in files for word in safetyWords):
+      e = """Received unexpected file path: '%s' when listing folders 
+      for removal!"""
+      raise RuntimeError(e % files)
+    out.append("""rm -rf %s""" % files)
+
+  for files in newPythonFiles:
+    out.append("""cp -rf %s %s""" % (files, realPythonPath))
+
+  for files in out:
+    print(out)
+
+  return out
+
+
+def _catkinPythonPath() -> str:
   """Returns the path to the newly generated python files."""
   return changeDir(CATKIN_WS, 'devel', 'lib', 'python3.11', 'site-packages')
 
@@ -82,7 +121,6 @@ def runCatkinMake() -> None:
                   stderr=PIPE,
                   text=True)
   commands = '\n'.join(_collectCommands())
-  ic(changeDir(CATKIN_WS, 'devel', 'setup.bash'))
   stdout, stderr = process.communicate(commands)
   if process.returncode:
     raise RuntimeError(stderr)
@@ -93,6 +131,19 @@ def runCatkinMake() -> None:
                   stdout=PIPE,
                   stderr=PIPE,
                   text=True)
+  stdout, stderr = process.communicate(commands)
+  if process.returncode:
+    raise RuntimeError(stderr)
+  print(stdout)
+  process = Popen(['/bin/zsh'],
+                  stdin=PIPE,
+                  stdout=PIPE,
+                  stderr=PIPE,
+                  text=True)
+  try:
+    commands = '\n'.join(_moveCommands())
+  except Exception as exception:
+    raise SystemExit from exception
   stdout, stderr = process.communicate(commands)
   if process.returncode:
     raise RuntimeError(stderr)

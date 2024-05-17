@@ -4,8 +4,6 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tests_" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/ezros/rosutils/catkin_ws/devel/lib/python3.11/site-packages" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/ezros/rosutils/catkin_ws/devel/lib/python3.11/site-packages/yolo" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/src/ezros/rosutils/catkin_ws/.catkin_tools" />
       <excludeFolder url="file://$MODULE_DIR$/src/ezros/rosutils/catkin_ws/build" />
       <excludeFolder url="file://$MODULE_DIR$/src/ezros/rosutils/catkin_ws/devel" />
@@ -14,7 +12,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/ezros/rosutils/catkin_ws/devel/lib" />
       <excludeFolder url="file://$MODULE_DIR$/src/ezros/rosutils/catkin_ws/logs" />
     </content>
-    <orderEntry type="jdk" jdkName="ros311" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="ros311 (2)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

@@ -10,6 +10,20 @@ from ezros.env import changeDir
 from ezros.rosutils import CATKIN_WS, basePackageXml, baseCMakeLists
 
 
+def getRosPackages() -> list[str]:
+  """Returns a list of the ROS packages in the catkin_ws/src directory."""
+  src = changeDir(CATKIN_WS, 'src')
+  out = []
+  for item in os.listdir(src):
+    if os.path.isfile(changeDir(src, item)):
+      continue
+    if item.startswith('.'):
+      continue
+    if 'msg' in os.listdir(changeDir(src, item)):
+      out.append(changeDir(CATKIN_WS, item))
+  return out
+
+
 def getRosPackageDir(packageName: str) -> str:
   """Returns the path to the ROS package directory."""
   return changeDir(CATKIN_WS, 'src', packageName)
@@ -18,11 +32,11 @@ def getRosPackageDir(packageName: str) -> str:
 def _createDirectory(packageName: str) -> None:
   """Creates the catkin_ws/src directory if it does not exist."""
   packageDir = getRosPackageDir(packageName)
-  if os.path.exists(packageDir):
-    return
-  os.makedirs(packageDir)
+  if not os.path.exists(packageDir):
+    os.makedirs(packageDir)
   msgDir = changeDir(packageDir, 'msg')
-  os.makedirs(msgDir)
+  if not os.path.exists(msgDir):
+    os.makedirs(msgDir)
 
 
 def _generatePackageXML(packageName: str) -> None:

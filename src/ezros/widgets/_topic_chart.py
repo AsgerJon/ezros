@@ -12,7 +12,7 @@ from icecream import ic
 from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout
 from ezside.widgets import CanvasWidget, PushButton, BaseWidget
 from ezside.widgets.charts import RealTimeView
-from rospy import Subscriber
+from rospy import Subscriber, init_node
 from vistutils.parse import maybe
 
 from ezros.widgets import TopicComboBox
@@ -39,14 +39,16 @@ class TopicChart(CanvasWidget):
   @Slot()
   def _lockTopic(self, ) -> None:
     """Lock the topic selection."""
-    subCreator = self.topicComboBox.currentItem().subCreatorFactory()
+    rosTopic = self.topicComboBox.currentItem()
 
-    @subCreator
+    @rosTopic.subCreatorFactory('LMAO', )
     def callMeMaybe(data: Any) -> None:
       """Callback function for the anonymous subscriber that updates the
       chart with real time data."""
-      print(data.data)
       self.realTimeView.append(data.data)
+
+    if isinstance(callMeMaybe, Subscriber):
+      self.sub = callMeMaybe
 
   def initUi(self, ) -> None:
     """Initializes the user interface for the TopicChart."""

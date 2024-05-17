@@ -9,5 +9,3 @@ import sys
 lol = """/home/AsgerJon/PycharmProjects/ezros/src/ezros/rosutils/"""
 lol2 = os.path.join(lol, 'catkin_ws', 'devel', 'lib', 'python3.11')
 lol3 = os.path.join(lol2, 'site-packages')
-
-sys.path.append(lol3)

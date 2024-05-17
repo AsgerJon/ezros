@@ -12,9 +12,10 @@ from PySide6.QtCore import Qt
 from icecream import ic
 import roslib
 
+from ezros.app import EZRos, MainWindow
 from ezros.env import SITE_PACKAGES, EZ_ROOT
 import std_msgs.msg as baseMsg
-import yolo
+import yolo.msg as yolo
 from ezros.rosutils import getMsgTypeNames, getMsgTypes
 
 ic.configureOutput(includeContext=True, )
@@ -29,7 +30,7 @@ def tester00() -> None:
 
 def tester01() -> int:
   """Main application tester"""
-  # return EZRos(MainWindow).exec()
+  return EZRos(MainWindow).exec()
 
 
 def tester02() -> int:
@@ -102,4 +103,4 @@ def main(callMeMaybe: Callable) -> None:
 
 
 if __name__ == '__main__':
-  main(tester05)
+  main(tester01)

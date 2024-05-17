@@ -3,14 +3,19 @@
 #  Copyright (c) 2024 Asger Jon Vistisen
 from __future__ import annotations
 
+from random import randint
 from typing import Callable, TYPE_CHECKING
 
 from icecream import ic
-from rospy import Subscriber
+from rospy import Subscriber, init_node
+from rospy.core import is_initialized
 import rostopic
 from vistutils.fields import EmptyField
+from vistutils.parse import maybe
 
 ic.configureOutput(includeContext=True)
+
+SubFactory = Callable[[Callable], Subscriber]
 
 
 class RosTopic:
@@ -59,12 +64,20 @@ class RosTopic:
     rosType = self.__topic_type__.__name__
     return '%s(%s)' % (clsName, rosName)
 
-  def subCreatorFactory(self) -> Callable:
+  def subCreatorFactory(self, nodeName: str = None, **kwargs) -> SubFactory:
     """Returns a decorator creating a subscriber with the decorated
     callable as the callback."""
 
-    def subCreator(callMeMaybe: Callable) -> Subscriber:
+    anonFlag = kwargs.get('anonymous', False)
+    nodeName = kwargs.get('nodeName', nodeName)
+    if nodeName is None:
+      anonFlag = True
+      nodeName = 'Node_%d' % randint(0, 2 ** 32)
+
+    def subCreator(callMeMaybe: Callable, ) -> Subscriber:
       """Creates a subscriber with the callback as the callback."""
+      if not is_initialized():
+        init_node(nodeName, anonymous=anonFlag)
       rosName, rosType = self.topicName, self.topicType
       if TYPE_CHECKING:
         assert isinstance(rosName, str) and isinstance(rosType, type)

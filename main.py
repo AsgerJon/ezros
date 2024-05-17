@@ -10,7 +10,12 @@ from typing import Callable
 
 from PySide6.QtCore import Qt
 from icecream import ic
-from ezros.app import EZRos, MainWindow
+import roslib
+
+from ezros.env import SITE_PACKAGES, EZ_ROOT
+import std_msgs.msg as baseMsg
+import yolo
+from ezros.rosutils import getMsgTypeNames, getMsgTypes
 
 ic.configureOutput(includeContext=True, )
 
@@ -24,7 +29,58 @@ def tester00() -> None:
 
 def tester01() -> int:
   """Main application tester"""
-  return EZRos(MainWindow).exec()
+  # return EZRos(MainWindow).exec()
+
+
+def tester02() -> int:
+  """Testing Ros stuff"""
+  for item in dir(roslib.packages):
+    try:
+      print(item)
+    except Exception as exception:
+      print(exception)
+      return 1
+  ic(roslib.packages.catkin_find())
+  ic(roslib.packages.rospkg)
+  return 0
+
+
+def tester03() -> int:
+  """Testing env module"""
+  try:
+    ic(SITE_PACKAGES)
+    ic(EZ_ROOT)
+  except Exception as exception:
+    print(exception)
+    return 1
+  return 0
+
+
+def tester04() -> int:
+  """Testing std_msgs.msg"""
+  ic(os.environ['CONDA_PREFIX'])
+  ic(os.path.basename(os.environ['CONDA_PREFIX']))
+  for (name, cls) in getMsgTypes().items():
+    try:
+      print(name)
+      print(cls.__bases__)
+      break
+    except Exception as exception:
+      print(exception)
+      return 1
+  else:
+    return 0
+  return 0
+
+
+def tester05() -> int:
+  """Testing yolo"""
+  try:
+    ic(yolo)
+  except Exception as exception:
+    print(exception)
+    return 1
+  return 0
 
 
 def main(callMeMaybe: Callable) -> None:
@@ -46,4 +102,4 @@ def main(callMeMaybe: Callable) -> None:
 
 
 if __name__ == '__main__':
-  main(tester01)
+  main(tester05)

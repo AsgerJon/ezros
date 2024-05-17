@@ -6,6 +6,7 @@ from __future__ import annotations
 from random import randint
 from typing import Callable, TYPE_CHECKING
 
+from PySide6.QtCore import QObject
 from icecream import ic
 from rospy import Subscriber, init_node
 from rospy.core import is_initialized
@@ -18,7 +19,7 @@ ic.configureOutput(includeContext=True)
 SubFactory = Callable[[Callable], Subscriber]
 
 
-class RosTopic:
+class RosTopic(QObject):
   """This class combines QObject and ROS functionality on a topic level. """
 
   __topic_name__ = None
@@ -29,6 +30,7 @@ class RosTopic:
 
   def __init__(self, topicName: str) -> None:
     """Initializes the RosTopic instance. """
+    QObject.__init__(self)
     self.__topic_name__ = topicName
     topicType = [*rostopic.get_topic_class(topicName), ]
     while topicType:
